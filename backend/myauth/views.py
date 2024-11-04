@@ -1,0 +1,847 @@
+from .serializers import UserSerializer, StatsSerializer, RefreshTokensSerializer, PasswordResetConfirmSerializer, PasswordResetRequestSerializer
+import hashlib
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.response import Response
+from rest_framework.request import Request
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken, UntypedToken
+from rest_framework_simplejwt.exceptions import TokenError
+from .models import User, Stats, RefreshTokens, ResetPasswordModel
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.sites.shortcuts import get_current_site
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.core.mail import send_mail
+from .tokens import email_confirmation_token
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from datetime import datetime
+import jwt
+from rest_framework.authentication import BaseAuthentication
+from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.views import APIView
+from django.conf import settings
+from django.http import HttpResponse
+import requests
+import urllib.parse
+from urllib.parse import urlencode
+from django.utils import timezone
+from datetime import timedelta
+
+
+class CookieJWTAuthentication(BaseAuthentication):
+	def authenticate(self, request):
+		access_token = request.COOKIES.get('access_token')
+		if not access_token:
+			return None
+		try :
+			payload = jwt.decode(access_token, settings.SECRET_KEY, algorithms=['HS256'])
+		except jwt.ExpiredSignatureError:
+			raise AuthenticationFailed({'error': 'token expired'})
+		except jwt.InvalidTokenError:
+			raise AuthenticationFailed('Invalid token')
+		try:
+			user = User.objects.get(id=payload['user_id'])
+		except User.DoesNotExist:
+			raise AuthenticationFailed('User not found')
+		return (user, None)
+
+class GoogleLogin(APIView):
+	permission_classes = [AllowAny]
+
+	def get(self, request):
+		google_url = "https://accounts.google.com/o/oauth2/auth"
+		redirect_uri = "http://localhost:8000/api/google_callback/"
+		client_id = settings.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY
+		response_type = "code"
+		scope = "openid email profile"
+
+		google_auth_url = f"{google_url}?client_id={client_id}&redirect_uri={redirect_uri}&response_type={response_type}&scope={scope}"
+		return Response({"url": google_auth_url}, status=status.HTTP_200_OK)
+
+
+class Login42(APIView):
+	permission_classes = [AllowAny]
+
+	def get(self, request):
+		redirect_uri = "http://localhost:8000/api/42_callback/"
+		client_id = settings.SOCIAL_AUTH_42_OAUTH2_KEY
+		state = 'random_state_string'
+
+		google_auth_url = f"https://api.intra.42.fr/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&&response_type=code&scope=public&state={state}"
+		return Response({"url": google_auth_url}, status=status.HTTP_200_OK)
+
+class FacebookLogin(APIView):
+	permission_classes = [AllowAny]
+
+	def get(self, request):
+		facebook_url = "https://www.facebook.com/v10.0/dialog/oauth"
+		redirect_uri = "http://localhost:8000/api/facebook_callback/"
+		client_id = settings.SOCIAL_AUTH_FACEBOOK_OAUTH2_KEY
+		state = 'randomestring'
+		scope = "email,public_profile"
+
+		facebook_auth_url = f"{facebook_url}?client_id={client_id}&redirect_uri={redirect_uri}&state={state}&scope={scope}"
+		return Response({"url": facebook_auth_url}, status=status.HTTP_200_OK)
+
+
+class GoogleCallback(APIView):
+	permission_classes = [AllowAny]
+	def get(self, request):
+		code = request.GET.get('code')
+		token_url = "https://oauth2.googleapis.com/token"
+		token_data = {
+    	        'code': code,
+    	        'client_id': settings.SOCIAL_AUTH_GOOGLE_OAUTH2_KEY,
+    	        'client_secret': settings.SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET,
+    	        'redirect_uri': "http://localhost:8000/api/google_callback/",
+    	        'grant_type': 'authorization_code',
+		}
+
+		token_response = requests.post(token_url, data=token_data)
+		token_info = token_response.json()
+		access_token = token_info.get('access_token')
+
+		user_info_url = "https://www.googleapis.com/oauth2/v2/userinfo"
+		user_info_response = requests.get(user_info_url, headers={
+    	        'Authorization': f"Bearer {access_token}"
+		})
+		user_info = user_info_response.json()
+
+		user_data = {
+			'email': user_info.get('email'),
+			'username' : user_info.get('name'),
+			'avatar': user_info.get('picture'),
+		}
+		user = User.objects.filter(username=user_data['username'], email=user_data['email']).first()
+		if not user is None:
+			refresh = RefreshTokens.objects.filter(user=user).first()
+			token = refresh.get_access_token()
+			refresh.save()
+		else:
+			serializer = UserSerializer(data=user_data)
+			if serializer.is_valid():
+				user = serializer.save()
+				refresh = RefreshTokensSerializer(data={'user': user.id})
+				if refresh.is_valid():
+					refresh_token : RefreshTokens = refresh.save()
+					user.save()
+					token = refresh_token.get_access_token()
+				else:
+					error_text = refresh.errors.get('ErrorDetail')
+					error_text = urlencode({'message': str(error_text)})
+					return redirect('http://localhost:3000/login?{error_text}')
+			else:
+				for field, error_list in serializer.errors.items():
+					for error in error_list:
+						pass
+				if error is None:
+					error = 'somthing went wrong'
+				error_text = urlencode({'message': str(error)})
+				return redirect(f'http://localhost:3000/login?{error_text}')
+		if user.isTwoFA:
+			code = str(randint(100000, 999999))
+			user.TwoFACode = code
+			user.TwoFA_sent_at = timezone.now()
+			user.save()
+			send_mail(
+            	'Your 2FA code',
+            	f'Hi {user.username}!\nYour verification code is {code}.',
+            	'wepong10auth@gmail.com',
+            	[user.email],
+            	fail_silently=False,
+        	)
+			return redirect('http://localhost:3000/2fa_confirmation')
+		response = redirect('http://localhost:3000/dashboard')
+		response.set_cookie (
+			key='access_token',
+			value=token,
+			httponly=True,
+			secure=False,
+			samesite='lax'
+		)
+		return response
+	
+class Callback42(APIView):
+	permission_classes = [AllowAny]
+	def get(self, request):
+		code = request.GET.get('code')
+		token_url = "https://api.intra.42.fr/oauth/token"
+		token_data = {
+    	        'code': code,
+    	        'client_id': settings.SOCIAL_AUTH_42_OAUTH2_KEY,
+    	        'client_secret': settings.SOCIAL_AUTH_42_OAUTH2_SECRET,
+    	        'redirect_uri': "http://localhost:8000/api/42_callback/",
+    	        'grant_type': 'authorization_code',
+		}
+		token_response = requests.post(token_url, data=token_data)
+		token_info = token_response.json()
+		access_token = token_info.get('access_token')
+    	    # Use the access token to get user info
+		user_info_url = "https://api.intra.42.fr/v2/me"
+		user_info_response = requests.get(user_info_url, headers={
+    	        'Authorization': f"Bearer {access_token}"
+		})
+		user_info = user_info_response.json()
+
+		user_data = {
+			'email': user_info.get('email'),
+			'username' : user_info.get('login'),
+			'avatar': user_info.get('image', {}).get('link'),
+		}
+		user = User.objects.filter(username=user_data['username'], email=user_data['email']).first()
+		if not user is None:
+			refresh = RefreshTokens.objects.filter(user=user).first()
+			token = refresh.get_access_token()
+			refresh.save()
+		else:
+			serializer = UserSerializer(data=user_data)
+			if serializer.is_valid():
+				user = serializer.save()
+				refresh = RefreshTokensSerializer(data={'user': user.id})
+				if refresh.is_valid():
+					refresh_token : RefreshTokens = refresh.save()
+					user.save()
+					token = refresh_token.get_access_token()
+				else:
+					error_text = refresh.errors.get('ErrorDetail')
+					error_text = urlencode({'message': str(error_text)})
+					return redirect('http://localhost:3000/login?{error_text}')
+			else:
+				for field, error_list in serializer.errors.items():
+					for error in error_list:
+						pass
+				if error is None:
+					error = 'somthing went wrong'
+				error_text = urlencode({'message': str(error)})
+				return redirect(f'http://localhost:3000/login?{error_text}')
+		if user.isTwoFA:
+			code = str(randint(100000, 999999))
+			user.TwoFACode = code
+			user.TwoFA_sent_at = timezone.now()
+			user.save()
+			send_mail(
+            	'Your 2FA code',
+            	f'Hi {user.username}!\nYour verification code is {code}.',
+            	'wepong10auth@gmail.com',
+            	[user.email],
+            	fail_silently=False,
+        	)
+			return redirect('http://localhost:3000/2fa_confirmation')
+		response = redirect('http://localhost:3000/dashboard')
+		response.set_cookie (
+			key='access_token',
+			value=token,
+			httponly=True,
+			secure=False,
+			samesite='lax'
+		)
+		return response
+	
+
+class FacebookCallback(APIView):
+	permission_classes = [AllowAny]
+	def get(self, request):
+		code = request.GET.get('code')
+		token_url = "https://graph.facebook.com/v17.0/oauth/access_token"
+		token_data = {
+    	        'client_id': settings.SOCIAL_AUTH_FACEBOOK_OAUTH2_KEY,
+    	        'redirect_uri': "http://localhost:8000/api/facebook_callback/",
+    	        'client_secret': settings.SOCIAL_AUTH_FACEBOOK_OAUTH2_SECRET,
+    	        'code': code,
+		}
+
+		token_response = requests.post(token_url, data=token_data)
+		token_info = token_response.json()
+		access_token = token_info.get('access_token')
+    	    # Use the access token to get user info
+		picture_height = 2000
+		picture_width = 2000
+		user_info_url = f"https://graph.facebook.com/me?access_token={access_token}&fields=id,name,email,picture.width({picture_width}).height({picture_height})"
+		user_info_response = requests.get(user_info_url, headers={
+    	        'Authorization': f"Bearer {access_token}",
+		})
+		user_info = user_info_response.json()
+
+		user_data = {
+			'email': user_info.get('email'),
+			'username' : user_info.get('name'),
+			'avatar': user_info.get('picture', {}).get('data', {}).get('url'),
+		}
+		user = User.objects.filter(username=user_data['username'], email=user_data['email']).first()
+		if not user is None:
+			refresh = RefreshTokens.objects.filter(user=user).first()
+			refresh.save()
+			token = refresh.get_access_token()
+		else:
+			serializer = UserSerializer(data=user_data)
+			if serializer.is_valid():
+				user = serializer.save()
+				refresh = RefreshTokensSerializer(data={'user': user.id})
+				if refresh.is_valid():
+					refresh_token : RefreshTokens = refresh.save()
+					user.save()
+					token = refresh_token.get_access_token()
+				else:
+					error_text = refresh.errors.get('ErrorDetail')
+					error_text = urlencode({'message': str(error_text)})
+					return redirect('http://localhost:3000/login?{error_text}')
+			else:
+				for field, error_list in serializer.errors.items():
+					for error in error_list:
+						pass
+				if error is None:
+					error = 'somthing went wrong'
+				error_text = urlencode({'message': str(error)})
+				return redirect(f'http://localhost:3000/login?{error_text}')
+		if user.isTwoFA:
+			code = str(randint(100000, 999999))
+			user.TwoFACode = code
+			user.TwoFA_sent_at = timezone.now()
+			user.save()
+			send_mail(
+            	'Your 2FA code',
+            	f'Hi {user.username}!\nYour verification code is {code}.',
+            	'wepong10auth@gmail.com',
+            	[user.email],
+            	fail_silently=False,
+        	)
+			return redirect('http://localhost:3000/2fa_confirmation')
+		response = redirect('http://localhost:3000/dashboard')
+		response.set_cookie (
+			key='access_token',
+			value=token,
+			httponly=True,
+			secure=False,
+			samesite='lax'
+		)
+		return response
+
+
+class CheckAuthentication(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def get(self, request):
+		return Response({'authenticated': True}, status=status.HTTP_200_OK)
+
+def activate(request, uidb64,token):
+	try:
+		uid = force_str(urlsafe_base64_decode(uidb64))
+		user = User.objects.get(pk=uid)
+	except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+		user = None
+	if user is not None and email_confirmation_token.check_token(user, token):
+		user.is_email_confirmed = True
+		user.save()
+		return Response({'messages' : 'email confirmed successfuly'}, status=status.HTTP_200_OK)
+	else:
+		return Response({'error' : 'email activation is invalid'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+def hash_password(password):
+	password_bytes = password.encode('utf-8')
+	sha256 = hashlib.sha256()
+	sha256.update(password_bytes)
+	hashed_password = sha256.hexdigest()
+	return hashed_password
+
+
+class refreshAccessToken(APIView):
+	def post(self,request):
+		try:
+			access_token = request.COOKIES.get('access_token')
+			if not access_token:
+				return Response({'error': 'invalide refresh token'}, status=status.HTTP_400_BAD_REQUEST)
+			payload = jwt.decode(access_token, settings.SECRET_KEY, algorithms=['HS256'], options={'verify_exp': False})
+			user_id = payload.get('user_id')
+			if not user_id:
+				return Response({'error': 'invalide refresh token'}, status=status.HTTP_400_BAD_REQUEST)
+			user = User.objects.get(id=user_id)
+			token: RefreshTokens = RefreshTokens.objects.get(user=user)
+			access_token = token.refresh_access_token()
+			return Response({'access': access_token}, status=status.HTTP_200_OK)
+		except:
+			return Response({'error': 'invalide refresh token'}, status=status.HTTP_400_BAD_REQUEST)
+
+from random import randint
+
+class loginUser(APIView):
+	def post(self, request):
+		try:
+			username = request.data['username']
+			password = request.data['password']
+			user = User.objects.filter(username=username).first()
+		except User.DoesNotExist:
+			return Response({'error': 'user not found'}, status=status.HTTP_404_NOT_FOUND)
+		except Exception as e:
+			return Response({'error': 'username and password fields are required'}, status=status.HTTP_400_BAD_REQUEST)
+		if not user:
+			return Response({'error': 'invalide username.'}, status=status.HTTP_401_UNAUTHORIZED)
+		if user.check_password(hash_password(password)):
+			if user.isTwoFA:
+				code = str(randint(100000, 999999))
+				user.TwoFACode = code
+				user.TwoFA_sent_at = timezone.now()
+				user.save()
+				send_mail(
+            		'Your 2FA code',
+            		f'Hi {user.username}!\nYour verification code is {code}.',
+            		'wepong10auth@gmail.com',
+            		[user.email],
+            		fail_silently=False,
+        		)
+				return Response({'2fa_required': True}, status=status.HTTP_200_OK)
+			refresh = RefreshTokens.objects.filter(user=user).first()
+			if refresh is None:
+				refresh_token = RefreshTokensSerializer(data={'user':user.id})
+				if refresh_token.is_valid():
+					refresh = refresh_token.save()
+			refresh.save()
+			response = Response({"access": refresh.get_access_token(), "refresh" : refresh.token, "id": user.id}, status=status.HTTP_201_CREATED)
+			response.set_cookie (
+				key='access_token',
+				value=refresh.get_access_token(),
+				httponly=True,
+				secure=False,
+				samesite='lax'
+			)
+			return response
+		return Response({'error': 'incorrect password.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class logoutUser(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def post(self, request):
+		try:
+			user = request.user
+			refresh_token = RefreshTokens.objects.get(user=user)
+			token = RefreshToken(refresh_token.token)
+			token.blacklist()
+			refresh_token.delete()
+			return Response ({'message': 'logout successful.'} , status=status.HTTP_205_RESET_CONTENT)
+		except Exception as e:
+			return Response ({'error':'invalide request'},status=status.HTTP_400_BAD_REQUEST)
+
+
+class registerUser(APIView):
+	def post(self, request):
+		serializer = UserSerializer(data=request.data)
+		if serializer.is_valid():
+			if serializer.validated_data['password'] == request.data['passwordConfirmation']:
+				if User.objects.filter(username=serializer.validated_data['username']).exists():
+					return Response({'error': 'username is already in use.'}, status=status.HTTP_400_BAD_REQUEST)
+				if User.objects.filter(username=serializer.validated_data['email']).exists():
+					return Response({'error': 'email is already in use.'}, status=status.HTTP_400_BAD_REQUEST)
+				user = serializer.save()
+				user.password = hash_password(serializer.validated_data['password'])
+				data = {
+					'user': user.id
+				}
+				refresh = RefreshTokensSerializer(data=data)
+				if refresh.is_valid():
+					refresh_token: RefreshTokens = refresh.save()
+					# refresh_token.save()
+					user.save()
+					response = Response({"access": refresh_token.get_access_token(), "refresh" : refresh_token.token}, status=status.HTTP_201_CREATED)
+					response.set_cookie (
+						key='access_token',
+						value=refresh_token.get_access_token(),
+						httponly=True,
+						secure=False,
+						samesite='lax'
+					)
+					return response
+				else:
+					return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+			else:
+				return Response({'error': 'passwords do not match!'}, status=status.HTTP_400_BAD_REQUEST)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class setup_email_2fa(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def post(self,request):
+		user : User = request.user
+		if user is None:
+			return Response({'error': 'user not found'}, status=status.HTTP_404_NOT_FOUND)
+		if not user.isTwoFA:
+			user.isTwoFA = True
+			user.save()
+		return Response({'message': 'email 2fa enabled successfully.'}, status=status.HTTP_200_OK)
+
+# from django.views.decorators.csrf import csrf_exempt
+# from django.utils.decorators import method_decorator
+
+# @method_decorator(csrf_exempt, name='dispatch')
+class confirm_email_2fa(APIView):
+	# permission_classes = [AllowAny]
+	def post(self,request):
+		username = request.data.get('username')
+		code = request.data.get('code')
+		print(username, " ======> ", code)
+		user = User.objects.filter(username=username).first()
+		print(user.username, " ======> ", user.TwoFACode)
+		if user is None:
+			return Response({'error': 'user not found'}, status=status.HTTP_404_NOT_FOUND)
+		if user.TwoFACode == code and timezone.now() - user.TwoFA_sent_at <= timedelta(minutes=5):
+			refresh = RefreshTokens.objects.filter(user=user).first()
+			if refresh is None:
+				print('first case')
+				refresh_token = RefreshTokensSerializer(data={'user':user.id})
+				if refresh_token.is_valid():
+					print('second case')
+					refresh = refresh_token.save()
+					refresh.save()
+					token = refresh.get_access_token()
+					# refresh = refresh_token.save()
+			else:
+				refresh.save()
+				token = refresh.get_access_token()
+			# refresh.save()
+			response = Response({"access": token, "refresh" : refresh.token, "id": user.id}, status=status.HTTP_201_CREATED)
+			response.set_cookie(
+				key='access_token',
+				value=token,
+				httponly=True,
+				secure=False,
+				samesite='lax'
+			)
+			return response
+		return Response({'error':'invalide or expired code'}, status=status.HTTP_401_UNAUTHORIZED)
+
+
+class confirmEmail(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def get(self,request):
+		try:
+			user: User = request.user
+			if user.is_email_confirmed:
+				return Response({'error': 'email already confirmed.'}, status=status.HTTP_400_BAD_REQUEST)
+			current_site = get_current_site(request)
+			mail_subject = 'Email Confirmation'
+			token = email_confirmation_token.make_token(user)
+			uid = urlsafe_base64_encode(force_bytes(user.pk))
+			message = f"""Hi {user.username},
+			Thank you for registering. Please click the link below to confirm your email:
+						http://{current_site}/api/users/activate/{uid}/{token}/ Activate your account"""
+			send_mail(mail_subject, message, 'wepong10auth@gmail.com', [user.email])
+			return Response({'message': 'email confirmation sent successfully.'}, status=status.HTTP_200_OK)
+		except Exception as e:
+			return Response({'error' : 'invalide request'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class updateInfo(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def put(self, request):
+		user = request.user
+		serializer = UserSerializer(User.objects.get(id=user.id), data=request.data, partial=True)
+		if serializer.is_valid():
+			serializer.save()
+			return Response(serializer.data, status=status.HTTP_200_OK)
+		else:
+			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class deleteUser(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def delete(self, request):
+		user = request.user
+		try:
+			user.delete()
+		except:
+			return Response(status=status.HTTP_404_NOT_FOUND)
+		return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
+class changePassword(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def post(self,request):
+		user: User = request.user
+		password = request.data['password']
+		if user.check_password(hash_password(password)):
+			newPassword = request.data['newPassword']
+			newPasswordConfirmation = request.data['newPasswordConfirmation']
+			if newPassword == newPasswordConfirmation:
+				if not newPassword:
+					return Response({'error': 'new password is required'}, status=status.HTTP_400_BAD_REQUEST)
+				user.set_password(hash_password(newPassword))
+				return Response({'message': 'password changed successfully.'}, status=status.HTTP_200_OK)
+			return Response({'error': 'passwords do not match'}, status=status.HTTP_400_BAD_REQUEST)
+		return Response({'error': 'password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class ProfileById(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def get(self, request):
+		user_id = request.GET.get('friend')
+		if user_id is None:
+			return Response({'error': 'user_name is required'}, status=status.HTTP_400_BAD_REQUEST)
+		try:
+			user = User.objects.get(id=user_id)
+		except User.DoesNotExist:
+			return Response({'error': 'user not found'})
+		data = {
+			'user_name': user.username,
+			'avatar' : user.avatar,
+			'email' : user.email,
+		}
+		return Response(data, status=status.HTTP_200_OK)
+
+class userProfile(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def get(self, request):
+		user = request.user
+		# if not user:
+		# 	return Response({'error': 'user is required.'}, status=status.HTTP_400_BAD_REQUEST)
+		# user = User.objects.get(id=user.id)
+		if user is None:
+			return Response({'error': 'user not found.'}, status=status.HTTP_404_NOT_FOUND)
+		data = {
+			'username' : user.username,
+			'avatar' : user.avatar,
+			'email' : user.email,
+			'id' : user.id
+		}
+		return Response(data, status=status.HTTP_200_OK)
+
+
+class friendList(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def get(self, request):
+		user = request.user
+		if user is None:
+			return Response({'error': 'user not found.'}, status=status.HTTP_404_NOT_FOUND)
+		data = {
+			'friends' : user.friends,
+		}
+		return Response(data, status=status.HTTP_200_OK)
+
+
+class myRequestsList(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def get(self, request):
+		user = request.user
+		if user is None:
+			return Response({'error': 'user not found.'}, status=status.HTTP_404_NOT_FOUND)
+		data = {
+			'myRequests' : user.MyRequests,
+		}
+		return Response(data, status=status.HTTP_200_OK)
+
+
+class BlockedList(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def get(self, request):
+		user = request.user
+		if user is None:
+			return Response({'error': 'user not found.'}, status=status.HTTP_404_NOT_FOUND)
+		data = {
+			'blockedList' : user.Blocked,
+		}
+		return Response(data, status=status.HTTP_200_OK)
+
+
+class friendRequestList(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def get(self, request):
+		user = request.user
+		if user is None:
+			return Response({'error': 'user not found.'}, status=status.HTTP_404_NOT_FOUND)
+		data = {
+			'friendsRequests' : user.friendRequests,
+		}
+		return Response(data, status=status.HTTP_200_OK)
+
+
+class sendRequest(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def post(self, request):
+		try: 
+			sender = request.user
+			if sender is None:
+				return Response({'error': 'user not found.'}, status=status.HTTP_404_NOT_FOUND)
+			reciever_id = request.data['reciever_id']
+			if not reciever_id:
+				return Response({'error': 'Receiver id is required.'}, status=status.HTTP_400_BAD_REQUEST)
+			reciever = User.objects.get(id=reciever_id)
+			if sender.id == reciever_id:
+				return Response({'error': 'You cannot send a friend request to yourself.'}, status=status.HTTP_400_BAD_REQUEST)
+			sender.sendRequest(reciever_id)
+			reciever.addFriendRequest(sender.id)
+			return Response({'message': 'Friend request sent successfully'},status=status.HTTP_200_OK)
+		except User.DoesNotExist:
+			return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+		except Exception as e:
+			return Response({'error': 'already sent'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class AcceptRequest(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def post(self, request):
+		try:
+			reciever = request.user
+			if reciever is None:
+				return Response({'error': 'user not found.'}, status=status.HTTP_404_NOT_FOUND)
+			sender_id = request.data['sender_id']
+			if not sender_id:
+				return Response({'error': 'Sender id is required.'}, status=status.HTTP_400_BAD_REQUEST)
+			sender = User.objects.get(id=sender_id)
+			if sender_id == reciever.id:
+				return Response({'error': 'invalide request'}, status=status.HTTP_400_BAD_REQUEST)
+			sender.DeleteRequest(sender_id)
+			sender.addFriend(reciever.id)
+			reciever.DeleteFriendRequest(reciever.id)
+			reciever.addFriend(sender_id)
+			return Response({'message': 'Friend request accepted successfully'},status=status.HTTP_200_OK)
+		except User.DoesNotExist:
+			return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+		except Exception as e:
+			return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DenyRequest(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def delete(self, request):
+		try:
+			reciever = request.user
+			if reciever is None:
+				return Response({'error': 'user not found.'}, status=status.HTTP_404_NOT_FOUND)
+			sender_id = request.data['sender_id']
+			if not sender_id:
+				return Response({'error': 'Sender id is required.'}, status=status.HTTP_400_BAD_REQUEST)
+			sender = User.objects.get(id=sender_id)
+			if sender_id == reciever.id:
+				return Response({'error': 'invalide request'}, status=status.HTTP_400_BAD_REQUEST)
+			reciever.DeleteFriendRequest(sender_id)
+			sender.DeleteRequest(reciever.id)
+			return Response({'message': 'Friend request denyed successfully'},status=status.HTTP_204_NO_CONTENT)
+		except User.DoesNotExist:
+			return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+		except Exception as e:
+			return Response({'error': 'invalide request'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class DeleteRequest(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def delete(self, request):
+		try:
+			sender = request.user
+			if sender is None:
+				return Response({'error': 'user not found.'}, status=status.HTTP_404_NOT_FOUND)
+			reciever_id = request.data['reciever_id']
+			if not reciever_id:
+				return Response({'error': 'Receiver user_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
+			reciever = User.objects.get(id=reciever_id)
+			if sender.id == reciever_id:
+				return Response({'error': 'invalide request'}, status=status.HTTP_400_BAD_REQUEST)
+			reciever.DeleteFriendRequest(sender.id)
+			sender.DeleteRequest(reciever_id)
+			return Response({'message': 'Friend request deleted successfully'},status=status.HTTP_204_NO_CONTENT)
+		except User.DoesNotExist:
+			return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+		except Exception as e:
+			return Response({'error': 'invalide request'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class block(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def post(self,request):
+		try:
+			user: User = request.user
+			toBeBlocked = User.objects.get(id=request.data['toBeBlocked_id'])
+			if not toBeBlocked:
+					return Response({'error': 'toBeBlocked user_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
+			if user.id == toBeBlocked.id:
+				return Response({'error': 'you cannot block yourself'}, status=status.HTTP_400_BAD_REQUEST)
+			user.block(toBeBlocked.id)
+			user.DeleteFriend(toBeBlocked.id)
+			toBeBlocked.DeleteFriend(user)
+			return Response({'message': 'user blocked successfully'},status=status.HTTP_200_OK)
+		except User.DoesNotExist:
+			return Response({'error':'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+		except Exception as e:
+			return Response({'error': 'invalide request'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class unblock(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def delete(self,request):
+		try:
+			user: User = request.user
+			toBeUnblocked = User.objects.get(id=request.data['toBeUnblocked'])
+			user.unblock(toBeUnblocked)
+			return Response({'message': 'user unblocked successfully'},status=status.HTTP_204_NO_CONTENT)
+		except User.DoesNotExist:
+			return Response({'error': 'User not found.'},status=status.HTTP_404_NOT_FOUND)
+		except Exception as e:
+			return Response({'error':'invalide request.'},status=status.HTTP_400_BAD_REQUEST)
+		
+
+class PasswordResetRequestView(APIView):
+	def post(self, request):
+		print('befor ser call')
+		serializer = PasswordResetRequestSerializer(data= {'email' :request.data['email'], 'password': hash_password(request.data['password'])})
+		print('after ser call')
+		if serializer.is_valid():
+			resetPass = serializer.save()
+			resetPass.save()
+			return Response({'detail': 'Password reset link sent.'}, status=status.HTTP_200_OK)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+	
+from django.contrib.auth.tokens import default_token_generator
+	
+def PasswordResetConfirmView(request, uid, token):
+	try:
+		decoded_uid = force_str(urlsafe_base64_decode(uid))
+		user = User.objects.get(pk=decoded_uid)
+	except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+		user = None
+	if user is not None and default_token_generator.check_token(user, token):
+		resetPass = ResetPasswordModel.objects.filter(email=user.email).first()
+		user.set_password(password=resetPass.password)
+		resetPass.delete()
+		user.save()
+		send_mail(
+            'Password Reset',
+            f'Hi {user.username}!\nPassword Reset confirmed successfully, you can log in to WePong with your new password.',
+            'wepong10auth@gmail.com',
+            [user.email],
+            fail_silently=False,
+        )
+		message_text = "Password Reset successful"
+		message_text = urlencode({'message': str(message_text)})
+		return redirect(f'http://localhost:3000/login?{message_text}')
+	else:
+		send_mail(
+            'Password Reset',
+            f'Hi {user.username}!\nWe had a problem trying to reset your password, please try again later.',
+            'wepong10auth@gmail.com',
+            [user.email],
+            fail_silently=False,
+        )
+		message_text = "Problem accured while trying to confirm password reset\nplease try again later."
+		message_text = urlencode({'message': str(message_text)})
+		return redirect(f'http://localhost:3000/login?{message_text}')
+	
