@@ -166,6 +166,32 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'json': {
+            '()': 'pythonjsonlogger.jsonlogger.JsonFormatter',
+            'format': '%(asctime)s %(levelname)s %(name)s %(message)s',
+        },
+    },
+    'handlers': {
+        'logstash': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.SocketHandler',
+            'host': 'logstash',
+            'port': 5044,
+            'formatter': 'json',
+        },
+    },
+    'root': {
+        'handlers': ['logstash'],
+        'level': 'DEBUG',
+    },
+}
+
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
