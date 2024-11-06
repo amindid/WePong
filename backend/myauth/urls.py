@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import loginUser,setup_email_2fa,confirm_email_2fa,GoogleLogin,Login42,FacebookLogin,GoogleCallback,Callback42,FacebookCallback ,registerUser,ProfileById, deleteUser, updateInfo, sendRequest, AcceptRequest,DenyRequest, DeleteRequest, block, unblock, logoutUser, confirmEmail, userProfile, friendList, friendRequestList, myRequestsList, BlockedList, refreshAccessToken, changePassword, CheckAuthentication, PasswordResetRequestView
+from .views import UpdateWalletView,loginUser,setup_email_2fa,confirm_email_2fa,GoogleLogin,Login42,FacebookLogin,GoogleCallback,Callback42,FacebookCallback ,registerUser,ProfileById, deleteUser, updateInfo, sendRequest, AcceptRequest,DenyRequest, DeleteRequest, block, unblock, logoutUser, confirmEmail, userProfile, friendList, friendRequestList, myRequestsList, BlockedList, refreshAccessToken, changePassword, CheckAuthentication, PasswordResetRequestView
 from . import views
 urlpatterns = [
 	path('users/checkAuthentication/', CheckAuthentication.as_view(), name='CheckAuthentication'),
@@ -17,6 +17,7 @@ urlpatterns = [
 	path('users/friendRequestList/', friendRequestList.as_view(), name='friendRequestList'),
 	path('users/myRequestsList/', myRequestsList.as_view(), name='myRequestsList'),
 	path('users/BlockedList/', BlockedList.as_view(), name='BlockedList'),
+	path('users/UpdateWallet/', UpdateWalletView.as_view(), name='UpdateWallet'),
 	# path('users/resetPassword/', resetPassword.as_view(), name='resetPassword'),
 	path('users/changePassword/', changePassword.as_view(), name='changePassword'),
 	path('friends/sendRequest/', sendRequest.as_view(), name='sendRequest'),

@@ -1,8 +1,10 @@
-
+import { showAlert } from './message-box.js';
 
 export class Card extends HTMLElement {
     constructor() {
         super();
+
+		
 		this.name = "";
 		this.imgSrc = "";
 		this.price = "";
@@ -47,6 +49,10 @@ export class Card extends HTMLElement {
 	// min-width: 150px;
 	render()
 	{
+		const message = document.createElement('div');
+		message.id = 'alert-box';
+		message.className = 'alert-box';
+		this.appendChild(message);
 		this.innerHTML = `
 		<style>
 			.card {
@@ -89,6 +95,11 @@ export class Card extends HTMLElement {
 				color: white;
 				front-size:100%;
 			}
+			.style_button:hover {
+				transition: all 0.8 ease-in-out;
+				transform: scale(1.2);
+			}
+			
 			.color1
 			{
 				
@@ -119,10 +130,11 @@ export class Card extends HTMLElement {
 				<h3 class="color price">${this.price}</h3>
 			</div>
 			<div class="h_class ">
-				<button class="style_button ${this.color22}">buy</button>
+				<button class="style_button ${this.color22}" id="button_price">buy</button>
 			</div>
 		</div>
 	`;
+
 	}
 }
 customElements.define("card-element", Card);

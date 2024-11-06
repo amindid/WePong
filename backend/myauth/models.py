@@ -26,6 +26,7 @@ class User (AbstractUser):
 	id = models.AutoField(primary_key=True)
 	email = models.EmailField(unique=True)
 	is_email_confirmed = models.BooleanField(default=False)
+	wallet = models.IntegerField(default=400)
 	username = models.CharField(max_length=255, unique=True)
 	password = models.CharField(max_length=255, null=True)
 	avatar = models.CharField(max_length=255, blank=True, null=True, default="../images/cat.png")

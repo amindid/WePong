@@ -37,6 +37,7 @@ AUTH_USER_MODEL = 'myauth.User'
 
 
 
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
