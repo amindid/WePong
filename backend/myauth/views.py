@@ -624,8 +624,13 @@ class friendList(APIView):
 		user = request.user
 		if user is None:
 			return Response({'error': 'user not found.'}, status=status.HTTP_404_NOT_FOUND)
+		friend_list = {}
+		for friend in user.friends:
+			user = User.objects.get(id=friend.id)
+			friend_list[user.id] = [user.username, user.avatar]
+
 		data = {
-			'friends' : user.friends,
+			'friends' : friend_list,
 		}
 		return Response(data, status=status.HTTP_200_OK)
 

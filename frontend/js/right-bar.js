@@ -29,55 +29,55 @@ class RightBar {
 		</div>
 		<!-- friends will be here -->
 	</div>`;
-	const setOnlineFriends = async () => {
-		try {
-			const response = await fetch('http://localhost:8000/api/users/friendList/', {
-				method: 'GET',
-				credentials: 'include',
-				headers: {
-					'Content-Type': 'application/json',
-				}
-			});
-			const data = await response.json();
-			if (response.ok) {
-				const friends = data.friends;
-				const upBar = bar.querySelector("#up-bar");
-				for (const friend of friends) {
-					let friend_avatar = '';
-					let friend_name = '';
-					const friendDiv = document.createElement('div');
-					friendDiv.className = 'online-friends';
-					const friendInfoResponse = await fetch (`http://localhost:8000/api/users/ProfileById/?friend=${friend}`, {
-						method: 'GET',
-						credentials: 'include',
-						headers: {
-							'Content-Type': 'application/json',
-						},
-					});
-					const friendInfo = await friendInfoResponse.json();
-					if (friendInfoResponse.ok) {
-						friend_avatar = friendInfo.avatar;
-						friend_name = friendInfo.user_name;
-					}
-					else {
-						console.log('failed to load friend info: ', friendInfoResponse.error);
-						showAlert(friendInfoResponse.error || 'failed to load friend info');
-					}
-					friendDiv.innerHTML = `<img class="profile-image" src="${friend_avatar}" alt="${friend_name}">
-					<div class="statu-online"></div>`;
-					upBar.appendChild(friendDiv);
-				}
-			}
-			else {
-				showAlert(data.error || 'failed to fetsh user friends list');
-				console.log('failed to fetsh user friends list: ',data.error);
-			}
-		} catch (error) {
-			showAlert(error || 'error accured: ');
-			console.log('error accured: ',error);
-		}
-	};
-	setOnlineFriends();
+	// const setOnlineFriends = async () => {
+	// 	try {
+	// 		const response = await fetch('http://localhost:8000/api/users/friendList/', {
+	// 			method: 'GET',
+	// 			credentials: 'include',
+	// 			headers: {
+	// 				'Content-Type': 'application/json',
+	// 			}
+	// 		});
+	// 		const data = await response.json();
+	// 		if (response.ok) {
+	// 			const friends = data.friends;
+	// 			const upBar = bar.querySelector("#up-bar");
+	// 			for (const friend of friends) {
+	// 				let friend_avatar = '';
+	// 				let friend_name = '';
+	// 				const friendDiv = document.createElement('div');
+	// 				friendDiv.className = 'online-friends';
+	// 				const friendInfoResponse = await fetch (`http://localhost:8000/api/users/ProfileById/?friend=${friend}`, {
+	// 					method: 'GET',
+	// 					credentials: 'include',
+	// 					headers: {
+	// 						'Content-Type': 'application/json',
+	// 					},
+	// 				});
+	// 				const friendInfo = await friendInfoResponse.json();
+	// 				if (friendInfoResponse.ok) {
+	// 					friend_avatar = friendInfo.avatar;
+	// 					friend_name = friendInfo.user_name;
+	// 				}
+	// 				else {
+	// 					console.log('failed to load friend info: ', friendInfoResponse.error);
+	// 					showAlert(friendInfoResponse.error || 'failed to load friend info');
+	// 				}
+	// 				friendDiv.innerHTML = `<img class="profile-image" src="${friend_avatar}" alt="${friend_name}">
+	// 				<div class="statu-online"></div>`;
+	// 				upBar.appendChild(friendDiv);
+	// 			}
+	// 		}
+	// 		else {
+	// 			showAlert(data.error || 'failed to fetsh user friends list');
+	// 			console.log('failed to fetsh user friends list: ',data.error);
+	// 		}
+	// 	} catch (error) {
+	// 		showAlert(error || 'error accured: ');
+	// 		console.log('error accured: ',error);
+	// 	}
+	// };
+	// setOnlineFriends();
 	content.appendChild(bar);
 	return content;
 	}
