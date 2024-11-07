@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 import certifi
+from decouple import config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -217,7 +218,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ALL_ORIGINS  = True
 CORS_ALLOW_CREDENTIALS = True
 
-
+SOCIAL_AUTH_FACEBOOK_OAUTH2_KEY = config('SOCIAL_AUTH_FACEBOOK_OAUTH2_KEY')
+SOCIAL_AUTH_FACEBOOK_OAUTH2_SECRET = config('SOCIAL_AUTH_FACEBOOK_OAUTH2_SECRET')
+SOCIAL_AUTH_42_OAUTH2_KEY = config('SOCIAL_AUTH_42_OAUTH2_KEY')
+SOCIAL_AUTH_42_OAUTH2_SECRET = config('SOCIAL_AUTH_42_OAUTH2_SECRET')
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True

@@ -8,6 +8,8 @@ RUN /opt/venv/bin/pip install --upgrade pip
 
 COPY requirements.txt .
 
+COPY .env /backend/.env
+
 RUN /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
 
 COPY ./backend .
