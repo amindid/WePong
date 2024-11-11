@@ -32,6 +32,10 @@ from django.utils import timezone
 from datetime import timedelta
 
 
+import logging
+
+logger = logging.getLogger('django')
+
 class CookieJWTAuthentication(BaseAuthentication):
 	def authenticate(self, request):
 		access_token = request.COOKIES.get('access_token')
@@ -454,6 +458,7 @@ class registerUser(APIView):
 						secure=False,
 						samesite='lax'
 					)
+					logger.info('User register event', extra={'event': 'user_register'})
 					return response
 				else:
 					return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
