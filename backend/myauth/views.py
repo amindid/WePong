@@ -32,9 +32,26 @@ from django.utils import timezone
 from datetime import timedelta
 
 
-import logging
+import json
 
-logger = logging.getLogger('django')
+def log_to_elasticsearch(message, event_type="generic"):
+    url = "http://localhost:9200/pingpong_logs-000001/_doc/"
+    headers = {
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "@timestamp": datetime.utcnow().isoformat(),
+        "message": message,
+        "event": event_type
+    }
+    try:
+        response = requests.post(url, headers=headers, data=json.dumps(payload), auth=('elastic', 'aouchaadtest'))
+        if response.status_code == 201:
+            print("Log event sent successfully!")
+        else:
+            print(f"Failed to send log event: {response.status_code} - {response.text}")
+    except Exception as e:
+        print(f"Error sending log to Elasticsearch: {e}")
 
 class CookieJWTAuthentication(BaseAuthentication):
 	def authenticate(self, request):
@@ -433,6 +450,7 @@ class logoutUser(APIView):
 
 class registerUser(APIView):
 	def post(self, request):
+		print('(((((((((((((((((((((((((((((((((((((((((((())))))))))))))))))))))))))))))))))))))))))))')
 		serializer = UserSerializer(data=request.data)
 		if serializer.is_valid():
 			if serializer.validated_data['password'] == request.data['passwordConfirmation']:
@@ -458,7 +476,9 @@ class registerUser(APIView):
 						secure=False,
 						samesite='lax'
 					)
-					logger.info('User register event', extra={'event': 'user_register'})
+					print('befor logs call')
+					log_to_elasticsearch("User accessed the view", event_type="login")
+					print('after logs call')
 					return response
 				else:
 					return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

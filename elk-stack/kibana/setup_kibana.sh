@@ -17,3 +17,7 @@ curl -u elastic:aouchaadtest -X POST "http://localhost:5601/api/kibana/settings/
 
 
 wait
+
+
+
+curl -u elastic:aouchaadtest -X POST "http://localhost:9200/pingpong_logs-000001/_doc/" -H "Content-Type: application/json" -d '{"@timestamp": "2024-11-12T00:00:00","message": "initial log event"}'

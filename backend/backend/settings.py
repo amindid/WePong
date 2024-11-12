@@ -113,32 +113,6 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
 ]
 
-import logging.config
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'logstash': {
-            'level': 'INFO',
-            'class': 'logstash.TCPLogstashHandler',
-            'host': 'localhost',  # Replace with Logstash IP if not local
-            'port': 5000,         # Port defined in your Logstash config
-            'version': 1,
-            'message_type': 'django',  # Define a type to filter logs
-            'fqdn': False,
-            'tags': ['django'],
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['logstash'],
-            'level': 'INFO',
-            'propagate': True,
-        },
-    },
-}
-
 
 CORS_ALLOW_ALL_ORIGINS = True
 
