@@ -31,7 +31,7 @@
 	background-color: rgba(80, 0, 93, 1);
 	border-top-right-radius: 15px;
 	border-top-left-radius: 15px;
-
+	min-height: 800px;
 }
 
 .img_
@@ -532,6 +532,10 @@
 }
 
 @media (max-width: 1200px) {
+	.settings1
+	{
+		min-height: 0px;
+	}
 	#plyername , #print-account-details , .display_change_username 
 	{
 		font-size: 50%;

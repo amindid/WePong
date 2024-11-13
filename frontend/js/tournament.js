@@ -8,23 +8,7 @@ class Tournament
 
 	constructor()
 	{
-		// this.content.querySelector('#create').addEventListener('click', to_create);
-		// this.content.querySelector('#join').addEventListener('click', to_join);
 
-		// function  to_create() {
-		// 	const bodyContent = document.querySelector("body-component");
-		// 	bodyContent.innerHTML = "";
-		// 	console.log("call to create");
-		// 	// const create_tournament = new CreateTournament;
-		// 	// bodyContent.appendChild(create_tournament);
-		// }
-		// function  to_join() {
-		// 	const bodyContent = document.querySelector("body-component");
-		// 	bodyContent.innerHTML = "";
-
-		// 	const list_tournament = new ListTournament;
-		// 	bodyContent.appendChild(list_tournament);
-		// }
 	}
 	render()
 	{
@@ -122,16 +106,9 @@ class Tournament
 		});
 		return page;
 	}
-
-	// connectedCallback()
-	// {
-
-	// }
 }
 export function rendertournamant() {
 	console.log("render tournament");
 	const page = new Tournament();
 	return page.render();
 }
-
-// customElements.define("tournament-element", Tournament);

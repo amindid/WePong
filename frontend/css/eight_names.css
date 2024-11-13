@@ -1,0 +1,73 @@
+.eightnames
+{
+	width: 90%;
+	height: 95%;
+	background: rgba(111, 0, 139, 0.38);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	border-radius: 20px;
+}
+
+.eightnames_
+{
+	width: 100%;
+	height: 10%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.eightnames_ > h1
+{
+	background: linear-gradient(90.03deg, #FFFFFF -123.25%, #FFFFFF -118.12%, #FFFFFF 41.28%, #FF00E6 94.78%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+	font-family: Bungee_Inline;
+	font-size: 300%;
+}
+
+.eightblocks
+{
+	width: 100%;
+	height: 90%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+}
+
+.eightblocks1
+{
+	width: 100%;
+	height: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: row;
+	gap: 5%;
+}
+
+.local_player8
+{
+	width: 20%;
+	height: 70%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 20px;
+	background-color: rgb(213, 231, 231);
+	flex-direction: column;
+}
+
+.to_play_tou8
+{
+	width: 100%;
+	height: 10%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 25%;
+}
