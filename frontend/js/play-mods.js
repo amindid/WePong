@@ -29,13 +29,18 @@ class PlayMods {
 	<div class="mods">
 		<img class="mod"  id="tournement_id" src="../images/tournement-icon.svg" alt="">
 		<img  class="mod" src="../images/local-icon.svg" alt="">
-		<img  class="mod" src="../images/online-icon.svg" alt="">
+		<img  class="mod" id="gameonline_id" src="../images/online-icon.svg" alt="">
 	</div>`;
 	content.appendChild(play_mods);
 	const tournament = content.querySelector("#tournement_id");
 	tournament.addEventListener('click', event => {
 		event.preventDefault();
 		navigate('/tournement');
+	});
+	const game_online = content.querySelector("#gameonline_id");
+	game_online.addEventListener('click', event => {
+		event.preventDefault();
+		navigate('/game-online');
 	});
 	return content;
 	}

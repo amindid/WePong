@@ -53,7 +53,7 @@ class SettingComponent
 									<button class="logout_button" id="logoutButton">LOG OUT</button>
 								</div>
 								<div class="delete">
-									<button class="logout_button">DELETE ACCOUNT</button>
+									<button class="logout_button" id="deleteButton">DELETE ACCOUNT</button>
 								</div>
 							</div>
 						</div>
@@ -71,18 +71,18 @@ class SettingComponent
 					</div>
 					<div class="password__ ">
 						<h1 class="h1_password"> Current password </h1>
-						<input class="input_password" > </input>
+						<input  class="input_password" id="Current_password"> </input>
 					</div>
 					<div class="password__">
 						<h1 class="h1_password"> New password </h1>
-						<input class="input_password" > </input>
+						<input  class="input_password" id="newPassword"> </input>
 					</div>
 					<div class="password__">
 						<h1 class="h1_password"> Confirm password </h1>
-						<input class="input_password" > </input>
+						<input  class="input_password" id="confirmNewPassword"> </input>
 					</div>
 					<div class="password__">
-						<button class="button_change_password">CHANGE PASSWORD</button>
+						<button class="button_change_password" id="buttonchangepassword">CHANGE PASSWORD</button>
 					</div>
 				</div>
 				<div class="twofactory">
@@ -241,6 +241,32 @@ class SettingComponent
 			});
 
 
+			this.content.querySelector('#deleteButton').addEventListener('click', function() {
+				deleteUser();
+			});
+			function deleteUser() {
+			    fetch('http://localhost:8000/api/users/delete', {
+			        method: 'DELETE',  // Change to DELETE
+			        credentials: 'include',
+			        headers: {
+			            'Content-Type': 'application/json',
+			        },
+			    })
+			    .then(response => {
+			        if (response.status === 204) {  // Change to 204
+			            showAlert('User deleted successfully');
+						navigate("/");
+			        } else {
+			            throw new Error('User deletion failed');
+			        }
+			    })
+			    .catch(error => {
+			        console.error('Error:', error);
+			        alert('Error deleting user');
+			    });
+			}
+
+
 			this.content.querySelector('#logoutButton').addEventListener('click', function() {
 				logoutUser();
 			});
@@ -272,22 +298,39 @@ class SettingComponent
 					alert('Error logging out');
 				});
 			}
+			let newcontent = this.content;
+			this.content.querySelector('#buttonchangepassword').addEventListener('click', function() {
+				changePassword();
+			});
+			function changePassword() {
+				const currentPassword = newcontent.querySelector('#Current_password').value;
+				const newPassword = newcontent.querySelector('#newPassword').value;
+				const confirmNewPassword = newcontent.querySelector('#confirmNewPassword').value;
 			
-			// const switc2 = this.content.querySelector("#switch_button2");
-			// if (switc2 !== null)
-			// {
-			// 	console.log("in condition");
-			// 	switc2.addEventListener('click', event => {
-			// 		console.log("in condition");
-			// 		event.preventDefault();
-			// 		this.content.innerHTML = this.content1.innerHTML;
-			// 	});
-			// }
-				
-				// if(this.content.innerHTML == this.content2.innerHTML)
-				// {
-				// }
-			// }
+				fetch('http://localhost:8000/api/users/changePassword/', {
+					method: 'POST',
+					credentials: 'include',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						password: currentPassword,
+						newPassword: newPassword,
+						newPasswordConfirmation: confirmNewPassword
+					})
+				})
+				.then(response => response.json())
+				.then(data => {
+					if (data.message) {
+						showAlert(data.message)
+					} else if (data.error) {
+						showAlert(data.message)
+					}
+				})
+				.catch(error => {
+					console.error('Error:', error);
+				});
+			}
 
 			return page;
 	}

@@ -2,6 +2,8 @@
 import { renderRightBar } from './right-bar.js';
 import { renderLeftBar } from './left-bar.js';
 import { navigate } from './router.js';
+import { sharedData } from './sharedDataTourn.js';
+import { showAlert } from './message-box.js';
 
 
 class CreateTournament
@@ -36,6 +38,13 @@ class CreateTournament
 	{
 		const page = document.createDocumentFragment();
 		page.appendChild(renderLeftBar());
+
+		const message = document.createElement('div');
+		message.id = 'alert-box';
+		message.className = 'alert-box';
+		page.appendChild(message);
+
+
 		this.content.className = 'create-tournament';
 		this.content.innerHTML = `
 			<div id="CREATE">
@@ -129,26 +138,36 @@ class CreateTournament
 		body.style.alignItems = 'center';
 		var input = this.content.querySelector("#input_name_tournment");
 		var h1 = this.content.querySelector("#display_name_tournment h1");
-	
+		let tmp = 0;
 		input.addEventListener("input", function() {
 			if (input.value.trim() === "")
 			{
 				h1.textContent = "Tournament Name";
 			}
 			else
+			{
 				h1.textContent = input.value;
+				tmp = 1;
+				localStorage.setItem('tournamentName', input.value.trim());
+			}
 		});
 		const four_players = this.content.querySelector("#four_players");
 		four_players.addEventListener('click', event =>
 		{
 			event.preventDefault();
-			navigate('/tournement/Fourplayers');
+			if(tmp === 1)
+				navigate('/tournement/fournames');
+			else
+				showAlert("Error : tournemant name");
 		});
 		const eight_players = this.content.querySelector("#eight_players");
 		eight_players.addEventListener('click', event =>
 		{
 			event.preventDefault();
-			navigate('/tournement/Eightplayers');
+			if(tmp === 1)
+				navigate('/tournement/eightnames');
+			else
+				showAlert("Error : tournemant name");
 		});
 		return page;
 	}
