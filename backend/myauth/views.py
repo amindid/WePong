@@ -199,21 +199,21 @@ class Callback42(APIView):
     	        'grant_type': 'authorization_code',
 		}
 		token_response = requests.post(token_url, data=token_data)
+		print(token_response)
 		token_info = token_response.json()
 		access_token = token_info.get('access_token')
-    	    # Use the access token to get user info
 		user_info_url = "https://api.intra.42.fr/v2/me"
 		user_info_response = requests.get(user_info_url, headers={
     	        'Authorization': f"Bearer {access_token}"
 		})
 		user_info = user_info_response.json()
-
 		user_data = {
 			'email': user_info.get('email'),
 			'username' : user_info.get('login'),
 			'avatar': user_info.get('image', {}).get('link'),
 		}
-		user = User.objects.filter(username=user_data['username'], email=user_data['email']).first()
+		
+		user = User.objects.filter(email=user_data['email']).first()
 		if not user is None:
 			refresh = RefreshTokens.objects.filter(user=user).first()
 			token = refresh.get_access_token()
@@ -239,19 +239,19 @@ class Callback42(APIView):
 					error = 'somthing went wrong'
 				error_text = urlencode({'message': str(error)})
 				return redirect(f'http://localhost:3000/login?{error_text}')
-		if user.isTwoFA:
-			code = str(randint(100000, 999999))
-			user.TwoFACode = code
-			user.TwoFA_sent_at = timezone.now()
-			user.save()
-			send_mail(
-            	'Your 2FA code',
-            	f'Hi {user.username}!\nYour verification code is {code}.',
-            	'wepong10auth@gmail.com',
-            	[user.email],
-            	fail_silently=False,
-        	)
-			return redirect('http://localhost:3000/2fa_confirmation')
+		# if user.isTwoFA:
+		# 	code = str(randint(100000, 999999))
+		# 	user.TwoFACode = code
+		# 	user.TwoFA_sent_at = timezone.now()
+		# 	user.save()
+		# 	send_mail(
+        #     	'Your 2FA code',
+        #     	f'Hi {user.username}!\nYour verification code is {code}.',
+        #     	'wepong10auth@gmail.com',
+        #     	[user.email],
+        #     	fail_silently=False,
+        # 	)
+		# 	return redirect('http://localhost:3000/2fa_confirmation')
 		response = redirect('http://localhost:3000/dashboard')
 		response.set_cookie (
 			key='access_token',
@@ -450,7 +450,6 @@ class logoutUser(APIView):
 
 class registerUser(APIView):
 	def post(self, request):
-		print('(((((((((((((((((((((((((((((((((((((((((((())))))))))))))))))))))))))))))))))))))))))))')
 		serializer = UserSerializer(data=request.data)
 		if serializer.is_valid():
 			if serializer.validated_data['password'] == request.data['passwordConfirmation']:
@@ -476,9 +475,9 @@ class registerUser(APIView):
 						secure=False,
 						samesite='lax'
 					)
-					print('befor logs call')
-					log_to_elasticsearch("User accessed the view", event_type="login")
-					print('after logs call')
+					print(datetime.utcnow().isoformat())
+					log_to_elasticsearch(f"new user registred named {user.username}", event_type="regitration")
+					print('after log')
 					return response
 				else:
 					return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
