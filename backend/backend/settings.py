@@ -103,6 +103,13 @@ SIMPLE_JWT = {
 }
 
 
+SOCIAL_AUTH_FACEBOOK_OAUTH2_KEY = '1692733098176655'
+SOCIAL_AUTH_FACEBOOK_OAUTH2_SECRET = 'af3a56257961d61f7c91f2a7d4cef35f'
+SOCIAL_AUTH_42_OAUTH2_KEY = 'u-s4t2ud-7072e30b5942eb2bbb20759e72db4dfd8d2c5fd81dd31c01236af910fe4ba3e1'
+SOCIAL_AUTH_42_OAUTH2_SECRET = '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'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '782054639074-46oipgtlo1li64qdse5kc4u71vp9n1kj.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
