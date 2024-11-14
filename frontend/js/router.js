@@ -23,6 +23,7 @@ import { renderFournames } from './four_names.js';
 import { rendertestmatch } from './test_match.js';
 import { renderEightnames } from './eight_names.js';
 import { renderLocalGame } from './local-game.js';
+import { renderGamePlay } from './game-play.js';
 
 // export function router() {
 //     const routes = {
@@ -161,6 +162,7 @@ export { renderFournames } from './four_names.js';
 export { rendertestmatch } from './test_match.js';
 export { renderEightnames } from './eight_names.js';
 export { renderLocalGame } from './local-game.js';
+export { renderGamePlay } from './game-play.js';
 
 function renderPage(page) {
     document.body.innerHTML = '';
@@ -228,6 +230,7 @@ async function loadPage(route) {
 							'/game-online' : rendergameonline,
 							'/tournement/test_match' : rendertestmatch ,
                             '/local-game' : renderLocalGame,
+                            '/game-play' : renderGamePlay 
 						};
     let isAuthenticated = false;
     try {

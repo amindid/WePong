@@ -291,7 +291,7 @@ class localGame {
             if (validateSelections()) {
                 showNotification('Game is starting...', '/images/ping-pong.png');
                 setTimeout(() => {
-                    navigate('/game');
+                    navigate('/game-play');
                 }, 3000);
             }
         });
