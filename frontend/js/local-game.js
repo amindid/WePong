@@ -289,7 +289,7 @@ class localGame {
         const playButton = this.content.querySelector('.play-button');
         playButton.addEventListener('click', () => {
             if (validateSelections()) {
-                showNotification('Game is starting...', 'images/notification-icon.svg');
+                showNotification('Game is starting...', '/images/ping-pong.png');
                 setTimeout(() => {
                     navigate('/game');
                 }, 3000);
