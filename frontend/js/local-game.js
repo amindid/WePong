@@ -295,6 +295,8 @@ class localGame {
                 }, 3000);
             }
         });
+
+        
     
         const validateSelections = () => {
 

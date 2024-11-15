@@ -211,6 +211,7 @@ async function ask_refreshing_token() {
 
 async function loadPage(route) {
     const startRoutes = {   '/': renderHomePage,
+                            'local-game': renderLocalGame,
                             '/login': renderLoginPage,
                             '/register': renderRegistrationPage,
                             '/password_reset': renderResetPasswordPage,
