@@ -198,7 +198,6 @@ class gamePlay {
                             <button class="exit-btn">EXIT</button>
                         </div>
                         <div class="Replay">
-                            
                             <button class="replay-btn">REPLAY</button>
                         </div>
                     </div>

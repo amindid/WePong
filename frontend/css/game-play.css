@@ -286,6 +286,13 @@
     /* height: 50px; */
 }
 
+.win-screen .player-name {
+    font-size: 2rem;
+    font-family: 'Bungee';
+    margin-bottom: 20px;
+    border: none;
+    background: none;
+}
 .win-screen .score-players {
     display: flex;
     justify-content: space-between;
@@ -295,7 +302,7 @@
     /* margin: 20px 0; */
     margin-bottom: 50px;
     gap: 50px;
-    font-family: 'interBold';
+    font-family: 'Bungee';
 }
 
 .win-screen .rewards {
@@ -351,3 +358,70 @@
     color: white;
     width: 180px;
 }
+
+
+/* Small devices (phones, 600px and below) */
+@media only screen and (max-width: 600px) {
+
+    .score {
+       display: none
+    }
+
+    .player1-container, .player2-container {
+        display: none
+
+    }
+
+    .rank-div-1, .rank-div-2 {
+        display: none;
+    }
+
+    .time-block {
+        margin: 10px 0;
+    }
+
+    canvas {
+        max-width: 100%;
+    }
+
+    #toggleBallMovement{
+        font-size: 10px;
+
+    }
+    .win-screen {
+        /* padding: 10px; */
+        display: flex ;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 80%;
+        height: 80%;
+    }
+
+    .win-screen .player-name {
+        font-size: 20px;
+    }
+    .win-screen h1 {
+        font-size: 50px;
+        font-family: 'Bungee';
+    }
+
+    .win-screen .stars img {
+        display: none;
+    }
+
+    .win-screen .score-players {
+        font-size: 50px;
+        font-family: 'Bungee';
+    }
+
+    .win-screen .rewards {
+        display: none;
+    }
+    
+    .win-screen .buttons {
+        gap: 1.5rem;
+        flex-direction: column;
+    }
+}
+

@@ -25,7 +25,7 @@ class localGame {
                                         <img id="rank-pic" src="images/ranks/diamond.svg" alt="rank1" class="rank-pic">
                                     </div>
                                     <div class="player-name">
-                                        <h1 id="player-name">emohamedd</h1>
+                                        <h1 id="player-name">PLAYER1</h1>
                                     </div>
                                 </div>
                             </div>
@@ -110,7 +110,7 @@ class localGame {
                             <div class="player-info">
                                 <div class="player-profile">
                                     <div class="player-level">
-                                        <span id="level-text">10</span>
+                                        <span id="level-text">1337</span>
                                     </div>
                                     <div class="player-picture">
                                         <img id="player-pic" src="images/player2.png" alt="player1" class="player-pic">
@@ -119,7 +119,7 @@ class localGame {
                                         <img id="rank-pic" src="images/ranks/diamond.svg" alt="rank1" class="rank-pic">
                                     </div>
                                     <div class="player-name">
-                                        <h1 id="player-name">Anouar</h1>
+                                        <h1 id="player-name">PLAYER2</h1>
                                     </div>
                                 </div>
                             </div>
