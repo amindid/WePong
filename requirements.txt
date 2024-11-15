@@ -51,3 +51,4 @@ zope.lifecycleevent==5.0
 zope.proxy==6.1
 python-json-logger
 python-decouple
+python-logstash

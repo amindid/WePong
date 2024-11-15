@@ -5,17 +5,22 @@ class Toper {
 		const toper = document.createElement('div');
 		toper.className = 'secondere';
 		toper.innerHTML = `
-			<div class="div3">
-				<svg class="info-sound-icons" width="100%" height="100%" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-					<path d="M37.5 19C37.5 29.2173 29.2173 37.5 19 37.5C8.78273 37.5 0.5 29.2173 0.5 19C0.5 8.78273 8.78273 0.5 19 0.5C29.2173 0.5 37.5 8.78273 37.5 19Z" stroke="white"/>
-					<path d="M24.7466 22.9888C24.2414 23.393 23.4836 23.3425 23.0542 22.812C22.6247 22.2815 22.7258 21.5237 23.2563 21.0943C23.9383 20.5386 24.3677 19.6797 24.3677 18.7451C24.3677 17.7347 23.8878 16.8505 23.13 16.2948C22.65 15.9412 22.5742 15.2339 22.9531 14.7792L23.0542 14.6782C23.4583 14.1982 24.2162 14.0972 24.6961 14.4761C25.9591 15.4612 26.7675 17.0274 26.7675 18.7451C26.7675 20.4628 25.9844 21.9784 24.7466 22.9888Z" fill="white"/>
-					<path d="M27.5005 26.3737C26.9953 26.7779 26.2627 26.6769 25.8333 26.1969C25.4291 25.6917 25.4796 24.9339 25.9848 24.5297C27.652 23.1404 28.7382 21.069 28.7382 18.7451C28.7382 16.4211 27.652 14.3245 25.9848 12.9604C25.4796 12.5563 25.4291 11.7985 25.8333 11.2933C26.2375 10.788 26.9953 10.687 27.5005 11.0912C29.7234 12.8847 31.1632 15.6381 31.1632 18.7198C31.138 21.8269 29.7234 24.5802 27.5005 26.3737Z" fill="white"/>
-					<path d="M17.6992 28.2177L11.561 23.494H8.55497C7.77189 23.494 7.14038 22.8625 7.14038 22.0794L7.14038 15.4106C7.14038 14.6276 7.77189 13.9961 8.55497 13.9961L11.561 13.9961L17.7245 9.27236C18.8107 8.43876 20.3516 9.19658 20.3516 10.5859L20.3516 26.9294C20.3516 28.2682 18.7854 29.0513 17.6992 28.2177Z" fill="white"/>
-				</svg>
-				<svg class="info-sound-icons" width="100%" height="100%" viewBox="0 0 39 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-					<path d="M38.0256 19C38.0256 29.2173 29.7429 37.5 19.5256 37.5C9.30837 37.5 1.02563 29.2173 1.02563 19C1.02563 8.78273 9.30837 0.5 19.5256 0.5C29.7429 0.5 38.0256 8.78273 38.0256 19Z" stroke="white"/>
-					<path fill-rule="evenodd" clip-rule="evenodd" d="M20.1615 13.009C22.1333 13.009 23.7317 11.4106 23.7317 9.43881C23.7317 7.46707 22.1333 5.86865 20.1615 5.86865C18.1898 5.86865 16.5914 7.46707 16.5914 9.43881C16.5914 11.4106 18.1898 13.009 20.1615 13.009ZM17.5913 14.7941C17.039 14.7941 16.5913 15.2418 16.5913 15.7941L16.5913 29.8598C16.5913 30.4121 17.039 30.8598 17.5913 30.8598H22.7316C23.2839 30.8598 23.7316 30.4121 23.7316 29.8598L23.7316 15.7941C23.7316 15.2418 23.2839 14.7941 22.7316 14.7941L17.5913 14.7941Z" fill="white"/>
-				</svg>
+			<div class="div3" id='div33'>
+				<button type="button" class='searchButton' id='searchButton'>
+					<svg width="100%" height="100%" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<mask id="mask0_2056_1608" style="mask-type:alpha" maskUnits="userSpaceOnUse" x="0" y="0" width="24" height="24">
+					<rect width="24" height="24" fill="#D9D9D9"/>
+					</mask>
+					<g mask="url(#mask0_2056_1608)">
+					<path d="M9.5 16C7.68333 16 6.14583 15.3708 4.8875 14.1125C3.62917 12.8542 3 11.3167 3 9.5C3 7.68333 3.62917 6.14583 4.8875 4.8875C6.14583 3.62917 7.68333 3 9.5 3C11.3167 3 12.8542 3.62917 14.1125 4.8875C15.3708 6.14583 16 7.68333 16 9.5C16 10.2333 15.8833 10.925 15.65 11.575C15.4167 12.225 15.1 12.8 14.7 13.3L20.3 18.9C20.4833 19.0833 20.575 19.3167 20.575 19.6C20.575 19.8833 20.4833 20.1167 20.3 20.3C20.1167 20.4833 19.8833 20.575 19.6 20.575C19.3167 20.575 19.0833 20.4833 18.9 20.3L13.3 14.7C12.8 15.1 12.225 15.4167 11.575 15.65C10.925 15.8833 10.2333 16 9.5 16ZM9.5 14C10.75 14 11.8125 13.5625 12.6875 12.6875C13.5625 11.8125 14 10.75 14 9.5C14 8.25 13.5625 7.1875 12.6875 6.3125C11.8125 5.4375 10.75 5 9.5 5C8.25 5 7.1875 5.4375 6.3125 6.3125C5.4375 7.1875 5 8.25 5 9.5C5 10.75 5.4375 11.8125 6.3125 12.6875C7.1875 13.5625 8.25 14 9.5 14Z" fill="#7B9999"/>
+					</g>
+					</svg>
+				</button>
+    			<input type="text" placeholder="Search" class='searchInput' id='searchInput' required>
+				<div id='searchResult' class='searchResult'>
+					<img id='searchImage'>
+					<span class='searchUsername' id='searchUsername'>no result</span>
+				</div>
 			</div>
 			<div class="div4">
 				<div class="wallet">
@@ -37,6 +42,62 @@ class Toper {
 				</svg>
 			</div>`;
 			content.appendChild(toper);
+			const div3 = content.querySelector('#div33');
+			const searchButton = content.querySelector("#searchButton");
+			const searchResult = content.querySelector('#searchResult');
+			div3.addEventListener('mouseover', (event) => {
+				searchResult.classList.add('show');
+			});
+			div3.addEventListener('mouseout', (event) => {
+				searchResult.classList.remove('show');
+			});
+			searchButton.addEventListener('click', async function (event) {
+				// if (!searchButton.contains(event.target)) {
+				// 	console.log('inside condition');
+				// 	searchResult.classList.remove('show')
+				// }
+				// searchResult.addEventListener('focusout', (event) => {
+				// 	// if(!searchResult.contains(event.target))
+				// 	console.log('55555555555555555555555555');
+				// 		searchResult.classList.remove('show');
+				// });
+				const searchTerm = document.querySelector("#searchInput").value;
+				const data = {
+					username: searchTerm,  
+				};
+				try {
+					const response = await fetch ('http://localhost:8000/api/users/ProfileByUsername/', {
+						method: 'POST',
+						credentials: 'include',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify(data),
+					});
+					const searchImage = document.querySelector('#searchImage');
+					const searchUsername = document.querySelector('#searchUsername');
+					if (response.ok) {
+						const userdata = await response.json();
+						if (userdata.avatar && userdata.username) {
+							searchImage.src = userdata.avatar;
+							searchImage.classList.add('show');
+							console.log(searchImage.src);
+							searchUsername.textContent = userdata.username;
+						} else {
+							searchImage.classList.remove('show');
+							searchUsername.textContent = 'no result'
+						}
+
+						// searchResult.classList.add('show');
+						// alert(`Searching for: ${userdata.username} ${userdata.email}`);
+					} else {
+						alert(`no result`);
+					}
+
+				} catch (error) {
+					console.log('SOMTHING WENT WRONG', error);
+				}
+			});
 			return content;
 	}
 }
