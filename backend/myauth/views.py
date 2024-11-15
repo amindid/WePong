@@ -663,6 +663,28 @@ class ProfileById(APIView):
 
 
 
+class ProfileByUsername(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def post(self, request):
+		username = request.data['username']
+		if username is None:
+			return Response({'error': 'username is required'}, status=status.HTTP_400_BAD_REQUEST)
+		try:
+			user = User.objects.get(username=username)
+		except User.DoesNotExist:
+			return Response({'error': 'user not found'})
+		if request.user == user:
+			return Response({'error': 'you are looking for your self'},status=-status.HTTP_400_BAD_REQUEST)
+		data = {
+			'username': user.username,
+			'avatar' : user.avatar,
+			'email' : user.email,
+		}
+		return Response(data, status=status.HTTP_200_OK)
+
+
+
 class userProfile(APIView):
 	authentication_classes = [CookieJWTAuthentication]
 	permission_classes = [IsAuthenticated]

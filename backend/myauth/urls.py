@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import loginUser,setup_email_2fa,confirm_email_2fa,GoogleLogin,Login42,FacebookLogin,GoogleCallback,Callback42,FacebookCallback ,registerUser,ProfileById, deleteUser, updateInfo, sendRequest, AcceptRequest,DenyRequest, DeleteRequest, block, unblock, logoutUser, confirmEmail, userProfile, friendList, friendRequestList, myRequestsList, BlockedList, refreshAccessToken, changePassword, CheckAuthentication, PasswordResetRequestView
+from .views import loginUser,ProfileByUsername,setup_email_2fa,confirm_email_2fa,GoogleLogin,Login42,FacebookLogin,GoogleCallback,Callback42,FacebookCallback ,registerUser,ProfileById, deleteUser, updateInfo, sendRequest, AcceptRequest,DenyRequest, DeleteRequest, block, unblock, logoutUser, confirmEmail, userProfile, friendList, friendRequestList, myRequestsList, BlockedList, refreshAccessToken, changePassword, CheckAuthentication, PasswordResetRequestView
 from . import views
 urlpatterns = [
 	path('users/checkAuthentication/', CheckAuthentication.as_view(), name='CheckAuthentication'),
@@ -13,6 +13,7 @@ urlpatterns = [
 	path('users/activate/<uidb64>/<token>/',views.activate, name='activate'),
 	path('users/userProfile/', userProfile.as_view(), name='userProfile'),
 	path('users/ProfileById/', ProfileById.as_view(), name='ProfileById'),
+	path('users/ProfileByUsername/', ProfileByUsername.as_view(), name='ProfileByUsername'),
 	path('users/friendList/', friendList.as_view(), name='friendList'),
 	path('users/friendRequestList/', friendRequestList.as_view(), name='friendRequestList'),
 	path('users/myRequestsList/', myRequestsList.as_view(), name='myRequestsList'),
