@@ -35,7 +35,8 @@
 }
 
 .button-test:hover {
-	transform: scale(1.2) rotate(15deg);
+	transform: scale(1.2);
+	cursor: pointer;
 }
 
 

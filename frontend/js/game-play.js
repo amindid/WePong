@@ -1,10 +1,10 @@
 import { navigate } from './router.js';
 
+let winnerPlayer = '';
 
 class gamePlay {
     content = document.createElement('div');
-    constructor() {
-    }
+    constructor() {}
 
     render() {
         const page = document.createDocumentFragment();
@@ -74,12 +74,14 @@ class gamePlay {
             let timerElement = document.getElementById('timer');
             let timerInterval;
     
-            // Retrieve selections from localStorage
+            
             const player1PaddleSrc = localStorage.getItem('player1Paddle');
             const player1BallSrc = localStorage.getItem('player1Ball');
             const player2PaddleSrc = localStorage.getItem('player2Paddle');
             const player2BallSrc = localStorage.getItem('player2Ball');
             const selectedMapSrc = localStorage.getItem('selectedMap');
+            const player1Name = localStorage.getItem('player1Name') || 'Player 1';
+            const player2Name = localStorage.getItem('player2Name') || 'Player 2';
 
             console.log("selectedItems", {player1PaddleSrc, player1BallSrc, player2PaddleSrc, player2BallSrc, selectedMapSrc});
     
@@ -125,7 +127,7 @@ class gamePlay {
                     } else {
                         clearInterval(countdownInterval);
                         overlay.style.visibility = 'hidden';
-                        callback();  // Start the game
+                        callback();  
                     }
                 }, 1000);
             }
@@ -148,7 +150,7 @@ class gamePlay {
                 timerElement.innerText = timer;
             }
             function resetGame() {
-                // Reset game variables and state
+                
                 player1Score = 0;
                 player2Score = 0;
                 player1ScoreElement.innerText = player1Score;
@@ -156,25 +158,25 @@ class gamePlay {
                 resrtTimer();
                 gameOver = false;
                 startTimer();
-                // removeChild(paddle1);
+                
         
-                // Additional reset logic as needed
+                
             }
         
             startTimer();
             
-            function showWinScreen(player, player1Score, player2Score) {
-                // Set game over flag
+            function showWinScreen(playerName, player1Score, player2Score) {
+                
                 gameOver = true;
                 resrtTimer();
                 clearInterval(timerInterval);
-                // Create win screen element
+                
                 const winScreen = document.createElement('div');
                 winScreen.className = 'win-screen';
             
-                // Set the inner HTML of the win screen
+                
                 winScreen.innerHTML = `
-                    <h1><span class="player-name">${player}</span> <span class="win-text">WINS</span></h1>            
+                    <h1><span class="player-name">${playerName}</span> <span class="win-text">WINS</span></h1>            
                     <div class="stars">
                         <img src="images/stars.svg" alt="Star">
                     </div>
@@ -203,24 +205,24 @@ class gamePlay {
                     </div>
                 `;
             
-                // Append win screen to the body
+                
                 document.body.appendChild(winScreen);
             
-                // Show the win screen
+                
                 setTimeout(() => {
                     winScreen.classList.add('show');
                 }, 10);
             
-                // Add event listeners to buttons
+                
                 winScreen.querySelector('.exit-btn').addEventListener('click', () => {
                     document.body.removeChild(winScreen);
-                    // Exit the game (you can customize this part as needed)
+                    
                     navigate('/');
                 });
             
                 winScreen.querySelector('.replay-btn').addEventListener('click', () => {
                     document.body.removeChild(winScreen);
-                    // resetGame();
+                    
                     navigate('/local-game');
                 });
             }
@@ -281,9 +283,7 @@ class gamePlay {
                     player2Score++;
                     player2ScoreElement.innerText = player2Score;
                     if (player2Score == this.scoreToWin) {
-                        // alert("Player 2 wins!")
-                        showWinScreen('Player 2', player1Score, player2Score);
-                        // resetGame();    
+                        showWinScreen(player2Name, player1Score, player2Score);
                     } else {
                         resetRound();
                     }
@@ -291,9 +291,7 @@ class gamePlay {
                     player1Score++;
                     player1ScoreElement.innerText = player1Score;
                     if (player1Score == this.scoreToWin) {
-                        // alert("Player 1 wins!");
-                        // resetGame();
-                        showWinScreen('Player 1', player1Score, player2Score);
+                        showWinScreen(player1Name, player1Score, player2Score);
                     } else {
                         resetRound();
                     }
@@ -368,7 +366,7 @@ class gamePlay {
             showCountdown(() => {
                 isBallMoving = true;
             });
-            // isBallMoving = !isBallMoving;
+            
         });
     
         function update() {
@@ -386,7 +384,7 @@ class gamePlay {
         }
         requestAnimationFrame(update);
     
-        }, 0);  // Delays execution until after DOM is updated
+        }, 0);  
         
       
         return page;

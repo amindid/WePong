@@ -24,6 +24,7 @@ import { rendertestmatch } from './test_match.js';
 import { renderEightnames } from './eight_names.js';
 import { renderLocalGame } from './local-game.js';
 import { renderGamePlay } from './game-play.js';
+import { renderNotFoundPage } from './not-found.js'; // Import the Not Found component
 
 // export function router() {
 //     const routes = {
@@ -211,7 +212,6 @@ async function ask_refreshing_token() {
 
 async function loadPage(route) {
     const startRoutes = {   '/': renderHomePage,
-                            'local-game': renderLocalGame,
                             '/login': renderLoginPage,
                             '/register': renderRegistrationPage,
                             '/password_reset': renderResetPasswordPage,
@@ -268,6 +268,9 @@ async function loadPage(route) {
             return renderPage(secretRoutes[route]());
         history.pushState({}, '', '/login');
         return renderPage(startRoutes['/login']());
+    }
+    else {
+        return renderPage(renderNotFoundPage());
     }
 }
 

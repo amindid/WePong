@@ -1,6 +1,11 @@
 import { navigate } from './router.js';
 
 
+
+let player1Name = "Player1";
+let player2Name = "Player2";
+
+
 class localGame {
 
     content = document.createElement('div');
@@ -12,6 +17,9 @@ class localGame {
         this.content.className = 'local-game-container';
         this.content.innerHTML=	`
                     <div class="game-setup">
+                        <div  id="return-btn-div" >
+                            <btn id="return-btn">Return</btn>
+                        </div>
                         <div class="player-section player-left">
                             <div class="player-info">
                                 <div class="player-profile">
@@ -25,7 +33,7 @@ class localGame {
                                         <img id="rank-pic" src="images/ranks/diamond.svg" alt="rank1" class="rank-pic">
                                     </div>
                                     <div class="player-name">
-                                        <h1 id="player-name">PLAYER1</h1>
+                                        <h1 id="player-name">${player1Name}</h1>
                                     </div>
                                 </div>
                             </div>
@@ -119,7 +127,7 @@ class localGame {
                                         <img id="rank-pic" src="images/ranks/diamond.svg" alt="rank1" class="rank-pic">
                                     </div>
                                     <div class="player-name">
-                                        <h1 id="player-name">PLAYER2</h1>
+                                        <h1 id="player-name">${player2Name}</h1>
                                     </div>
                                 </div>
                             </div>
@@ -227,35 +235,35 @@ class localGame {
         };
         
         function showNotification(message, iconUrl) {
-            // Create notification element
+            
             const notification = document.createElement('div');
             notification.className = 'popup';
         
-            // Create icon element
+            
             const icon = document.createElement('img');
             icon.src = iconUrl;
             icon.className = 'popup-icon';
         
-            // Create message element
+            
             const messageElement = document.createElement('div');
             messageElement.innerText = message;
         
-            // Append icon and message to the notification
+            
             notification.appendChild(icon);
             notification.appendChild(messageElement);
         
-            // Append notification to the body
+            
             document.body.appendChild(notification);
         
-            // Show the notification
+            
             setTimeout(() => {
                 notification.classList.add('show');
             }, 10);
         
-            // Hide the notification after 3 seconds
+            
             setTimeout(() => {
                 notification.classList.remove('show');
-                // Remove the notification from the DOM after the transition
+                
                 setTimeout(() => {
                     document.body.removeChild(notification);
                 }, 500);
@@ -285,7 +293,12 @@ class localGame {
                 updateImageDisplay();
             });
         });
-    
+        
+        const returnButton = this.content.querySelector('#return-btn');
+        returnButton.addEventListener('click', () => {
+            navigate('/');
+        });
+
         const playButton = this.content.querySelector('.play-button');
         playButton.addEventListener('click', () => {
             if (validateSelections()) {
