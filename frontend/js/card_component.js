@@ -62,6 +62,8 @@ export class Card extends HTMLElement {
 				flex-direction: column;
 				width: 80%;
 				height: 80%;
+				background-color: transparent;
+  				border: 2px solid transparent;
 				border-radius: 20px;
 				gap:5%;
 			}
