@@ -38,6 +38,7 @@ AUTH_USER_MODEL = 'myauth.User'
 
 
 
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -59,7 +60,6 @@ REST_FRAMEWORK = {
 	    'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
-
 
 
 SIMPLE_JWT = {

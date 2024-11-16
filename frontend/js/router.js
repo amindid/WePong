@@ -18,6 +18,10 @@ import { renderEightPlayers } from './eight_players.js';
 import { renderJoinTournament } from './list_tou.js';
 import { renderSettings } from './settings.js';
 import { renderTwoFaConfirmationPage } from './2fa_confirmation.js'
+import { rendergameonline } from './game_online.js';
+import { renderFournames } from './four_names.js';
+import { rendertestmatch } from './test_match.js';
+import { renderEightnames } from './eight_names.js';
 
 // export function router() {
 //     const routes = {
@@ -151,6 +155,10 @@ export { renderEightPlayers } from './eight_players.js'
 export { renderJoinTournament } from './list_tou.js'
 export { renderSettings } from './settings.js'
 import { showAlert } from './message-box.js';
+export { rendergameonline } from './game_online.js';
+export { renderFournames } from './four_names.js';
+export { rendertestmatch } from './test_match.js';
+export { renderEightnames } from './eight_names.js';
 
 function renderPage(page) {
     document.body.innerHTML = '';
@@ -208,11 +216,15 @@ async function loadPage(route) {
     const secretRoutes = {  '/dashboard': renderDashboard,
                             '/shop' : renderShop,
                             '/tournement' : rendertournamant,
+                            '/tournement/fournames' : renderFournames,
+                            '/tournement/eightnames' : renderEightnames,
                             '/tournement/create' : renderCreateTournament,
                             '/tournement/Fourplayers' : renderFourPlayers,
 							'/tournement/Eightplayers' : renderEightPlayers,
                             '/tournement/join' : renderJoinTournament,
-							'/settings' : renderSettings
+							'/settings' : renderSettings,
+							'/game-online' : rendergameonline,
+							'/tournement/test_match' : rendertestmatch
 						};
     let isAuthenticated = false;
     try {

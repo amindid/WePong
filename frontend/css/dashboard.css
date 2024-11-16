@@ -216,3 +216,31 @@ input.searchInput {
 		margin-right: 0;
 	}
 }
+
+.notification-div {
+	display: none; 
+	position: absolute;
+	top: 7%;
+	right: 10%;
+	width: 20%;
+	height: 20%;
+	background-color: #46035e;
+	border: 2px solid #ffffff;
+	border-radius: 10px;
+	
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center; 
+  }
+
+  @media (max-width: 1200px)
+  {
+	.notification-div
+	{
+		top: 10%;
+		right: 25%;
+		width: 50%;
+		height: 30%;
+		z-index: 2;
+	}
+  }

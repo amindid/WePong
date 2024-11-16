@@ -69,6 +69,33 @@ class LeftBare
 		event.preventDefault();
 		navigate('/settings');
 	});
+		let imageleft = content.querySelector("#leftBar-userImage");
+		const setPlayerImage = async () => {
+			try {
+				console.log('befor fetch');
+				const response = await fetch('http://localhost:8000/api/users/userProfile/', {
+					method: 'GET',
+					credentials: 'include',
+					headers: {
+						'Content-Type': 'application/json',
+					}
+				});
+				console.log('after fetch');
+				const data = await response.json();
+				if (response.ok) {
+					console.log('after await');
+					imageleft.src = data.avatar;
+				}
+				else {
+					showAlert(data.error || 'failed to load user image');
+					console.log(data.error || 'failed to load user image');
+				}
+			} catch (error) {
+				showAlert(error || 'failed to fetch user profile ==> error: ');
+				console.log('failed to fetch user profile ==> error: ',error);
+			}
+		};
+		setPlayerImage();
 	return content;
 	}
 }

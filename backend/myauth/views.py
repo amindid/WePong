@@ -699,7 +699,8 @@ class userProfile(APIView):
 			'username' : user.username,
 			'avatar' : user.avatar,
 			'email' : user.email,
-			'id' : user.id
+			'id' : user.id,
+			'wallet' : user.wallet
 		}
 		return Response(data, status=status.HTTP_200_OK)
 
@@ -954,4 +955,23 @@ def PasswordResetConfirmView(request, uid, token):
 		message_text = "Problem accured while trying to confirm password reset\nplease try again later."
 		message_text = urlencode({'message': str(message_text)})
 		return redirect(f'http://localhost:3000/login?{message_text}')
+
+class UpdateWalletView(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def post(self, request, *args, **kwargs):
+		user = request.user
+		amount = request.data.get('amount')
+		if amount is not None:
+		    try:
+		        amount = int(amount)
+		    except ValueError:
+		        return Response({"error": "Invalid amount"}, status=status.HTTP_400_BAD_REQUEST)		
+		    user.wallet += amount
+		    user.save()
+		    # serializer = UserSerializer(user)
+		    return Response({'message': 'wallet apdated successfully'}, status=status.HTTP_200_OK)
+		else:
+		    return Response({"error": "Amount not provided"}, status=status.HTTP_400_BAD_REQUEST)
+
 	
