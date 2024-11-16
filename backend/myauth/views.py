@@ -117,7 +117,17 @@ class FacebookLogin(APIView):
 		facebook_auth_url = f"{facebook_url}?client_id={client_id}&redirect_uri={redirect_uri}&state={state}&scope={scope}"
 		return Response({"url": facebook_auth_url}, status=status.HTTP_200_OK)
 
-
+class isTwoFA(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def get(self, request):
+		try:
+			user = request.user
+			if user.isTwoFA:
+				return Response({'TwoFA': 'True'},status=status.HTTP_200_OK)
+			return Response({'TwoFA': 'False'},status=status.HTTP_200_OK)
+		except:
+			return Response ({'message': 'somthing went wrong please try again later.'})
 
 class GoogleCallback(APIView):
 	permission_classes = [AllowAny]
@@ -147,7 +157,7 @@ class GoogleCallback(APIView):
 			'username' : user_info.get('name'),
 			'avatar': user_info.get('picture'),
 		}
-		user = User.objects.filter(username=user_data['username'], email=user_data['email']).first()
+		user = User.objects.filter(email=user_data['email']).first()
 		if not user is None:
 			refresh = RefreshTokens.objects.filter(user=user).first()
 			token = refresh.get_access_token()
@@ -159,6 +169,8 @@ class GoogleCallback(APIView):
 				refresh = RefreshTokensSerializer(data={'user': user.id})
 				if refresh.is_valid():
 					refresh_token : RefreshTokens = refresh.save()
+					user.isAuth = True
+					user.authProvider = 'google'
 					user.save()
 					token = refresh_token.get_access_token()
 				else:
@@ -240,6 +252,8 @@ class Callback42(APIView):
 				refresh = RefreshTokensSerializer(data={'user': user.id})
 				if refresh.is_valid():
 					refresh_token : RefreshTokens = refresh.save()
+					user.isAuth = True
+					user.authProvider = '42'
 					user.save()
 					token = refresh_token.get_access_token()
 				else:
@@ -311,7 +325,7 @@ class FacebookCallback(APIView):
 			'username' : user_info.get('name'),
 			'avatar': user_info.get('picture', {}).get('data', {}).get('url'),
 		}
-		user = User.objects.filter(username=user_data['username'], email=user_data['email']).first()
+		user = User.objects.filter(email=user_data['email']).first()
 		if not user is None:
 			refresh = RefreshTokens.objects.filter(user=user).first()
 			refresh.save()
@@ -323,6 +337,8 @@ class FacebookCallback(APIView):
 				refresh = RefreshTokensSerializer(data={'user': user.id})
 				if refresh.is_valid():
 					refresh_token : RefreshTokens = refresh.save()
+					user.isAuth = True
+					user.authProvider = 'facebook'
 					user.save()
 					token = refresh_token.get_access_token()
 				else:
@@ -473,13 +489,15 @@ class logoutUser(APIView):
 	permission_classes = [IsAuthenticated]
 	def post(self, request):
 		try:
-			user = request.user
-			refresh_token = RefreshTokens.objects.get(user=user)
-			token = RefreshToken(refresh_token.token)
-			token.blacklist()
-			refresh_token.delete()
+			# user = request.user
+			# refresh_token = RefreshTokens.objects.get(user=user)
+			# token = RefreshToken(refresh_token.token)
+			# token.blacklist()
+			# refresh_token.delete()
 			log_to_elasticsearch("logout success", event_type="logout")
-			return Response ({'message': 'logout successful.'} , status=status.HTTP_205_RESET_CONTENT)
+			response = Response ({'message': 'logout successful.'} , status=status.HTTP_205_RESET_CONTENT)
+			response.delete_cookie('access_token')
+			return response
 		except Exception as e:
 			return Response ({'error':'invalide request'},status=status.HTTP_400_BAD_REQUEST)
 
@@ -533,11 +551,11 @@ class setup_email_2fa(APIView):
 		user : User = request.user
 		if user is None:
 			return Response({'error': 'user not found'}, status=status.HTTP_404_NOT_FOUND)
-		if not user.isTwoFA:
-			user.isTwoFA = True
-			user.save()
-		log_to_elasticsearch("enabling 2fa", event_type="2fa")
-		return Response({'message': 'email 2fa enabled successfully.'}, status=status.HTTP_200_OK)
+		# if not user.isTwoFA:
+		user.isTwoFA = not user.isTwoFA
+		user.save()
+		# log_to_elasticsearch("enabling 2fa" if user.isTwoFA else "disabling 2fa", event_type="2fa")
+		return Response({'message': 'email 2fa enabled successfully.' if user.isTwoFA else 'email 2fa disabled successfully.'}, status=status.HTTP_200_OK)
 
 
 
@@ -596,17 +614,24 @@ class confirmEmail(APIView):
 
 
 
-class updateInfo(APIView):
+class updateUsername(APIView):
 	authentication_classes = [CookieJWTAuthentication]
 	permission_classes = [IsAuthenticated]
 	def put(self, request):
-		user = request.user
-		serializer = UserSerializer(User.objects.get(id=user.id), data=request.data, partial=True)
-		if serializer.is_valid():
-			serializer.save()
-			return Response(serializer.data, status=status.HTTP_200_OK)
-		else:
-			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		try:
+			user = request.user
+			newUsername = request.data['newUsername']
+			data = {
+				'username' : newUsername,
+			}
+			serializer = UserSerializer(user, data=data, partial=True)
+			if serializer.is_valid():
+				serializer.save()
+				return Response(serializer.data, status=status.HTTP_200_OK)
+			else:
+				return Response({'message': "username already in use."}, status=status.HTTP_400_BAD_REQUEST)
+		except:
+			return Response({'message' : 'somthing went wrong please try again later.'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -629,17 +654,19 @@ class changePassword(APIView):
 	permission_classes = [IsAuthenticated]
 	def post(self,request):
 		user: User = request.user
+		if user.isAuth:
+			return Response({'message' : f"this user is authenticated with {user.authProvider}, there is no password to change."})
 		password = request.data['password']
 		if user.check_password(hash_password(password)):
 			newPassword = request.data['newPassword']
 			newPasswordConfirmation = request.data['newPasswordConfirmation']
 			if newPassword == newPasswordConfirmation:
 				if not newPassword:
-					return Response({'error': 'new password is required'}, status=status.HTTP_400_BAD_REQUEST)
+					return Response({'message': 'new password is required'}, status=status.HTTP_400_BAD_REQUEST)
 				user.set_password(hash_password(newPassword))
 				return Response({'message': 'password changed successfully.'}, status=status.HTTP_200_OK)
-			return Response({'error': 'passwords do not match'}, status=status.HTTP_400_BAD_REQUEST)
-		return Response({'error': 'password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({'message': 'passwords do not match'}, status=status.HTTP_400_BAD_REQUEST)
+		return Response({'message': 'password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -963,14 +990,14 @@ class UpdateWalletView(APIView):
 		user = request.user
 		amount = request.data.get('amount')
 		if amount is not None:
-		    try:
-		        amount = int(amount)
-		    except ValueError:
-		        return Response({"error": "Invalid amount"}, status=status.HTTP_400_BAD_REQUEST)		
-		    user.wallet += amount
-		    user.save()
+			try:
+				amount = int(amount)
+			except ValueError:
+				return Response({"error": "Invalid amount"}, status=status.HTTP_400_BAD_REQUEST)		
+			user.wallet += amount
+			user.save()
 		    # serializer = UserSerializer(user)
-		    return Response({'message': 'wallet apdated successfully'}, status=status.HTTP_200_OK)
+			return Response({'message': 'wallet apdated successfully'}, status=status.HTTP_200_OK)
 		else:
 		    return Response({"error": "Amount not provided"}, status=status.HTTP_400_BAD_REQUEST)
 
