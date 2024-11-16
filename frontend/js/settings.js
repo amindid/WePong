@@ -43,11 +43,10 @@ class SettingComponent
 							<div id="edit">
 								<div class="edit_username">
 									<h1 class="display_change_username"> change username </h1>
-									<input class="input_username" > </input>
+									<input class="input_username" id="input_username"> </input>
 								</div>
 								<div class="edit_username ">
-									<h1 class="display_change_username"> email </h1>
-									<input class="input_username"  readonly> </input>
+									<button class="logout_button" id="submit_change_username">DELETE ACCOUNT</button>
 								</div>
 								<div class="logout" >
 									<button class="logout_button" id="logoutButton">LOG OUT</button>
@@ -94,8 +93,8 @@ class SettingComponent
 							<h1> Secure your account </h1>
 							<h3> Enable 2FA to add an extra layer of security  </h3>
 						</div>
-						<div class="button_enable2fa">
-							<button id="enable2fa" class="button_2fa">ENABLE 2FA </button>
+						<div id="TwoFA">
+
 						</div>
 					</div>
 					
@@ -185,12 +184,38 @@ class SettingComponent
 			}
 		};
 		setPlayerImage();
-
-
-			const enable2fa = this.content.querySelector("#enable2fa");
+		const twoFA = this.content.querySelector('#TwoFA');
+		async function changebutton() {
+			const response = await fetch('http://localhost:8000/api/users/isTwoFA/', {
+				method: 'GET',
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/json',
+				}
+			})
+			const data = await response.json();
+			if (response.ok) {
+				if (data.TwoFA === 'True') {
+					twoFA.innerHTML = `
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
+						<label class="form-check-label" for="flexSwitchCheckChecked">click to disable</label>
+				  	</div>`;
+				} else {
+					twoFA.innerHTML = `
+					<div class="form-check form-switch">
+						<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
+						<label class="form-check-label" for="flexSwitchCheckDefault">click to enable</label>
+				  	</div>`;
+				}
+			} else {
+				showAlert('somthing went wrong')
+			}
+		}
+		changebutton();
+			const enable2fa = this.content.querySelector("#TwoFA");
 			if (enable2fa) {
 				enable2fa.addEventListener('click', async function (event) {
-					event.preventDefault();
 					const response = await fetch('http://localhost:8000/api/setup_2fa/', {
 						method : 'POST',
 						credentials: 'include',
@@ -204,41 +229,24 @@ class SettingComponent
 					}
 				});
 			}
-
-			async function updateusername(username) {
-				const response = await fetch('http://localhost:8000/api/users/update/', {
-					method: 'PUT',
-					headers: {
-						'Content-Type': 'application/json'
-					},
-					credentials: 'include',
-					body: JSON.stringify({ username: username })
-				});
+			// async function updateusername(username) {
+			// 	const response = await fetch('http://localhost:8000/api/users/update/', {
+			// 		method: 'PUT',
+			// 		headers: {
+			// 			'Content-Type': 'application/json'
+			// 		},
+			// 		credentials: 'include',
+			// 		body: JSON.stringify({ username: username })
+			// 	});
 			
-				const data = await response.json();
-				if (response.ok) {
-					console.log('username updated:', data);
-				} else {
-					console.error('Error updating username:', data);
-				}
-			}
+			// 	const data = await response.json();
+			// 	if (response.ok) {
+			// 		console.log('username updated:', data);
+			// 	} else {
+			// 		console.error('Error updating username:', data);
+			// 	}
+			// }
 			
-			this.content.querySelector('.input_username').addEventListener('keypress', function(event) {
-				if (event.key === 'Enter') {
-					const newUsername = event.target.value;
-	
-					if (newUsername) {
-						showAlert("the username changed");
-						updateusername(newUsername);
-						event.target.value = '';
-						navigate("/settings");
-					}
-					else
-					{
-						showAlert("ERROR");
-					}
-				}
-			});
 
 
 			this.content.querySelector('#deleteButton').addEventListener('click', function() {
@@ -281,17 +289,17 @@ class SettingComponent
 				.then(response => {
 					console.log("then1");
 					if (response.status === 205) {
-						return response.json();
+						navigate("/login");
 					} else {
-						throw new Error('Logout failed');
+						alert("error while logout");
 					}
 				})
-				.then(data => {
-					console.log("then2");
-					alert(data.message);
-					// Redirect to the login page or perform any other necessary actions
-					navigate("/login");  // Update with your login page URL
-				})
+				// .then(data => {
+				// 	console.log("then2");
+				// 	alert(data.message);
+				// 	// Redirect to the login page or perform any other necessary actions
+				// 	navigate("/login");  // Update with your login page URL
+				// })
 				.catch(error => {
 					console.log("catsh");
 					console.error('Error:', error);
@@ -331,7 +339,32 @@ class SettingComponent
 					console.error('Error:', error);
 				});
 			}
-
+			this.content.querySelector('#submit_change_username').addEventListener('click', async function (event) {
+				event.preventDefault();
+				const newUsername = document.querySelector("#input_username").value;
+				if (newUsername === '') {
+					return;
+				}
+				const data = {
+					newUsername: newUsername,
+				}
+				const response = await fetch('http://localhost:8000/api/users/updateUsername/', {
+					method : 'PUT',
+					credentials: 'include',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(data),
+				});
+				const Resdata = await response.json();
+				if (response.ok) {
+					// showAlert('username changed successfully');
+					navigate('/settings');
+				}
+				else {
+					showAlert(Resdata.message || Resdata.error);
+				}
+			});
 			return page;
 	}
 }
