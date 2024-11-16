@@ -4,11 +4,37 @@ import { navigate } from './router.js';
 class GameOnline {
     content = document.createElement('span');
     socket = null;
+	user_id;
     constructor() {}
+	setPlayerImage = async () => {
+		try {
+			const response = await fetch('http://localhost:8000/api/users/userProfile/', {
+				method: 'GET',
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/json',
+				}
+			});
+			const data = await response.json();
+			if (response.ok) {
+				
+				console.log("current id >>", data.id);
+				// username = data.username;
+				return data;
+			} else {
+				showAlert(data.error || 'failed to load user image');
+				console.log(data.error || 'failed to load user image');
+				return null;
+			}
+		} catch (error) {
+			showAlert(error || 'failed to fetch user profile ==> error: ');
+			console.log('failed to fetch user profile ==> error: ', error);
+			return null;
+		}
+	};
 
     create_socket(user_idd) {
         this.socket = new WebSocket(`ws://127.0.0.1:2100/ws/game_online/`);
-        console.log("create socket");
 
 
         this.socket.addEventListener('open', () => {
@@ -22,10 +48,38 @@ class GameOnline {
             this.socket.send(JSON.stringify(message));
         });
 
-        this.socket.addEventListener('message', (event) => {
+        this.socket.addEventListener('message', async (event) => {
             const data = JSON.parse(event.data);
 			console.log("message from server >> " , data);
    			showAlert('Message from server: ' + data.message);
+			console.log("userid to fetch =====>>>> ", data.user_id);
+			   if (data.user_id != null) {
+				try {
+					const response = await fetch(`http://localhost:8000/api/users/ProfileById/?friend=${data.user_id}`, {
+						method: 'GET',
+						credentials: 'include',
+						headers: {
+							'Content-Type': 'application/json',
+						}
+					});
+		
+					const userData = await response.json();
+		
+					if (response.ok) {
+						let imgage = this.content.querySelector('#player-imag-2');
+						console.log("imageeee2 >" , userData.avatar);
+						console.log("name2 >" , userData);
+						imgage.src = userData.avatar;
+						
+					} else {
+						showAlert(userData.error || 'Failed to load second user data');
+						console.log(userData.error || 'Failed to load second user data');
+					}
+				} catch (error) {
+					showAlert(error || 'Failed to fetch second user profile ==> error: ');
+					console.log('Failed to fetch second user profile ==> error: ', error);
+				}
+			}
         });
 
         this.socket.addEventListener('close', () => {
@@ -57,7 +111,9 @@ class GameOnline {
                     <div class="vs">
                         <h1> vs </h1>
                     </div>
-                    <div class="vs"> </div>
+                    <div class="vs" >
+						<img id="player-imag-2"  alt="Player Image" >
+					</div>
                 </div>
                 <div class="quit_play">
                     <button class="buuton_quit_play" id="quit-play-online">QUIT</button>
@@ -68,37 +124,24 @@ class GameOnline {
         const body = document.body;
         body.style.alignItems = 'center';
 
-        let image = this.content.querySelector("#player-imag-1");
-        let username;
-        let user_id;
+        // let image = this.content.querySelector("#player-imag-1");
+        // let username;
+        
 
-        const setPlayerImage = async () => {
-            try {
-                const response = await fetch('http://localhost:8000/api/users/userProfile/', {
-                    method: 'GET',
-                    credentials: 'include',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    // console.log('after await');
-                    image.src = data.avatar;
-                    user_id = data.id;
-                    username = data.username;
-                    // console.log("end fetch");
-                    this.create_socket(user_id);
-                } else {
-                    showAlert(data.error || 'failed to load user image');
-                    console.log(data.error || 'failed to load user image');
-                }
-            } catch (error) {
-                showAlert(error || 'failed to fetch user profile ==> error: ');
-                console.log('failed to fetch user profile ==> error: ', error);
-            }
-        };
-        setPlayerImage();
+        
+	
+		this.setPlayerImage().then(data => {
+			if (data) {
+				let image = this.content.querySelector("#player-imag-1");
+				image.src = data.avatar;
+				this.create_socket(data.id);
+				
+			} else {
+				console.log('Failed to retrieve user ID');
+			}
+		});
+		
+
 
         const quit = this.content.querySelector("#quit-play-online");
         quit.addEventListener('click', event => {

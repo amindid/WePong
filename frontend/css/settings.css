@@ -280,6 +280,8 @@
 	width: 50%;
 	height: 80%;
 	font-size: 100%;
+	border-radius: 10px;
+	border: 2px solid white;
 	background-color: rgb(149, 32, 167);
 	color: white;
 }
@@ -300,6 +302,22 @@
 	transition: all 0.5 ease-in-out;
 	transform: scale(1.1);
 }
+.submit_btn
+{
+	width: 20%;
+	height: 40%;
+	font-size: 100%;
+	background-color: rgba(80, 0, 93, 1);
+	border: 3px solid white;
+	border-radius: 5px;
+	color: white;
+	cursor: pointer;
+
+}
+.submit_btn:hover {
+	transition: all 0.5 ease-in-out;
+	transform: scale(1.1);
+}
 
 
 
@@ -311,12 +329,13 @@
 	width: 95%;
 	height: 15%;
 	display: flex;
+	margin-left: 5%;
 	/* justify-content: flex-start; */
 	flex-direction: column;
 }
 .display_setting > h1
 {
-	font-size: 200%;
+	font-size: 250%;
 	margin-bottom: -18px;
 	margin-top: 7%;
 	color: white;
@@ -395,8 +414,8 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 35%;
-	height: 50%;
+	width: 20%;
+	height: 40%;
 	background-color : rgba(228, 0, 205, 1);
 	color: white;
 	font-family: 'MPLUSRounded1c';
@@ -500,6 +519,7 @@
 	background-color: rgba(80, 0, 93, 1);
 	border-bottom-right-radius: 15px;
 	border-bottom-left-radius: 15px;
+
 }
 
 
@@ -532,18 +552,31 @@
 }
 
 @media (max-width: 1200px) {
+	.input_username{
+		height: 40%;
+	}
+	.submit_btn
+	{
+		height: 50%;
+		width: 30%;
+		font-size: 70%;
+	}
 	.settings1
 	{
 		min-height: 0px;
 	}
-	#plyername , #print-account-details , .display_change_username 
+	.display_change_username 
+	{
+		font-size: 80%;
+	}
+	#plyername , #print-account-details
 	{
 		font-size: 50%;
 	}
 	.logout_button
 	{
 		font-size: 40%;
-		min-width: 50px;
+		min-width: 70px;
 	}
 	.password__
 	{
@@ -552,6 +585,7 @@
 	.input_password
 	{
 		height: 70%;
+		width: 70%;
 	}
 	.h1_password
 	{
@@ -562,6 +596,8 @@
 	.button_change_password
 	{
 		font-size: 50%;
+		width: 50%;
+		height: 40%;
 	}
 	.password__1
 	{
@@ -591,8 +627,17 @@
 	}
 	.button_2fa{
 		font-size: 40%;
+		height: 50%;
+		width: 60%;
 	}
-	
+	.display_setting > h1
+	{
+		font-size: 150%;
+	}
+	.display_setting > h3
+	{
+		font-size: 100%;
+	}
 
 }
 

@@ -46,8 +46,7 @@ class SettingComponent
 									<input class="input_username" > </input>
 								</div>
 								<div class="edit_username ">
-									<h1 class="display_change_username"> email </h1>
-									<input class="input_username"  readonly> </input>
+									<button class="submit_btn">submit</button>
 								</div>
 								<div class="logout" >
 									<button class="logout_button" id="logoutButton">LOG OUT</button>
