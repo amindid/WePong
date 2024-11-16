@@ -29,37 +29,37 @@ class EightName
 			<div class="eightblocks">
 				<div class="eightblocks1">
 					<div class="local_player8">
-						<div class="img_test"> 
+						<div class="img_test_"> 
 							<img src="../images/cat.png">
 						</div>
-						<div class="img_test1"> 
+						<div class="img_test_1"> 
 							<h1> Player 1  </h1>
 							<input class="input_player_local" id="input1_player_local" placeholder="" > </input>
 						</div>
 					</div>
 					<div class="local_player8">
-						<div class="img_test"> 
+						<div class="img_test_"> 
 							<img src="../images/dog.png">
 						</div>
-						<div class="img_test1"> 
+						<div class="img_test_1"> 
 							<h1> Player 2  </h1>
 							<input class="input_player_local" id="input2_player_local" placeholder="" > </input>
 						</div>
 					</div>
 					<div class="local_player8">
-						<div class="img_test"> 
+						<div class="img_test_"> 
 							<img src="../images/cat2.png">
 						</div>
-						<div class="img_test1"> 
+						<div class="img_test_1"> 
 							<h1> Player 3  </h1>
 							<input class="input_player_local" id="input3_player_local" placeholder="" > </input>
 						</div>
 					</div>
 					<div class="local_player8">
-						<div class="img_test"> 
+						<div class="img_test_"> 
 							<img src="../images/dog2.png">
 						</div>
-						<div class="img_test1"> 
+						<div class="img_test_1"> 
 							<h1> Player 4  </h1>
 							<input class="input_player_local" id="input4_player_local" placeholder="" > </input>
 						</div>
@@ -67,37 +67,37 @@ class EightName
 				</div>
 				<div class="eightblocks1">
 					<div class="local_player8">
-						<div class="img_test"> 
+						<div class="img_test_"> 
 							<img src="../images/gon.jpg">
 						</div>
-						<div class="img_test1">
+						<div class="img_test_1">
 							<h1> Player 5  </h1>
 							<input class="input_player_local" id="input5_player_local" placeholder="" > </input>
 						</div>
 					</div>
 					<div class="local_player8">
-						<div class="img_test"> 
+						<div class="img_test_"> 
 							<img src="../images/KILLUA.jpg">
 						</div>
-						<div class="img_test1">
+						<div class="img_test_1">
 							<h1> Player 6  </h1>
 							<input class="input_player_local" id="input6_player_local" placeholder="" > </input>
 						</div>
 					</div>
 					<div class="local_player8">
-						<div class="img_test"> 
+						<div class="img_test_"> 
 							<img src="../images/kurabika.jpg">
 						</div>
-						<div class="img_test1">
+						<div class="img_test_1">
 							<h1> Player 7  </h1>
 							<input class="input_player_local" id="input7_player_local" placeholder="" > </input>
 						</div>
 					</div>
 					<div class="local_player8">
-						<div class="img_test"> 
+						<div class="img_test_"> 
 							<img src="../images/hessoka.jpg">
 						</div>
-						<div class="img_test1">
+						<div class="img_test_1">
 							<h1> Player 8  </h1>
 							<input class="input_player_local" id="input8_player_local" placeholder="" > </input>
 						</div>

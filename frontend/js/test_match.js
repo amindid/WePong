@@ -65,7 +65,7 @@ export class Match
 				this.player2 = localStorage.getItem('Player_final_2');
 			}
 		}
-		else if (localStorage.getItem('tournement8') === "1")
+		else if (localStorage.getItem('tournement4') === "1")
 		{
 			if (localStorage.getItem('semifinal1') === "0")
 			{

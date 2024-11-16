@@ -5,6 +5,16 @@ export class LeftLine
 		this.var1 = var1;
 		this.var2 = var2;
 		this.content = document.createElement('div');
+		if (this.var1 === null)
+		{
+			this.var1 = "../images/test.jpg"
+			// console.log("this.var1", this.var1);
+		}
+		if (this.var2=== null)
+		{
+			this.var2 = "../images/test.jpg"
+			// console.log("this.var2", this.var2);
+		}
 		this.render()
 	}
 	
@@ -15,12 +25,12 @@ export class LeftLine
 		<div id="img_players_left">
 			<div class="container_left">
 				<div class="img_player_">
-					<img src="../images/${this.var1}" class="img_player_staylee">
+					<img src="${this.var1}" class="img_player_staylee" alt="">
 				</div>
 			</div>
 			<div class="container_left">
 				<div class="img_player_">
-					<img src="../images/${this.var2}" class="img_player_staylee">
+					<img src="${this.var2}" class="img_player_staylee" alt="">
 				</div>
 			</div>
 		</div>
@@ -34,6 +44,7 @@ export class LeftLine
 		</div>
 		`;
 
+		
 	}
 }
 

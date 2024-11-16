@@ -156,7 +156,11 @@ class CreateTournament
 		{
 			event.preventDefault();
 			if(tmp === 1)
+			{
+				localStorage.clear();
+				localStorage.setItem('tournamentName', input.value.trim());
 				navigate('/tournement/fournames');
+			}
 			else
 				showAlert("Error : tournemant name");
 		});
@@ -165,7 +169,11 @@ class CreateTournament
 		{
 			event.preventDefault();
 			if(tmp === 1)
+			{
+				localStorage.clear();
+				localStorage.setItem('tournamentName', input.value.trim());
 				navigate('/tournement/eightnames');
+			}
 			else
 				showAlert("Error : tournemant name");
 		});

@@ -126,7 +126,9 @@ class EightPlayers
 		quit.addEventListener('click', event =>
 		{
 			event.preventDefault();
+			this.navigationCancelled = true;
 			localStorage.clear();
+			localStorage.setItem('playtour', "0");
 			navigate('/tournement/create');
 		});
 
@@ -146,6 +148,7 @@ class EightPlayers
 				const semifinal1_ = new LeftLine(localStorage.getItem('img_player_semifinale1'), localStorage.getItem('img_player_semifinale2'));
 				const leftfinal1_ = this.content.querySelector("#demi_final_left");
        			if (leftfinal1_) {
+					leftfinal1_.innerHTML =``;
        			    leftfinal1_.appendChild(semifinal1_.content);
        			}
             }
@@ -156,9 +159,10 @@ class EightPlayers
             } else if (localStorage.getItem('quarterfinal2') === "1") {
 				const semifinal1__ = new LeftLine(localStorage.getItem('img_player_semifinale1'), localStorage.getItem('img_player_semifinale2'));
 				const leftfinal1__ = this.content.querySelector("#demi_final_left");
-				   if (leftfinal1__) {
-					   leftfinal1__.appendChild(semifinal1__.content);
-				   }
+				if (leftfinal1__) {
+					leftfinal1__.innerHTML =``;
+					leftfinal1__.appendChild(semifinal1__.content);
+				}
             }
 
             if (localStorage.getItem('quarterfinal3') === "0" && localStorage.getItem('quarterfinal2') === "1") {
@@ -192,7 +196,6 @@ class EightPlayers
                 const img_player_semifinal1 = this.content.querySelector("#img_player_semifinal1");
                 const imgElement = document.createElement('img');
                 imgElement.src = localStorage.getItem('img_final_1');
-				console.log(localStorage.getItem('img_player_semifinale1'));
                 imgElement.className = "img_player_staylee";
                 img_player_semifinal1.appendChild(imgElement);
             }
