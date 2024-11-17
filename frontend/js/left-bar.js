@@ -35,7 +35,7 @@ class LeftBare
 			<path d="M26 39.7094C26 34.347 29.9427 30 34.8062 30H41.6813C46.5448 30 50.4875 34.347 50.4875 39.7094C50.4875 45.0718 46.5448 49.419 41.6813 49.419H36.4946V54.1063C36.4946 54.1063 26 51.7626 26 39.7094Z" fill="#F4F5F6"/>
 			<path fill-rule="evenodd" clip-rule="evenodd" d="M43.9087 51.0861C45.1747 52.4264 46.8938 53.25 48.7874 53.25H51.3624V56.9999C51.3624 56.9999 60.9825 55.125 60.9825 45.4825C60.9825 41.1925 57.8284 37.7148 53.9376 37.7148H52.0051C52.1562 38.3476 52.2366 39.0119 52.2366 39.697C52.2366 45.2845 48.6692 49.9534 43.9087 51.0861Z" fill="#F4F5F6"/>
 		</svg>
-		<svg class="button-test" width="90%" height="90%" viewBox="0 0 63 62" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<svg class="button-test" id="profile" width="90%" height="90%" viewBox="0 0 63 62" fill="none" xmlns="http://www.w3.org/2000/svg">
 			<rect x="0.19751" y="0.0541992" width="62.4396" height="61.4865" rx="10" fill="#A700B6"/>
 			<path d="M19.2197 40.3142C19.2197 38.7892 19.8355 37.3267 20.9316 36.2483C22.0277 35.17 23.5143 34.5642 25.0644 34.5642H36.7536C38.3037 34.5642 39.7903 35.17 40.8864 36.2483C41.9825 37.3267 42.5983 38.7892 42.5983 40.3142C42.5983 41.0767 42.2904 41.808 41.7423 42.3471C41.1943 42.8863 40.451 43.1892 39.6759 43.1892H22.142C21.367 43.1892 20.6237 42.8863 20.0757 42.3471C19.5276 41.808 19.2197 41.0767 19.2197 40.3142Z" stroke="#F8F8F8" stroke-width="3" stroke-linejoin="round"/>
 			<path d="M30.909 28.8142C33.3299 28.8142 35.2925 26.8834 35.2925 24.5017C35.2925 22.12 33.3299 20.1892 30.909 20.1892C28.4881 20.1892 26.5255 22.12 26.5255 24.5017C26.5255 26.8834 28.4881 28.8142 30.909 28.8142Z" stroke="#F8F8F8" stroke-width="3"/>
@@ -68,6 +68,11 @@ class LeftBare
 	settings.addEventListener('click', event => {
 		event.preventDefault();
 		navigate('/settings');
+	});
+	const profile = content.querySelector("#profile");
+	profile.addEventListener('click', event => {
+		event.preventDefault();
+		navigate('/profile');
 	});
 		let imageleft = content.querySelector("#leftBar-userImage");
 		const setPlayerImage = async () => {
