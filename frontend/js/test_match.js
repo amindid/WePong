@@ -15,7 +15,6 @@ export class Match
 
 			if (localStorage.getItem('quarterfinal1') === "0")
 			{
-				console.log("***************");
 				this.img1 = localStorage.getItem('img_player1');
 				this.img2 = localStorage.getItem('img_player2');
 				this.player1 = localStorage.getItem('Player_Name1');
