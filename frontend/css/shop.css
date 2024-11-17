@@ -175,7 +175,7 @@ card-element
 	height: 80%;
 	border-radius: 10px;
 	justify-self: center;
-	max-width: 350px;
+	/* max-width: 350px; */
 	min-height: 200px;
 	/* align-self: ; */
 	/* min-height: 250px; */

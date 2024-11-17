@@ -93,7 +93,7 @@ class SettingComponent
 							<h1> Secure your account </h1>
 							<h3> Enable 2FA to add an extra layer of security  </h3>
 						</div>
-						<div id="TwoFA">
+						<div class="display_secur" id="TwoFA">
 
 						</div>
 					</div>
@@ -195,26 +195,21 @@ class SettingComponent
 			})
 			const data = await response.json();
 			if (response.ok) {
+				let button_twofa = document.createElement("div");
+				button_twofa.className = "form-check form-switch";
 				if (data.TwoFA === 'True') {
-					twoFA.innerHTML = `
-					<div class="form-check form-switch">
-						<input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
-						<label class="form-check-label" for="flexSwitchCheckChecked">click to disable</label>
-				  	</div>`;
+					button_twofa.innerHTML	 = `
+						<input class="form-check-input display_secur_label"  type="checkbox" id="flexS" checked>
+						<label class="form-check-label display_secur_label" for="flexSwitchCheckChecked">click to disable</label>
+						`;
 				} else {
-					twoFA.innerHTML = `
-					<div class="form-check form-switch">
-						<input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-						<label class="form-check-label" for="flexSwitchCheckDefault">click to enable</label>
-				  	</div>`;
+					button_twofa.innerHTML = `
+						<input class="form-check-input display_secur_label" type="checkbox" id="flexS">
+						<label class="form-check-label display_secur_label" for="flexSwitchCheckDefault">click to enable</label>
+				  		`;
 				}
-			} else {
-				showAlert('somthing went wrong')
-			}
-		}
-		changebutton();
-			const enable2fa = this.content.querySelector("#TwoFA");
-			if (enable2fa) {
+				const enable2fa = button_twofa.querySelector("#flexS");
+				if (enable2fa) {
 				enable2fa.addEventListener('click', async function (event) {
 					const response = await fetch('http://localhost:8000/api/setup_2fa/', {
 						method : 'POST',
@@ -229,6 +224,28 @@ class SettingComponent
 					}
 				});
 			}
+				twoFA.appendChild(button_twofa);
+			} else {
+				showAlert('somthing went wrong')
+			}
+		}
+		changebutton();
+			// const enable2fa = twoFA.querySelector("#flexS");
+			// if (enable2fa) {
+			// 	enable2fa.addEventListener('click', async function (event) {
+			// 		const response = await fetch('http://localhost:8000/api/setup_2fa/', {
+			// 			method : 'POST',
+			// 			credentials: 'include',
+			// 		});
+			// 		const data = await response.json();
+			// 		if (response.ok) {
+			// 			showAlert(data.message || 'check check');
+			// 		}
+			// 		else {
+			// 			showAlert(data.error);
+			// 		}
+			// 	});
+			// }
 			// async function updateusername(username) {
 			// 	const response = await fetch('http://localhost:8000/api/users/update/', {
 			// 		method: 'PUT',
