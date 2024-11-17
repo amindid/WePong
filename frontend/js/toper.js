@@ -1,3 +1,5 @@
+import { showAlert } from './message-box.js';
+
 class Toper {
 	constructor() {}
 	render() {
@@ -48,22 +50,20 @@ class Toper {
 			const div3 = content.querySelector('#div33');
 			const searchButton = content.querySelector("#searchButton");
 			const searchResult = content.querySelector('#searchResult');
-			div3.addEventListener('mouseover', (event) => {
+			const searchInput = content.querySelector('#searchInput');
+			div3.addEventListener('click', (event) => {
+				event.stopPropagation();
 				searchResult.classList.add('show');
+				searchInput.classList.add('show');
 			});
-			div3.addEventListener('mouseout', (event) => {
+			document.addEventListener('click', (event) => {
 				searchResult.classList.remove('show');
+				searchInput.classList.remove('show');
 			});
+			div3.addEventListener('click', function(event) {
+				event.stopPropagation();
+			  });
 			searchButton.addEventListener('click', async function (event) {
-				// if (!searchButton.contains(event.target)) {
-				// 	console.log('inside condition');
-				// 	searchResult.classList.remove('show')
-				// }
-				// searchResult.addEventListener('focusout', (event) => {
-				// 	// if(!searchResult.contains(event.target))
-				// 	console.log('55555555555555555555555555');
-				// 		searchResult.classList.remove('show');
-				// });
 				const searchTerm = document.querySelector("#searchInput").value;
 				const data = {
 					username: searchTerm,  
@@ -90,14 +90,12 @@ class Toper {
 							searchImage.classList.remove('show');
 							searchUsername.textContent = 'no result'
 						}
-
-						// searchResult.classList.add('show');
-						// alert(`Searching for: ${userdata.username} ${userdata.email}`);
 					} else {
-						alert(`no result`);
+						showAlert('you are looking for your own username');
 					}
-
+					
 				} catch (error) {
+					showAlert('somthing went wrong please try again later.');
 					console.log('SOMTHING WENT WRONG', error);
 				}
 			});
@@ -105,7 +103,6 @@ class Toper {
 			function toggleNotification(event) {
 				event.stopPropagation(); 
 				notificationDiv.style.display = "flex";
-				// notificationDiv.style.display = notificationDiv.style.display === 'block' ? 'none' : 'block';
 			  }
 
 			var notification = content.querySelector("#notification_id");
