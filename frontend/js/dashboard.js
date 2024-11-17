@@ -22,7 +22,7 @@ class Dashboard {
 		let username = page.querySelector("#user-name");
 		const setPlayerImage = async () => {
 			try {
-				console.log('befor fetch');
+				// console.log('befor fetch');
 				const response = await fetch('http://localhost:8000/api/users/userProfile/', {
 					method: 'GET',
 					credentials: 'include',
@@ -30,7 +30,7 @@ class Dashboard {
 						'Content-Type': 'application/json',
 					}
 				});
-				console.log('after fetch');
+				// console.log('after fetch');
 				const data = await response.json();
 				if (response.ok) {
 					console.log('after await');

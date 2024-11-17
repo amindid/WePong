@@ -2,5 +2,15 @@
   "dependencies": {
     "express": "^4.21.1",
     "jwt-decode": "^4.0.0"
-  }
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "name": "wepong",
+  "version": "1.0.0",
+  "main": "server.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }

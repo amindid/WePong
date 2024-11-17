@@ -18,6 +18,8 @@ import { renderEightPlayers } from './eight_players.js';
 import { renderJoinTournament } from './list_tou.js';
 import { renderSettings } from './settings.js';
 import { renderTwoFaConfirmationPage } from './2fa_confirmation.js'
+import { renderProfile } from './profile.js'
+import { renderFriendList } from './friend_list.js'
 
 // export function router() {
 //     const routes = {
@@ -151,6 +153,7 @@ export { renderEightPlayers } from './eight_players.js'
 export { renderJoinTournament } from './list_tou.js'
 export { renderSettings } from './settings.js'
 import { showAlert } from './message-box.js';
+export { renderProfile } from './profile.js';
 
 function renderPage(page) {
     document.body.innerHTML = '';
@@ -212,7 +215,9 @@ async function loadPage(route) {
                             '/tournement/Fourplayers' : renderFourPlayers,
 							'/tournement/Eightplayers' : renderEightPlayers,
                             '/tournement/join' : renderJoinTournament,
-							'/settings' : renderSettings
+							'/settings' : renderSettings,
+							'/profile' : renderProfile,
+							'/friendList' : renderFriendList
 						};
     let isAuthenticated = false;
     try {
