@@ -195,26 +195,21 @@ class SettingComponent
 			})
 			const data = await response.json();
 			if (response.ok) {
+				let button_twofa = document.createElement("div");
+				button_twofa.className = "form-check form-switch";
 				if (data.TwoFA === 'True') {
-					twoFA.innerHTML = `
-					<div class="form-check form-switch">
-						<input class="form-check-input display_secur_label"  type="checkbox" id="flexSwitchCheckChecked" checked>
+					button_twofa.innerHTML	 = `
+						<input class="form-check-input display_secur_label"  type="checkbox" id="flexS" checked>
 						<label class="form-check-label display_secur_label" for="flexSwitchCheckChecked">click to disable</label>
-				  	</div>`;
+						`;
 				} else {
-					twoFA.innerHTML = `
-					<div class="form-check form-switch">
-						<input class="form-check-input display_secur_label" type="checkbox" id="flexSwitchCheckDefault">
+					button_twofa.innerHTML = `
+						<input class="form-check-input display_secur_label" type="checkbox" id="flexS">
 						<label class="form-check-label display_secur_label" for="flexSwitchCheckDefault">click to enable</label>
-				  	</div>`;
+				  		`;
 				}
-			} else {
-				showAlert('somthing went wrong')
-			}
-		}
-		changebutton();
-			const enable2fa = this.content.querySelector("#TwoFA");
-			if (enable2fa) {
+				const enable2fa = button_twofa.querySelector("#flexS");
+				if (enable2fa) {
 				enable2fa.addEventListener('click', async function (event) {
 					const response = await fetch('http://localhost:8000/api/setup_2fa/', {
 						method : 'POST',
@@ -229,6 +224,28 @@ class SettingComponent
 					}
 				});
 			}
+				twoFA.appendChild(button_twofa);
+			} else {
+				showAlert('somthing went wrong')
+			}
+		}
+		changebutton();
+			// const enable2fa = twoFA.querySelector("#flexS");
+			// if (enable2fa) {
+			// 	enable2fa.addEventListener('click', async function (event) {
+			// 		const response = await fetch('http://localhost:8000/api/setup_2fa/', {
+			// 			method : 'POST',
+			// 			credentials: 'include',
+			// 		});
+			// 		const data = await response.json();
+			// 		if (response.ok) {
+			// 			showAlert(data.message || 'check check');
+			// 		}
+			// 		else {
+			// 			showAlert(data.error);
+			// 		}
+			// 	});
+			// }
 			// async function updateusername(username) {
 			// 	const response = await fetch('http://localhost:8000/api/users/update/', {
 			// 		method: 'PUT',

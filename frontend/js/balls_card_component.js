@@ -69,9 +69,9 @@ export class BallCardsComponent extends HTMLElement
 			const data = await response.json();
 			if (response.ok) {
 				wallet = data.wallet;
-				console.log("###############");
-				console.log("wallet:" , data.wallet);
-				console.log("###############");
+				// console.log("###############");
+				// console.log("wallet:" , data.wallet);
+				// console.log("###############");
 				// wallet += amount
 				return data;
 			}
