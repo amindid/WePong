@@ -295,7 +295,7 @@ header h1 {
     display: none;
 }
 
-.modal-content {
+.modal-content-comp {
     background-color: #660066;
     border-radius: 20px;
     padding: 40px;
@@ -304,13 +304,13 @@ header h1 {
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
 }
 
-.modal-content h2 {
+.modal-content-comp h2 {
     margin-bottom: 20px;
     color: white;
     font-size: 28px;
 }
 
-.modal-content input {
+.modal-content-comp input {
     width: 100%;
     padding: 15px;
     margin-bottom: 25px;
@@ -322,7 +322,7 @@ header h1 {
     outline: none;
 }
 
-.modal-content input::placeholder {
+.modal-content-comp input::placeholder {
     color: white;
     font-size: 20px;
 }

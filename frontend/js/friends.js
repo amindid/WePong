@@ -69,7 +69,7 @@ class Friends {
 
                 <!-- Add Friend Modal -->
                 <div class="add-friend-modal hidden">
-                    <div class="modal-content">
+                    <div class="modal-content-comp">
                         <h2>Add a Friend</h2>
                         <input type="text" id="friend-username" placeholder="Enter username" />
                         <div class="modal-buttons">
@@ -130,7 +130,7 @@ class Friends {
             friendCard.innerHTML = `
                 <div class="friend-info">
                     <img class="avatar" src="../images/player2.png" alt="Avatar" />
-                    <span class="username">${username}</span>
+                    <span class="username-search">${username}</span>
                 </div>
                 <p class="status offline">OFFLINE</p>
                 <div class="friend-btn">
@@ -173,7 +173,7 @@ class Friends {
             const searchTerm = searchInput.value.toLowerCase();
             const friendCards = friendList.querySelectorAll('.friend-card');
             friendCards.forEach(card => {
-                const username = card.querySelector('.username').textContent.toLowerCase();
+                const username = card.querySelector('.username-search').textContent.toLowerCase();
                 if (username.includes(searchTerm)) {
                     card.style.display = 'flex';
                 } else {
