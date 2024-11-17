@@ -157,7 +157,6 @@ body {
     display: flex;
     width: fit-content;
     height: 250px;
-   
     border-radius: 10px;
     flex: 1;
     text-align: center;
@@ -170,6 +169,7 @@ body {
     margin: 0;
     padding: 0;
     line-height: 1.9;
+    font-family: "Bungee";
 }
 .stat-box1 h3{
     color: var(--primary-color);
@@ -238,12 +238,9 @@ body {
     justify-content: center;
     align-items: center;
     font-size: 28px;
-   
     color: #fff;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
-
-
 
 .match-history h2 {
     margin-bottom: 30px;
@@ -252,10 +249,16 @@ body {
     font-size: 30px;
 
 }
+p {
+    color: white;
+    margin: 0 !important;
+}
 
 .matches {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    /* align-items: center; */
     gap: 10px;
 }
 
@@ -263,7 +266,6 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-   
     background-color: rgba(255, 0, 238, 0.2);
     padding: 10px;
     border-radius: 10px;

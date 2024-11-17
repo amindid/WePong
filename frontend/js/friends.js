@@ -53,7 +53,7 @@ class Friends {
                             <div class="friend-card ${friend.statusClass}">
                                 <div class="friend-info">
                                     <img class="avatar" src="${friend.avatar}" alt="Avatar" />
-                                    <span class="username">${friend.username}</span>
+                                    <span class="username-search">${friend.username}</span>
                                 </div>
                                 <span class="status ${friend.statusClass}">${friend.status}</span>
                                 <div class="friend-btn">

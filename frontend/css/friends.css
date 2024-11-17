@@ -146,6 +146,10 @@ h1 {
     padding: 10px;
 }
 
+header h1 {
+    font-family: "Bungee";
+    color: white;
+}
 
 .search-bar input {
     border: none;
@@ -218,7 +222,7 @@ h1 {
 }
 
 
-.username {
+.username-search {
     font-size: 24px;
     color: white;
     font-family: "Bungee";
@@ -265,7 +269,7 @@ h1 {
 .friend-btn img {
     width: 24px;
     height: 24px;
-    padding: 0px 15px;
+    /* padding: 0px 15px; */
 }
 
 
