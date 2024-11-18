@@ -22,7 +22,11 @@ import { rendergameonline } from './game_online.js';
 import { renderFournames } from './four_names.js';
 import { rendertestmatch } from './test_match.js';
 import { renderEightnames } from './eight_names.js';
-
+import { renderLocalGame } from './local-game.js';
+import { renderGamePlay } from './game-play.js';
+import { renderNotFoundPage } from './not-found.js'; // Import the Not Found component
+import { renderProfile } from './profile.js';
+import { renderFriends } from './friends.js';
 // export function router() {
 //     const routes = {
 //         '/': HomePage,
@@ -159,6 +163,10 @@ export { rendergameonline } from './game_online.js';
 export { renderFournames } from './four_names.js';
 export { rendertestmatch } from './test_match.js';
 export { renderEightnames } from './eight_names.js';
+export { renderLocalGame } from './local-game.js';
+export { renderGamePlay } from './game-play.js';
+export {renderProfile} from './profile.js';
+export {renderFriends} from './friends.js';
 
 function renderPage(page) {
     document.body.innerHTML = '';
@@ -224,7 +232,11 @@ async function loadPage(route) {
                             '/tournement/join' : renderJoinTournament,
 							'/settings' : renderSettings,
 							'/game-online' : rendergameonline,
-							'/tournement/test_match' : rendertestmatch
+							'/tournement/test_match' : rendertestmatch ,
+                            '/local-game' : renderLocalGame,
+                            '/game-play' : renderGamePlay,
+                            '/profile' : renderProfile , 
+                            '/friends' : renderFriends ,
 						};
     let isAuthenticated = false;
     try {
@@ -261,6 +273,9 @@ async function loadPage(route) {
             return renderPage(secretRoutes[route]());
         history.pushState({}, '', '/login');
         return renderPage(startRoutes['/login']());
+    }
+    else {
+        return renderPage(renderNotFoundPage());
     }
 }
 

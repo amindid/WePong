@@ -227,7 +227,7 @@ class EightPlayers
                 await sleep(3000);
                 if (!this.navigationCancelled) {
                     alert(msg);
-                    navigate('/tournement/test_match');
+					navigate('/local-game');
                 }
             }
         };
