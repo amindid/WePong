@@ -466,7 +466,7 @@ class localGame {
         
                 const player2BallElement = player2Section.querySelector('.ball .selected-ball img');
                 if (!player2BallElement) {
-                    throw new Error("Player 2 nBall not selected");
+                    throw new Error("Player 2 nBall not selected");s
                 }
                 const player2Ball = player2BallElement.src;
         

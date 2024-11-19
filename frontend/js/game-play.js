@@ -173,6 +173,9 @@ class gamePlay {
             const player2PaddleSrc = localStorage.getItem('player2Paddle');
             const player2BallSrc = localStorage.getItem('player2Ball');
             const selectedMapSrc = localStorage.getItem('selectedMap');
+
+            
+    
             // player1Name = localStorage.getItem('player1Name') || 'Player 1';
             // player2Name = localStorage.getItem('player2Name') || 'Player 2';
 
@@ -192,7 +195,7 @@ class gamePlay {
             
                     timer += 1;
                     timerElement.innerText = timer;
-            
+                    
                     if (timer % 10 == 0) {
                         paddle1.speed++;
                         paddle2.speed++;
@@ -498,17 +501,51 @@ class gamePlay {
             return Math.random() < 0.5 ? ballSrc1 : ballSrc2;
         }
     
-    
+        function adjustGameElements() {
+            const isSmallScreen = window.innerWidth <= 768; // Define breakpoint for small screens
+        
+            if (isSmallScreen) {
+                paddle1.width = 20; // Smaller paddle width
+                paddle1.height = 120; // Smaller paddle height
+                paddle2.width = 20;
+                paddle2.height = 120;
+                ball.width = 30; // Smaller ball
+                ball.height = 60;
+                ball.speed = 0.1; // Slower ball speed
+                // Ensure paddles and ball are repositioned appropriately
+            } else {
+                paddle1.width = 40; // Default paddle width
+                paddle1.height = 180; // Default paddle height
+                paddle2.width = 40;
+                paddle2.height = 180;
+                ball.width = 60; // Default ball size
+                ball.height = 60;
+            }
+        
+        }
+        canvas.addEventListener('touchmove', (e) => {
+            const touch = e.touches[0];
+            if (touch.clientX < canvas.width / 2) {
+                paddle1.y = touch.clientY - paddle1.height / 2;
+            } else {
+                paddle2.y = touch.clientY - paddle2.height / 2;
+            }
+        });
+        
         window.addEventListener('resize', () => {
             canvas.width = window.innerWidth * coefficient;
             canvas.height = window.innerHeight * coefficient;
-            paddle2.x = canvas.width - 100;
-            paddle2.y = 100;
-            paddle1.x = 50;
-            paddle1.y = 550;
+        
+            paddle2.x = canvas.width - paddle2.width - 30; // Adjust paddle2 x position
+            paddle1.x = 30; // Adjust paddle1 x position
+        
+            adjustGameElements(); // Adjust dimensions for smaller screens
             update();
         });
-    
+        
+        // Call this function once when the game loads
+        adjustGameElements();
+        
         window.addEventListener('keydown', function (event) {
             var key = event.key;
     
