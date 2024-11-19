@@ -1,7 +1,7 @@
 .container_b{
 	display: flex;
 	justify-content: center;
-	width: 80%;
+	width: 70%;
 	height: 90%;
 }
 
@@ -41,12 +41,6 @@
 
 
 #username_b{
-	/* position: relative; */
-	/* width: 381px;
-	height: 63px;
-	top: -12%;
-	left: 30%;
-	opacity: 0px; */
 	margin-top: calc(clamp(100px, 20vw, 150px)/2 + 20px);
 	font-family: Bungee;
 	font-size: 50px;

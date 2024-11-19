@@ -57,6 +57,26 @@ class Profile
 		}
 	}
 	
+	async fetchFriendList() {
+		try{
+			const response = await fetch('http://localhost:8000/api/users/friendList/', {
+				method: 'GET',
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/json',
+				}
+			})
+			if (!response.ok){
+				throw new Error('Network response was not ok: ' + response.statusText);
+			}
+			const friendList = await response.json();
+			return (friendList);
+		} catch(error){
+			console.error('There was a problem with the fetch operation:', error);
+			return;
+		}
+	}
+
 	async acceptReq(profileId){
 		try{
 			console.log(profileId);
@@ -100,6 +120,28 @@ class Profile
 		}
 	}
 
+	async removeFriend(profileId){
+		try{
+			console.log("profile to be removed is " + profileId);
+			const response = await fetch('http://localhost:8000/api/users/removeFriend/', {
+				method: 'POST',
+				credentials: 'include',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({ friend_id: parseInt(profileId, 10) }),
+			})
+			if (!response.ok){
+				throw new Error('Network response was not ok: ' + response.statusText);
+			}
+			const responseData = await response.json();
+        	console.log('Success:', responseData);
+		} catch (error){
+			console.error('There was a problem with the fetch operation:', error);
+			return;
+		}
+	}
+
 	render()
 	{
 		const page = document.createDocumentFragment();
@@ -116,64 +158,7 @@ class Profile
     </div>
     
     <div class="friends-section">
-        <div class="friend-list">
-            <div class="friend-card">
-                <img class="friend-avatar" src="../images/default-avatar.png">
-                <div class="friend-info">
-                    <div class="friend-name">CoolGamer</div>
-                    <div class="friend-status">Online</div>
-                </div>
-                <div class="friend-actions">
-                    <button class="button_b chat">Chat</button>
-                    <button class="button_b remove">Remove</button>
-                </div>
-            </div>
-            <div class="friend-card">
-                <img class="friend-avatar" src="../images/default-avatar.png">
-                <div class="friend-info">
-                    <div class="friend-name">ProPlayer</div>
-                    <div class="friend-status">Online</div>
-                </div>
-                <div class="friend-actions">
-                    <button class="button_b chat">Chat</button>
-                    <button class="button_b remove">Remove</button>
-                </div>
-            </div>
-            <div class="friend-card">
-                <img class="friend-avatar" src="../images/default-avatar.png">
-                <div class="friend-info">
-                    <div class="friend-name">GameMaster</div>
-                    <div class="friend-status">Offline</div>
-                </div>
-                <div class="friend-actions">
-                    <button class="button_b chat">Chat</button>
-                    <button class="button_b remove">Remove</button>
-                </div>
-            </div>
-            <div class="friend-card">
-                <img class="friend-avatar" src="../images/default-avatar.png">
-                <div class="friend-info">
-                    <div class="friend-name">PixelWarrior</div>
-                    <div class="friend-status">Online</div>
-                </div>
-                <div class="friend-actions">
-                    <button class="button_b chat">Chat</button>
-                    <button class="button_b remove">Remove</button>
-                </div>
-            </div>
-            <div class="friend-card">
-                <img class="friend-avatar" src="../images/default-avatar.png">
-                <div class="friend-info">
-                    <div class="friend-name">QuestSeeker</div>
-                    <div class="friend-status">Online</div>
-                </div>
-                <div class="friend-actions">
-                    <button class="button_b chat">Chat</button>
-                    <button class="button_b remove">Remove</button>
-                </div>
-            </div>
-        </div>
-
+        <div class="friend-list"></div>
         <div class="friend-requests"></div>
     </div>
     </div>
@@ -262,6 +247,30 @@ class Profile
 				
 			}
 		});
+		// now fetching the friend list
+		this.fetchFriendList().then(friendList => {
+			const list = friendList.friends;
+			for (const key in list) {
+				const value = list[key];
+				const friendListCon = this.content.querySelector('.friend-list');
+				if (!friendListCon){
+					console.error('Friend list container not found.');
+					return;
+				}
+				const profileCard = document.createElement('div');
+				profileCard.className = 'friend-card'
+				profileCard.innerHTML = `
+				<img class="friend-avatar" src="${value[1]}">
+                <div class="friend-info">
+                    <div class="friend-name">${value[0]}</div>
+                </div>
+                <div class="friend-actions">
+                    <button class="button_b remove" profile-id="${key}">Remove</button>
+                </div>
+				`
+				friendListCon.appendChild(profileCard);
+			}
+		});
 		// Add JavaScript functionality
 		// Tab switching functionality
 		this.content.querySelectorAll('.tab').forEach(tab => {
@@ -284,19 +293,16 @@ class Profile
 		});
 		// Button functionality
 		this.content.addEventListener('click', (e) => {
-			// Check if the clicked element is a button with a specific action
 			if (e.target.classList.contains('button_b')) {
 				const action = e.target.classList.contains('accept') ? 'accept' :
 							   e.target.classList.contains('decline') ? 'decline' :
 							   e.target.classList.contains('remove') ? 'remove' : null;
 		
-				if (!action) return; // Ignore clicks on non-action buttons
+				if (!action) return;
 
-				const reqCard = e.target.closest('.req-card'); // Find the closest request card
+				const reqCard = e.target.closest('.req-card');
 
-				if (!reqCard) return; // If no card is found, exit
-
-				// alert("Button clicked: " + action);
+				if (!reqCard) return;
 
 				const profileId = e.target.getAttribute('profile-id');
 				switch (action) {
@@ -308,27 +314,24 @@ class Profile
 						this.denyReq(profileId)
             			.then(() => reqCard.remove())
 						break;
-					case 'remove':
 				}
 			}
 		});
-		// Button functionality
-		// this.content.querySelectorAll('.button').forEach(button => {
-		// 	button.addEventListener('click', (e) => {
-		// 		const action = e.target.className.split(' ')[1];
-		// 		const reqCard = e.target.closest('.req-card');
-		// 		alert("clicked");
-		// 		switch (action) {
-		// 			case 'accept':
-		// 				reqCard.remove(); // Accept request action
-		// 				break;
-		// 			case 'decline':
-		// 			case 'remove':
-		// 				reqCard.remove(); // Remove or decline action
-		// 				break;
-		// 		}
-		// 	});
-		// });
+		this.content.addEventListener('click', (e) => {
+			if (e.target.classList.contains('button_b')){
+				const action = e.target.classList.contains('remove') ? 'remove' : null;
+				if (!action) return;
+
+				const profileCard = e.target.closest('.friend-card');
+				if (!profileCard) return;
+
+				const profileId = e.target.getAttribute('profile-id');
+				if (action === 'remove'){
+					this.removeFriend(profileId)
+					.then(() => profileCard.remove());
+				}
+			}
+		});
 		const body = document.body
 		body.style.alignItems = 'center';
 		return page;
