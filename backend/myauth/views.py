@@ -30,6 +30,31 @@ import urllib.parse
 from urllib.parse import urlencode
 from django.utils import timezone
 from datetime import timedelta
+import json
+from random import randint
+from django.contrib.auth.tokens import default_token_generator
+
+
+
+def log_to_elasticsearch(message, event_type="generic"):
+    url = "http://localhost:9200/pingpong_logs-000001/_doc/"
+    headers = {
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "@timestamp": datetime.utcnow().isoformat(),
+        "message": message,
+        "event": event_type
+    }
+    try:
+        response = requests.post(url, headers=headers, data=json.dumps(payload), auth=('elastic', 'aouchaadtest'))
+        if response.status_code == 201:
+            print("Log event sent successfully!")
+        else:
+            print(f"Failed to send log event: {response.status_code} - {response.text}")
+    except Exception as e:
+        print(f"Error sending log to Elasticsearch: {e}")
+
 
 
 class CookieJWTAuthentication(BaseAuthentication):
@@ -49,6 +74,8 @@ class CookieJWTAuthentication(BaseAuthentication):
 			raise AuthenticationFailed('User not found')
 		return (user, None)
 
+
+
 class GoogleLogin(APIView):
 	permission_classes = [AllowAny]
 
@@ -63,6 +90,7 @@ class GoogleLogin(APIView):
 		return Response({"url": google_auth_url}, status=status.HTTP_200_OK)
 
 
+
 class Login42(APIView):
 	permission_classes = [AllowAny]
 
@@ -73,6 +101,8 @@ class Login42(APIView):
 
 		google_auth_url = f"https://api.intra.42.fr/oauth/authorize?client_id={client_id}&redirect_uri={redirect_uri}&&response_type=code&scope=public&state={state}"
 		return Response({"url": google_auth_url}, status=status.HTTP_200_OK)
+
+
 
 class FacebookLogin(APIView):
 	permission_classes = [AllowAny]
@@ -87,6 +117,17 @@ class FacebookLogin(APIView):
 		facebook_auth_url = f"{facebook_url}?client_id={client_id}&redirect_uri={redirect_uri}&state={state}&scope={scope}"
 		return Response({"url": facebook_auth_url}, status=status.HTTP_200_OK)
 
+class isTwoFA(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def get(self, request):
+		try:
+			user = request.user
+			if user.isTwoFA:
+				return Response({'TwoFA': 'True'},status=status.HTTP_200_OK)
+			return Response({'TwoFA': 'False'},status=status.HTTP_200_OK)
+		except:
+			return Response ({'message': 'somthing went wrong please try again later.'})
 
 class GoogleCallback(APIView):
 	permission_classes = [AllowAny]
@@ -116,7 +157,7 @@ class GoogleCallback(APIView):
 			'username' : user_info.get('name'),
 			'avatar': user_info.get('picture'),
 		}
-		user = User.objects.filter(username=user_data['username'], email=user_data['email']).first()
+		user = User.objects.filter(email=user_data['email']).first()
 		if not user is None:
 			refresh = RefreshTokens.objects.filter(user=user).first()
 			token = refresh.get_access_token()
@@ -128,11 +169,14 @@ class GoogleCallback(APIView):
 				refresh = RefreshTokensSerializer(data={'user': user.id})
 				if refresh.is_valid():
 					refresh_token : RefreshTokens = refresh.save()
+					user.isAuth = True
+					user.authProvider = 'google'
 					user.save()
 					token = refresh_token.get_access_token()
 				else:
 					error_text = refresh.errors.get('ErrorDetail')
 					error_text = urlencode({'message': str(error_text)})
+					log_to_elasticsearch("google auth failed", event_type="error")
 					return redirect('http://localhost:3000/login?{error_text}')
 			else:
 				for field, error_list in serializer.errors.items():
@@ -141,6 +185,7 @@ class GoogleCallback(APIView):
 				if error is None:
 					error = 'somthing went wrong'
 				error_text = urlencode({'message': str(error)})
+				log_to_elasticsearch("google auth failed", event_type="error")
 				return redirect(f'http://localhost:3000/login?{error_text}')
 		if user.isTwoFA:
 			code = str(randint(100000, 999999))
@@ -163,8 +208,11 @@ class GoogleCallback(APIView):
 			secure=False,
 			samesite='lax'
 		)
+		log_to_elasticsearch("google auth success", event_type="google auth")
 		return response
-	
+
+
+
 class Callback42(APIView):
 	permission_classes = [AllowAny]
 	def get(self, request):
@@ -178,21 +226,21 @@ class Callback42(APIView):
     	        'grant_type': 'authorization_code',
 		}
 		token_response = requests.post(token_url, data=token_data)
+		print(token_response)
 		token_info = token_response.json()
 		access_token = token_info.get('access_token')
-    	    # Use the access token to get user info
 		user_info_url = "https://api.intra.42.fr/v2/me"
 		user_info_response = requests.get(user_info_url, headers={
     	        'Authorization': f"Bearer {access_token}"
 		})
 		user_info = user_info_response.json()
-
 		user_data = {
 			'email': user_info.get('email'),
 			'username' : user_info.get('login'),
 			'avatar': user_info.get('image', {}).get('link'),
 		}
-		user = User.objects.filter(username=user_data['username'], email=user_data['email']).first()
+		
+		user = User.objects.filter(email=user_data['email']).first()
 		if not user is None:
 			refresh = RefreshTokens.objects.filter(user=user).first()
 			token = refresh.get_access_token()
@@ -204,11 +252,14 @@ class Callback42(APIView):
 				refresh = RefreshTokensSerializer(data={'user': user.id})
 				if refresh.is_valid():
 					refresh_token : RefreshTokens = refresh.save()
+					user.isAuth = True
+					user.authProvider = '42'
 					user.save()
 					token = refresh_token.get_access_token()
 				else:
 					error_text = refresh.errors.get('ErrorDetail')
 					error_text = urlencode({'message': str(error_text)})
+					log_to_elasticsearch("42 auth failed", event_type="error")
 					return redirect('http://localhost:3000/login?{error_text}')
 			else:
 				for field, error_list in serializer.errors.items():
@@ -217,6 +268,7 @@ class Callback42(APIView):
 				if error is None:
 					error = 'somthing went wrong'
 				error_text = urlencode({'message': str(error)})
+				log_to_elasticsearch("42 auth failed", event_type="error")
 				return redirect(f'http://localhost:3000/login?{error_text}')
 		if user.isTwoFA:
 			code = str(randint(100000, 999999))
@@ -239,8 +291,10 @@ class Callback42(APIView):
 			secure=False,
 			samesite='lax'
 		)
+		log_to_elasticsearch("42 auth success", event_type="42 auth")
 		return response
 	
+
 
 class FacebookCallback(APIView):
 	permission_classes = [AllowAny]
@@ -271,7 +325,7 @@ class FacebookCallback(APIView):
 			'username' : user_info.get('name'),
 			'avatar': user_info.get('picture', {}).get('data', {}).get('url'),
 		}
-		user = User.objects.filter(username=user_data['username'], email=user_data['email']).first()
+		user = User.objects.filter(email=user_data['email']).first()
 		if not user is None:
 			refresh = RefreshTokens.objects.filter(user=user).first()
 			refresh.save()
@@ -283,11 +337,14 @@ class FacebookCallback(APIView):
 				refresh = RefreshTokensSerializer(data={'user': user.id})
 				if refresh.is_valid():
 					refresh_token : RefreshTokens = refresh.save()
+					user.isAuth = True
+					user.authProvider = 'facebook'
 					user.save()
 					token = refresh_token.get_access_token()
 				else:
 					error_text = refresh.errors.get('ErrorDetail')
 					error_text = urlencode({'message': str(error_text)})
+					log_to_elasticsearch("facebook auth failed", event_type="error")
 					return redirect('http://localhost:3000/login?{error_text}')
 			else:
 				for field, error_list in serializer.errors.items():
@@ -296,6 +353,7 @@ class FacebookCallback(APIView):
 				if error is None:
 					error = 'somthing went wrong'
 				error_text = urlencode({'message': str(error)})
+				log_to_elasticsearch("facebook auth failed", event_type="error")
 				return redirect(f'http://localhost:3000/login?{error_text}')
 		if user.isTwoFA:
 			code = str(randint(100000, 999999))
@@ -318,7 +376,9 @@ class FacebookCallback(APIView):
 			secure=False,
 			samesite='lax'
 		)
+		log_to_elasticsearch("google auth success", event_type="facbook auth")
 		return response
+
 
 
 class CheckAuthentication(APIView):
@@ -326,6 +386,8 @@ class CheckAuthentication(APIView):
 	permission_classes = [IsAuthenticated]
 	def get(self, request):
 		return Response({'authenticated': True}, status=status.HTTP_200_OK)
+
+
 
 def activate(request, uidb64,token):
 	try:
@@ -336,9 +398,12 @@ def activate(request, uidb64,token):
 	if user is not None and email_confirmation_token.check_token(user, token):
 		user.is_email_confirmed = True
 		user.save()
+		log_to_elasticsearch("email confirmation success", event_type="email confirmation")
 		return Response({'messages' : 'email confirmed successfuly'}, status=status.HTTP_200_OK)
 	else:
+		log_to_elasticsearch("email confirmation failed", event_type="error")
 		return Response({'error' : 'email activation is invalid'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 def hash_password(password):
@@ -347,6 +412,7 @@ def hash_password(password):
 	sha256.update(password_bytes)
 	hashed_password = sha256.hexdigest()
 	return hashed_password
+
 
 
 class refreshAccessToken(APIView):
@@ -366,7 +432,7 @@ class refreshAccessToken(APIView):
 		except:
 			return Response({'error': 'invalide refresh token'}, status=status.HTTP_400_BAD_REQUEST)
 
-from random import randint
+
 
 class loginUser(APIView):
 	def post(self, request):
@@ -375,10 +441,13 @@ class loginUser(APIView):
 			password = request.data['password']
 			user = User.objects.filter(username=username).first()
 		except User.DoesNotExist:
+			log_to_elasticsearch("login fail", event_type="error")
 			return Response({'error': 'user not found'}, status=status.HTTP_404_NOT_FOUND)
 		except Exception as e:
+			log_to_elasticsearch("login fail", event_type="error")
 			return Response({'error': 'username and password fields are required'}, status=status.HTTP_400_BAD_REQUEST)
 		if not user:
+			log_to_elasticsearch("login fail", event_type="error")
 			return Response({'error': 'invalide username.'}, status=status.HTTP_401_UNAUTHORIZED)
 		if user.check_password(hash_password(password)):
 			if user.isTwoFA:
@@ -408,8 +477,11 @@ class loginUser(APIView):
 				secure=False,
 				samesite='lax'
 			)
+			log_to_elasticsearch("login success", event_type="login")
 			return response
+		log_to_elasticsearch("login fail", event_type="error")
 		return Response({'error': 'incorrect password.'}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 
 class logoutUser(APIView):
@@ -417,14 +489,18 @@ class logoutUser(APIView):
 	permission_classes = [IsAuthenticated]
 	def post(self, request):
 		try:
-			user = request.user
-			refresh_token = RefreshTokens.objects.get(user=user)
-			token = RefreshToken(refresh_token.token)
-			token.blacklist()
-			refresh_token.delete()
-			return Response ({'message': 'logout successful.'} , status=status.HTTP_205_RESET_CONTENT)
+			# user = request.user
+			# refresh_token = RefreshTokens.objects.get(user=user)
+			# token = RefreshToken(refresh_token.token)
+			# token.blacklist()
+			# refresh_token.delete()
+			log_to_elasticsearch("logout success", event_type="logout")
+			response = Response ({'message': 'logout successful.'} , status=status.HTTP_205_RESET_CONTENT)
+			response.delete_cookie('access_token')
+			return response
 		except Exception as e:
 			return Response ({'error':'invalide request'},status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class registerUser(APIView):
@@ -433,8 +509,10 @@ class registerUser(APIView):
 		if serializer.is_valid():
 			if serializer.validated_data['password'] == request.data['passwordConfirmation']:
 				if User.objects.filter(username=serializer.validated_data['username']).exists():
+					log_to_elasticsearch("register fail", event_type="error")
 					return Response({'error': 'username is already in use.'}, status=status.HTTP_400_BAD_REQUEST)
 				if User.objects.filter(username=serializer.validated_data['email']).exists():
+					log_to_elasticsearch("register fail", event_type="error")
 					return Response({'error': 'email is already in use.'}, status=status.HTTP_400_BAD_REQUEST)
 				user = serializer.save()
 				user.password = hash_password(serializer.validated_data['password'])
@@ -444,7 +522,6 @@ class registerUser(APIView):
 				refresh = RefreshTokensSerializer(data=data)
 				if refresh.is_valid():
 					refresh_token: RefreshTokens = refresh.save()
-					# refresh_token.save()
 					user.save()
 					response = Response({"access": refresh_token.get_access_token(), "refresh" : refresh_token.token}, status=status.HTTP_201_CREATED)
 					response.set_cookie (
@@ -454,12 +531,18 @@ class registerUser(APIView):
 						secure=False,
 						samesite='lax'
 					)
+					log_to_elasticsearch(f"new user registred named {user.username}", event_type="regitration")
 					return response
 				else:
+					log_to_elasticsearch("register fail", event_type="error")
 					return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 			else:
+				log_to_elasticsearch("register fail", event_type="error")
 				return Response({'error': 'passwords do not match!'}, status=status.HTTP_400_BAD_REQUEST)
+		log_to_elasticsearch("register fail", event_type="error")
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 class setup_email_2fa(APIView):
 	authentication_classes = [CookieJWTAuthentication]
@@ -468,41 +551,33 @@ class setup_email_2fa(APIView):
 		user : User = request.user
 		if user is None:
 			return Response({'error': 'user not found'}, status=status.HTTP_404_NOT_FOUND)
-		if not user.isTwoFA:
-			user.isTwoFA = True
-			user.save()
-		return Response({'message': 'email 2fa enabled successfully.'}, status=status.HTTP_200_OK)
+		# if not user.isTwoFA:
+		user.isTwoFA = not user.isTwoFA
+		user.save()
+		# log_to_elasticsearch("enabling 2fa" if user.isTwoFA else "disabling 2fa", event_type="2fa")
+		return Response({'message': 'email 2fa enabled successfully.' if user.isTwoFA else 'email 2fa disabled successfully.'}, status=status.HTTP_200_OK)
 
-# from django.views.decorators.csrf import csrf_exempt
-# from django.utils.decorators import method_decorator
 
-# @method_decorator(csrf_exempt, name='dispatch')
+
 class confirm_email_2fa(APIView):
-	# permission_classes = [AllowAny]
 	def post(self,request):
 		username = request.data.get('username')
 		code = request.data.get('code')
-		print(username, " ======> ", code)
 		user = User.objects.filter(username=username).first()
-		print(user.username, " ======> ", user.TwoFACode)
 		if user is None:
 			return Response({'error': 'user not found'}, status=status.HTTP_404_NOT_FOUND)
 		if user.TwoFACode == code and timezone.now() - user.TwoFA_sent_at <= timedelta(minutes=5):
 			refresh = RefreshTokens.objects.filter(user=user).first()
 			if refresh is None:
-				print('first case')
 				refresh_token = RefreshTokensSerializer(data={'user':user.id})
 				if refresh_token.is_valid():
-					print('second case')
 					refresh = refresh_token.save()
 					refresh.save()
 					token = refresh.get_access_token()
-					# refresh = refresh_token.save()
 			else:
 				refresh.save()
 				token = refresh.get_access_token()
-			# refresh.save()
-			response = Response({"access": token, "refresh" : refresh.token, "id": user.id}, status=status.HTTP_201_CREATED)
+			response = Response({'message': '2fa confirmed successfully'},status=status.HTTP_201_CREATED)
 			response.set_cookie(
 				key='access_token',
 				value=token,
@@ -510,8 +585,11 @@ class confirm_email_2fa(APIView):
 				secure=False,
 				samesite='lax'
 			)
+			log_to_elasticsearch("2fa confirmation", event_type="2fa")
 			return response
+		log_to_elasticsearch("2fa fail", event_type="error")
 		return Response({'error':'invalide or expired code'}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 
 class confirmEmail(APIView):
@@ -536,17 +614,25 @@ class confirmEmail(APIView):
 
 
 
-class updateInfo(APIView):
+class updateUsername(APIView):
 	authentication_classes = [CookieJWTAuthentication]
 	permission_classes = [IsAuthenticated]
 	def put(self, request):
-		user = request.user
-		serializer = UserSerializer(User.objects.get(id=user.id), data=request.data, partial=True)
-		if serializer.is_valid():
-			serializer.save()
-			return Response(serializer.data, status=status.HTTP_200_OK)
-		else:
-			return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+		try:
+			user = request.user
+			newUsername = request.data['newUsername']
+			data = {
+				'username' : newUsername,
+			}
+			serializer = UserSerializer(user, data=data, partial=True)
+			if serializer.is_valid():
+				serializer.save()
+				return Response(serializer.data, status=status.HTTP_200_OK)
+			else:
+				return Response({'message': "username already in use."}, status=status.HTTP_400_BAD_REQUEST)
+		except:
+			return Response({'message' : 'somthing went wrong please try again later.'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class deleteUser(APIView):
@@ -558,6 +644,7 @@ class deleteUser(APIView):
 			user.delete()
 		except:
 			return Response(status=status.HTTP_404_NOT_FOUND)
+		log_to_elasticsearch("user deletion", event_type="user deletion")
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -567,17 +654,20 @@ class changePassword(APIView):
 	permission_classes = [IsAuthenticated]
 	def post(self,request):
 		user: User = request.user
+		if user.isAuth:
+			return Response({'message' : f"this user is authenticated with {user.authProvider}, there is no password to change."})
 		password = request.data['password']
 		if user.check_password(hash_password(password)):
 			newPassword = request.data['newPassword']
 			newPasswordConfirmation = request.data['newPasswordConfirmation']
 			if newPassword == newPasswordConfirmation:
 				if not newPassword:
-					return Response({'error': 'new password is required'}, status=status.HTTP_400_BAD_REQUEST)
+					return Response({'message': 'new password is required'}, status=status.HTTP_400_BAD_REQUEST)
 				user.set_password(hash_password(newPassword))
 				return Response({'message': 'password changed successfully.'}, status=status.HTTP_200_OK)
-			return Response({'error': 'passwords do not match'}, status=status.HTTP_400_BAD_REQUEST)
-		return Response({'error': 'password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({'message': 'passwords do not match'}, status=status.HTTP_400_BAD_REQUEST)
+		return Response({'message': 'password is incorrect'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class ProfileById(APIView):
@@ -597,6 +687,30 @@ class ProfileById(APIView):
 			'email' : user.email,
 		}
 		return Response(data, status=status.HTTP_200_OK)
+
+
+
+class ProfileByUsername(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def post(self, request):
+		username = request.data['username']
+		if username is None:
+			return Response({'error': 'username is required'}, status=status.HTTP_400_BAD_REQUEST)
+		try:
+			user = User.objects.get(username=username)
+		except User.DoesNotExist:
+			return Response({'error': 'user not found'})
+		if request.user == user:
+			return Response({'error': 'you are looking for your self'},status=-status.HTTP_400_BAD_REQUEST)
+		data = {
+			'username': user.username,
+			'avatar' : user.avatar,
+			'email' : user.email,
+		}
+		return Response(data, status=status.HTTP_200_OK)
+
+
 
 class userProfile(APIView):
 	authentication_classes = [CookieJWTAuthentication]
@@ -618,17 +732,24 @@ class userProfile(APIView):
 		return Response(data, status=status.HTTP_200_OK)
 
 
+
 class friendList(APIView):
 	authentication_classes = [CookieJWTAuthentication]
 	permission_classes = [IsAuthenticated]
 	def get(self, request):
-		user = request.user
+		user : User = request.user
 		if user is None:
 			return Response({'error': 'user not found.'}, status=status.HTTP_404_NOT_FOUND)
+		friend_list = {}
+		for friend in user.friends:
+			user = User.objects.get(id=friend)
+			friend_list[user.id] = [user.username, user.avatar]
+
 		data = {
-			'friends' : user.friends,
+			'friends' : friend_list,
 		}
 		return Response(data, status=status.HTTP_200_OK)
+
 
 
 class myRequestsList(APIView):
@@ -644,6 +765,7 @@ class myRequestsList(APIView):
 		return Response(data, status=status.HTTP_200_OK)
 
 
+
 class BlockedList(APIView):
 	authentication_classes = [CookieJWTAuthentication]
 	permission_classes = [IsAuthenticated]
@@ -657,6 +779,7 @@ class BlockedList(APIView):
 		return Response(data, status=status.HTTP_200_OK)
 
 
+
 class friendRequestList(APIView):
 	authentication_classes = [CookieJWTAuthentication]
 	permission_classes = [IsAuthenticated]
@@ -668,6 +791,7 @@ class friendRequestList(APIView):
 			'friendsRequests' : user.friendRequests,
 		}
 		return Response(data, status=status.HTTP_200_OK)
+
 
 
 class sendRequest(APIView):
@@ -686,11 +810,13 @@ class sendRequest(APIView):
 				return Response({'error': 'You cannot send a friend request to yourself.'}, status=status.HTTP_400_BAD_REQUEST)
 			sender.sendRequest(reciever_id)
 			reciever.addFriendRequest(sender.id)
+			log_to_elasticsearch("Friend request sent successfully", event_type="friend request")
 			return Response({'message': 'Friend request sent successfully'},status=status.HTTP_200_OK)
 		except User.DoesNotExist:
 			return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 		except Exception as e:
 			return Response({'error': 'already sent'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class AcceptRequest(APIView):
@@ -711,11 +837,13 @@ class AcceptRequest(APIView):
 			sender.addFriend(reciever.id)
 			reciever.DeleteFriendRequest(sender_id)
 			reciever.addFriend(sender_id)
+			log_to_elasticsearch("Friend request accepted successfully", event_type="accept friend request")
 			return Response({'message': 'Friend request accepted successfully'},status=status.HTTP_200_OK)
 		except User.DoesNotExist:
 			return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 		except Exception as e:
 			return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class DenyRequest(APIView):
@@ -771,6 +899,7 @@ class removeFriend(APIView):
 			return Response({'error': 'somthing went wrong'}, status=status.HTTP_400_BAD_REQUEST)
 
 
+
 class DeleteRequest(APIView):
 	authentication_classes = [CookieJWTAuthentication]
 	permission_classes = [IsAuthenticated]
@@ -787,11 +916,13 @@ class DeleteRequest(APIView):
 				return Response({'error': 'invalide request'}, status=status.HTTP_400_BAD_REQUEST)
 			reciever.DeleteFriendRequest(sender.id)
 			sender.DeleteRequest(reciever_id)
+			log_to_elasticsearch("Friend request deleted successfully", event_type="friend request deleted")
 			return Response({'message': 'Friend request deleted successfully'},status=status.HTTP_204_NO_CONTENT)
 		except User.DoesNotExist:
 			return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 		except Exception as e:
 			return Response({'error': 'invalide request'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class block(APIView):
@@ -808,11 +939,13 @@ class block(APIView):
 			user.block(toBeBlocked.id)
 			user.DeleteFriend(toBeBlocked.id)
 			toBeBlocked.DeleteFriend(user)
+			log_to_elasticsearch("user blocked successfully", event_type="block")
 			return Response({'message': 'user blocked successfully'},status=status.HTTP_200_OK)
 		except User.DoesNotExist:
 			return Response({'error':'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 		except Exception as e:
 			return Response({'error': 'invalide request'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 class unblock(APIView):
@@ -823,12 +956,14 @@ class unblock(APIView):
 			user: User = request.user
 			toBeUnblocked = User.objects.get(id=request.data['toBeUnblocked'])
 			user.unblock(toBeUnblocked)
+			log_to_elasticsearch("user unblocked successfully", event_type="unblock")
 			return Response({'message': 'user unblocked successfully'},status=status.HTTP_204_NO_CONTENT)
 		except User.DoesNotExist:
 			return Response({'error': 'User not found.'},status=status.HTTP_404_NOT_FOUND)
 		except Exception as e:
 			return Response({'error':'invalide request.'},status=status.HTTP_400_BAD_REQUEST)
-		
+
+
 
 class PasswordResetRequestView(APIView):
 	def post(self, request):
@@ -838,10 +973,11 @@ class PasswordResetRequestView(APIView):
 		if serializer.is_valid():
 			resetPass = serializer.save()
 			resetPass.save()
+			log_to_elasticsearch("password reset request", event_type="password reset")
 			return Response({'detail': 'Password reset link sent.'}, status=status.HTTP_200_OK)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 	
-from django.contrib.auth.tokens import default_token_generator
+
 	
 def PasswordResetConfirmView(request, uid, token):
 	try:
@@ -883,14 +1019,14 @@ class UpdateWalletView(APIView):
 		user = request.user
 		amount = request.data.get('amount')
 		if amount is not None:
-		    try:
-		        amount = int(amount)
-		    except ValueError:
-		        return Response({"error": "Invalid amount"}, status=status.HTTP_400_BAD_REQUEST)		
-		    user.wallet += amount
-		    user.save()
+			try:
+				amount = int(amount)
+			except ValueError:
+				return Response({"error": "Invalid amount"}, status=status.HTTP_400_BAD_REQUEST)		
+			user.wallet += amount
+			user.save()
 		    # serializer = UserSerializer(user)
-		    return Response({'message': 'wallet apdated successfully'}, status=status.HTTP_200_OK)
+			return Response({'message': 'wallet apdated successfully'}, status=status.HTTP_200_OK)
 		else:
 		    return Response({"error": "Amount not provided"}, status=status.HTTP_400_BAD_REQUEST)
 

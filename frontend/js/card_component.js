@@ -62,8 +62,10 @@ export class Card extends HTMLElement {
 				flex-direction: column;
 				width: 80%;
 				height: 80%;
+				background-color: transparent;
+  				border: 2px solid transparent;
 				border-radius: 20px;
-				
+				gap:5%;
 			}
 			.img_class {
 				width: 100%;
@@ -90,7 +92,7 @@ export class Card extends HTMLElement {
 				justify-content: center;
 				align-items: center;
 				width: 40%;
-				height: 60%;
+				height: 100%;
 				border-radius: 20px;
 				color: white;
 				front-size:100%;

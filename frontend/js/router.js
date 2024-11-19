@@ -21,6 +21,15 @@ import { renderTwoFaConfirmationPage } from './2fa_confirmation.js'
 import { renderProfile } from './profile.js'
 import { renderFriendList } from './friend_list.js'
 
+import { rendergameonline } from './game_online.js';
+import { renderFournames } from './four_names.js';
+import { rendertestmatch } from './test_match.js';
+import { renderEightnames } from './eight_names.js';
+import { renderLocalGame } from './local-game.js';
+import { renderGamePlay } from './game-play.js';
+import { renderNotFoundPage } from './not-found.js'; // Import the Not Found component
+// import { renderProfile } from './profile.js';
+// import { renderFriends } from './friends.js';
 // export function router() {
 //     const routes = {
 //         '/': HomePage,
@@ -154,6 +163,29 @@ export { renderJoinTournament } from './list_tou.js'
 export { renderSettings } from './settings.js'
 import { showAlert } from './message-box.js';
 export { renderProfile } from './profile.js';
+export { rendergameonline } from './game_online.js';
+export { renderFournames } from './four_names.js';
+export { rendertestmatch } from './test_match.js';
+export { renderEightnames } from './eight_names.js';
+export { renderLocalGame } from './local-game.js';
+export { renderGamePlay } from './game-play.js';
+// export {renderProfile} from './profile.js';
+// export {renderFriends} from './friends.js';
+
+/*
+    data = {
+        page: html,
+        unregister: () => {}
+    }
+
+    let prevData = null
+
+    renderPage(data) {
+
+        if (prevData) prevData.unregister()
+        prevData = data
+    }
+*/
 
 function renderPage(page) {
     document.body.innerHTML = '';
@@ -205,19 +237,30 @@ async function loadPage(route) {
                             '/login': renderLoginPage,
                             '/register': renderRegistrationPage,
                             '/password_reset': renderResetPasswordPage,
-                            '/2fa_confirmation': renderTwoFaConfirmationPage};
+                            '/2fa_confirmation': renderTwoFaConfirmationPage,
+                            // '/local-game' : renderLocalGame,
+                            // '/game-play' : renderGamePlay
+                            };
 
 
     const secretRoutes = {  '/dashboard': renderDashboard,
                             '/shop' : renderShop,
                             '/tournement' : rendertournamant,
+                            '/tournement/fournames' : renderFournames,
+                            '/tournement/eightnames' : renderEightnames,
                             '/tournement/create' : renderCreateTournament,
                             '/tournement/Fourplayers' : renderFourPlayers,
 							'/tournement/Eightplayers' : renderEightPlayers,
                             '/tournement/join' : renderJoinTournament,
 							'/settings' : renderSettings,
 							'/profile' : renderProfile,
-							'/friendList' : renderFriendList
+							'/friendList' : renderFriendList,
+							'/game-online' : rendergameonline,
+							'/tournement/test_match' : rendertestmatch ,
+                            '/local-game' : renderLocalGame,
+                            '/game-play' : renderGamePlay,
+                            // '/profile' : renderProfile , 
+                            // '/friends' : renderFriends ,
 						};
     let isAuthenticated = false;
     try {
@@ -254,6 +297,9 @@ async function loadPage(route) {
             return renderPage(secretRoutes[route]());
         history.pushState({}, '', '/login');
         return renderPage(startRoutes['/login']());
+    }
+    else {
+        return renderPage(renderNotFoundPage());
     }
 }
 

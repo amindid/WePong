@@ -28,8 +28,8 @@ class PlayMods {
 	</div>
 	<div class="mods">
 		<img class="mod"  id="tournement_id" src="../images/tournement-icon.svg" alt="">
-		<img  class="mod" src="../images/local-icon.svg" alt="">
-		<img  class="mod" src="../images/online-icon.svg" alt="">
+		<img  class="mod" id="local-game-id" src="../images/local-icon.svg" alt="">
+		<img  class="mod" id="gameonline_id" src="../images/online-icon.svg" alt="">
 	</div>`;
 	content.appendChild(play_mods);
 	const tournament = content.querySelector("#tournement_id");
@@ -37,6 +37,18 @@ class PlayMods {
 		event.preventDefault();
 		navigate('/tournement');
 	});
+	const game_online = content.querySelector("#gameonline_id");
+	game_online.addEventListener('click', event => {
+		event.preventDefault();
+		navigate('/game-online');
+	});
+	const local_game = content.querySelector("#local-game-id");
+	local_game.addEventListener('click', event => {
+		event.preventDefault();
+		localStorage.setItem("local-game", "1");
+		navigate('/local-game');
+	});
+
 	return content;
 	}
 }

@@ -31,17 +31,37 @@ class HomePage {
 				<p class="title-text">WELCOM TO PONG..</p>
 			</div>
 			<div class="buttonDiv">
-				<a href="" class="homeAtag"><button class="homeButton">PLAY LOCAL</button></a>
-				<a id="play-online" class="homeAtag"><button class="homeButton">PLAY ONLINE</button></a>
+				<a id="play-local" class="homeAtag"><button class="homeButton">PLAY LOCAL</button></a>
+				<a id="play-online" class="homeAtag"><button class="homeButton">SIGN IN</button></a>
 			</div>`;
+
 		page.appendChild(content);
 		const playOnLine = content.querySelector('#play-online');
 		playOnLine.addEventListener('click', (event) => {
 			event.preventDefault();
 			navigate('/login');
 		});
+		const playLocal = content.querySelector('#play-local');
+		playLocal.addEventListener('click', (event) => {
+			event.preventDefault();
+			navigate('/local-game');
+		}
+		);
+
+		/*
+		const unregister = () => {
+			playLocal.removeEventListener('click', handler)
+		}
+
+		return {
+			page,
+			unregister
+		}
+		*/
+
 		return page;
 	}
+
 	changebackground() {
 		const body = document.body
 		body.style.backgroundImage = "url('../images/homepageBackground.svg')";

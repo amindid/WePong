@@ -31,6 +31,8 @@ class User (AbstractUser):
 	password = models.CharField(max_length=255, null=True)
 	avatar = models.CharField(max_length=255, blank=True, null=True, default="../images/cat.png")
 	isTwoFA = models.BooleanField(default=False)
+	isAuth = models.BooleanField(default=False)
+	authProvider = models.CharField(max_length=255,null=True)
 	# otpTwoFA = models.CharField(max_length=255, unique=True, blank=True, null=True)
 	TwoFACode = models.CharField(max_length=6, null=True, blank=True)
 	TwoFA_sent_at = models.DateTimeField(null=True,blank=True)

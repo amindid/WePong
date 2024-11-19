@@ -31,7 +31,7 @@
 	background-color: rgba(80, 0, 93, 1);
 	border-top-right-radius: 15px;
 	border-top-left-radius: 15px;
-
+	min-height: 800px;
 }
 
 .img_
@@ -210,7 +210,7 @@
 	flex-direction: column;
 	width: 100%;
 	height: 20%;
-
+	gap: 20%;
 }
 .logout
 {
@@ -278,8 +278,10 @@
 	align-items: center;
 	justify-content: center;
 	width: 50%;
-	height: 80%;
+	height: 50%;
 	font-size: 100%;
+	border-radius: 10px;
+	border: 2px solid white;
 	background-color: rgb(149, 32, 167);
 	color: white;
 }
@@ -300,6 +302,22 @@
 	transition: all 0.5 ease-in-out;
 	transform: scale(1.1);
 }
+.submit_btn
+{
+	width: 20%;
+	height: 40%;
+	font-size: 100%;
+	background-color: rgba(80, 0, 93, 1);
+	border: 3px solid white;
+	border-radius: 5px;
+	color: white;
+	cursor: pointer;
+
+}
+.submit_btn:hover {
+	transition: all 0.5 ease-in-out;
+	transform: scale(1.1);
+}
 
 
 
@@ -311,14 +329,17 @@
 	width: 95%;
 	height: 15%;
 	display: flex;
+	margin-left: 5%;
+	margin-top: 5%;
+
+	gap: 20px;
 	/* justify-content: flex-start; */
 	flex-direction: column;
 }
 .display_setting > h1
 {
-	font-size: 200%;
+	font-size: 250%;
 	margin-bottom: -18px;
-	margin-top: 7%;
 	color: white;
 }
 .display_setting > h3
@@ -395,8 +416,8 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 35%;
-	height: 50%;
+	width: 20%;
+	height: 40%;
 	background-color : rgba(228, 0, 205, 1);
 	color: white;
 	font-family: 'MPLUSRounded1c';
@@ -468,19 +489,25 @@
 
 
 .display_secur > h1{
-	font-size: 100%;
+	font-size: 150%;
 	color: white;
 }
 .display_secur > h3{
-	font-size: 100%;
+	font-size: 150%;
 	color: rgba(147, 151, 160, 1);
 }
+.display_secur_label
+{
+	font-size: 200%;
+	color: rgba(147, 151, 160, 1);
+}
+
 .dispaly_2factory1
 {
 	width: 97%;
 	height: 20%;
 	display: flex;
-	font-size: 100%;
+	font-size: 150%;
 	font-family: 'MPLUSRounded1c';
 	color: white;
 	align-items: center;
@@ -500,6 +527,7 @@
 	background-color: rgba(80, 0, 93, 1);
 	border-bottom-right-radius: 15px;
 	border-bottom-left-radius: 15px;
+
 }
 
 
@@ -531,15 +559,34 @@
 	display: none;
 }
 
-@media (max-width: 1200px) {
-	#plyername , #print-account-details , .display_change_username 
+
+
+@media (max-width: 1500px) {
+	.input_username{
+		height: 40%;
+	}
+	.submit_btn
+	{
+		height: 50%;
+		width: 30%;
+		font-size: 70%;
+	}
+	.settings1
+	{
+		min-height: 0px;
+	}
+	.display_change_username 
+	{
+		font-size: 80%;
+	}
+	#plyername , #print-account-details
 	{
 		font-size: 50%;
 	}
 	.logout_button
 	{
 		font-size: 40%;
-		min-width: 50px;
+		min-width: 70px;
 	}
 	.password__
 	{
@@ -547,7 +594,8 @@
 	}
 	.input_password
 	{
-		height: 70%;
+		height: 45%;
+		width: 70%;
 	}
 	.h1_password
 	{
@@ -558,6 +606,8 @@
 	.button_change_password
 	{
 		font-size: 50%;
+		width: 50%;
+		height: 40%;
 	}
 	.password__1
 	{
@@ -575,196 +625,32 @@
 	}
 	.dispaly_2factory1 > h1
 	{
-		font-size: 80%;
+		font-size: 65%;
 	}
 	.display_secur > h1
 	{
-		font-size: 50%;
+		font-size: 40%;
 	}
 	.display_secur > h3
 	{
-		font-size: 50%;
+		font-size: 40%;
 	}
 	.button_2fa{
 		font-size: 40%;
+		height: 50%;
+		width: 60%;
 	}
-	
-
-}
-
-
-/* .input_password:hover
-{
-} */
-		
-
-
-
-
-
-
-
-
-
-/* @media (max-width: 800px) {
-	body {
-	  justify-content: center;
-	}
-	.settings1{
-		width: 90%;
-	}
-	.logout_button
+	.display_setting > h1
 	{
-		width: 100%;
-		height: 100%;
-		font-size: 50%;
+		font-size: 100%;
 	}
-	.print-account-details
+	.display_setting > h3
 	{
-		font-size: 50%;
+		font-size: 80%;
 	}
-	
-  } */
-/* @media (max-height: 800px) {
-	body {
-	  justify-content: center;
-	}
-	.logout_button
+	.display_secur_label
 	{
-		width: 100%;
-		height: 100%;
+		font-size: 70%;
 	}
-  } */
 
-
-
-
-/* #username_settings
-{
-	width: 80%;
-	height: 15%;
-	display: flex;
-	justify-content:space-between;
-	align-items:center;
-	flex-direction: row;
-	gap: 100px;
 }
-
-#logout_delete
-{
-	width: 100%;
-	height: 30%;
-	display: flex;
-	justify-content:center;
-	align-items:center;
-	flex-direction: column;
-	gap: 10px;
-}
-@font-face {
-	font-family: 'MPLUSRounded1c-Bold';
-	src: url('../images/MPLUSRounded1c-Bold.ttf') format('truetype');
-	font-weight: normal;
-	font-style: normal;
-}
-
-
-.logout
-{
-	width: 80%;
-	height: 15%;
-	font-family: MPLUSRounded1c-Bold;
-	display: flex;
-	justify-content: center;
-	align-items:center;
-	color: white;
-	padding-right: 23%;
-}
-
-.delete
-{
-	width: 100%;
-	height: 15%;
-	font-family: MPLUSRounded1c-Bold;
-	display: flex;
-	justify-content: center;
-	align-items:center;
-	padding-right: 10%;
-	color: rgba(255, 0, 0, 1);
-}
-
-
-#edit_username
-{
-	width: 80%;
-	height: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-#printusername
-{
-	width: 25%;
-	height: 100%;
-	font-size: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-family: MPLUSRounded1c-Bold;
-}
-
-#printemail
-{
-	width: 25%;
-	height: 100%;
-	font-size: 17px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	font-family: MPLUSRounded1c-Bold;
-}
-
-
-#edit_data
-{
-	width: 80%;
-	height: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-}
-
-
-.input_username
-{
-	width: 70%;
-	height: 55%;
-	border-radius: 20px;
-	color: white;
-	font-size: 30px;
-	background-color: rgba(228, 0, 205, 1);
-}
-
-input::placeholder 
-{
-	color: white;
-}
-
-#switch
-{
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 15%;
-	height: 15%;
-	background-color: blue;
-	border-radius: 7px;
-}
-
-#click-switch
-{
-	display: flex;
-	justify-content: center;
-	align-items: center;
-} */

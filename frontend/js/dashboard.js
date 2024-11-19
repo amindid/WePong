@@ -17,8 +17,8 @@ class Dashboard {
 		page.appendChild(renderBodyCenter());
 		page.appendChild(renderRightBar());
 		let image = page.querySelector("#player-image");
-		let imageleft = page.querySelector("#leftBar-userImage");
-		let imageright = page.querySelector("#rightBar-userImage");
+		// let imageleft = page.querySelector("#leftBar-userImage");
+		// let imageright = page.querySelector("#rightBar-userImage");
 		let username = page.querySelector("#user-name");
 		const setPlayerImage = async () => {
 			try {
@@ -35,8 +35,8 @@ class Dashboard {
 				if (response.ok) {
 					console.log('after await');
 					image.src = data.avatar;
-					imageleft.src = data.avatar;
-					imageright.src = data.avatar;
+					// imageleft.src = data.avatar;
+					// imageright.src = data.avatar;
 					username.textContent = data.username;
 					console.log(image.src);
 				}

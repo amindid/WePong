@@ -1,0 +1,361 @@
+:root{
+    --primary-color: #bb07a3;
+    --secondary-color: #cb0ccb;
+    --tertiary-color: #B821FF;
+    --background-color: linear-gradient(45deg, #511569 30%, black 90%);
+    --nav-color: linear-gradient(180deg, rgba(132,0,135,1) 0%, rgba(23,0,44,1) 100%);
+}
+
+
+@font-face {
+    font-family: 'BowblyOne';
+    src: url('../images/fonts/BowlbyOne-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;     
+}
+@font-face {
+    font-family: 'Bungee';
+    src: url('../images/fonts/Bungee-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Bungeeline';
+    src: url('../images/fonts/BungeeInline-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Saira';
+    src: url('../images/fonts/saira.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../images/fonts/Poppins-Black.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+body {
+    margin: 0;
+    padding: 0;
+   
+   
+    background: var(--background-color);
+    font-family: 'Poppins', sans-serif;
+    color: white;
+}
+
+.wrapper-fr {
+    display: flex;
+    padding-left: 590px;
+    padding-right: 590px;
+    box-sizing: border-box;
+}
+
+
+#chat-icon{
+    margin: 1rem 1rem 0rem 1rem;
+    width: 3rem;
+    height: 3rem;
+}
+#nav-pic-chat{
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+}
+
+
+
+.friend-info{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+#nav-pic-chat:hover{
+    cursor: pointer;
+    background: var(--secondary-color);
+    transition: 0.5s ease;
+    filter: drop-shadow(0 0 1rem rgb(255, 121, 237));
+}
+.friends-pic-chat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.friend-list-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 30px;
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+h1 {
+    font-size: 48px;
+    margin: 20px;
+}
+
+.friend-actions {
+    display: flex;
+    gap: 20px;
+}
+
+
+.add-friend-btn {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    background-color: #A00090;
+    border: none;
+    color: white;
+    font-weight: bold;
+    padding: 15px 30px;
+    cursor: pointer;
+    border-radius: 10px;
+    font-size: 20px;
+    transition: background-color 0.3s ease;
+}
+.add-friend-btn:hover {
+    background-color: #b300a0;
+}
+
+
+.add-friend-btn img {
+    width: 30px;
+    height: 30px;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    background-color: #A00090;
+    padding: 10px;
+}
+
+header h1 {
+    font-family: "Bungee";
+    color: white;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    color: white;
+    background: none;
+    padding: 10px 40px;
+    font-size: 20px;
+    font-weight: bold;
+}
+.search-bar input::placeholder {
+    color: #ffffff;
+    opacity: 1;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: start;
+}
+
+
+.search-bar button {
+    border: none;
+    cursor: pointer;
+    background-color: white;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+.search-bar button:hover {
+    background-color: #ddd;
+}
+.search-bar button img {
+    width: 40px;
+    height: 40px;
+    object-fit: contain;
+}
+
+.friend-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.friend-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #660066;
+    border-radius: 15px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.friend-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+}
+
+
+.avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 5px solid #b907b9;
+}
+
+
+.username-search {
+    font-size: 24px;
+    color: white;
+    font-family: "Bungee";
+}
+
+
+.status {
+    font-size: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.in-game {
+    color: #ff38a5;
+}
+
+.online {
+    color: rgb(11, 255, 11);
+}
+
+.offline {
+    color: #ff4c4c;
+}
+
+.friend-btn {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+
+.friend-btn button {
+    background-color: #a700a7;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.friend-btn button:hover {
+    background-color: #ff19ff;
+}
+
+.friend-btn img {
+    width: 24px;
+    height: 24px;
+    /* padding: 0px 15px; */
+}
+
+
+.add-friend-modal {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+     top: 0; 
+    left: 0;
+    width: 100%;
+    height: 100%;
+   
+   
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.hidden {
+    display: none;
+}
+
+.modal-content-comp {
+    background-color: #660066;
+    border-radius: 20px;
+    padding: 40px;
+    text-align: center;
+    width: 400px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+}
+
+.modal-content-comp h2 {
+    margin-bottom: 20px;
+    color: white;
+    font-size: 28px;
+}
+
+.modal-content-comp input {
+    width: 100%;
+    padding: 15px;
+    margin-bottom: 25px;
+    border: none;
+    border-radius: 10px;
+    background-color: #A00090;
+    color: white;
+    font-size: 20px;
+    outline: none;
+}
+
+.modal-content-comp input::placeholder {
+    color: white;
+    font-size: 20px;
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.modal-buttons button {
+    width: 48%;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 20px;
+    transition: background-color 0.3s;
+}
+
+#confirm-add-btn {
+    background-color: #a700a7;
+    color: white;
+}
+#confirm-add-btn:hover {
+    background-color: #bb00bb;
+}
+
+#cancel-add-btn {
+    background-color: #852c79;
+    color: white;
+}
+#cancel-add-btn:hover {
+    background-color: #c920ac;
+}

@@ -79,6 +79,16 @@ class LeftBare
 		event.preventDefault();
 		navigate('/settings');
 	});
+	// const profile = content.querySelector("#profile");
+	// profile.addEventListener('click', event => {
+	// 	event.preventDefault();
+	// 	navigate('/profile');
+	// });
+	// const friends = content.querySelector("#friends");
+	// friends.addEventListener('click', event => {
+	// 	event.preventDefault();
+	// 	navigate('/friends');
+	// });
 		let imageleft = content.querySelector("#leftBar-userImage");
 		const setPlayerImage = async () => {
 			try {

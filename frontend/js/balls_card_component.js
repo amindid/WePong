@@ -26,7 +26,7 @@ export class BallCardsComponent extends HTMLElement
 			type: 'BALL',
 			price: '200',
 			imgSrc: '../images/org-ball.png',
-			width: '75%',
+			width: '60%',
 			color:'rgb(174, 50, 28)'
 		};
 		const neonball = {
@@ -35,7 +35,7 @@ export class BallCardsComponent extends HTMLElement
 			type: 'BALL',
 			price: '300',
 			imgSrc: '../images/nean-ball.png',
-			width: '100%',
+			width: '85%',
 			color:'rgba(162, 9, 158, 1)'
 		};
 		const waterball = {
@@ -44,7 +44,7 @@ export class BallCardsComponent extends HTMLElement
 			type: 'BALL',
 			price: '400',
 			imgSrc: '../images/BLUE-BALL.png',
-			width: '75%',
+			width: '60%',
 			color:'rgba(12, 109, 149, 1)'
 		};
 		const earthball = {
@@ -53,7 +53,7 @@ export class BallCardsComponent extends HTMLElement
 			type: 'BALL',
 			price: '500',
 			imgSrc: '../images/EARTH-BALL(1).png',
-			width: '75%',
+			width: '60%',
 			color:'rgba(5, 158, 41, 1)'
 		};
 		let wallet = 0;
@@ -69,9 +69,9 @@ export class BallCardsComponent extends HTMLElement
 			const data = await response.json();
 			if (response.ok) {
 				wallet = data.wallet;
-				console.log("###############");
-				console.log("wallet:" , data.wallet);
-				console.log("###############");
+				// console.log("###############");
+				// console.log("wallet:" , data.wallet);
+				// console.log("###############");
 				// wallet += amount
 				return data;
 			}
