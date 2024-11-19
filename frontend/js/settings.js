@@ -116,10 +116,10 @@ class SettingComponent
 		page.appendChild(message);
 		const button = document.createElement('div');
 		button.className = "dispaly_2factory2";
-		button.id = "switch_button";
+		// button.id = "switch_button";
 		button.innerHTML = `
 		
-		<img src="../images/icon-park-outline_switch.svg" alt="icon" width="100%" height="100%">
+		<img src="../images/icon-park-outline_switch.svg" id="switch_button" alt="icon" width="auto" height="100%" style="border: 2px solid black; cursor: pointer;">
 
 		`
 

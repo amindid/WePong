@@ -34,6 +34,7 @@ class HomePage {
 				<a id="play-local" class="homeAtag"><button class="homeButton">PLAY LOCAL</button></a>
 				<a id="play-online" class="homeAtag"><button class="homeButton">SIGN IN</button></a>
 			</div>`;
+
 		page.appendChild(content);
 		const playOnLine = content.querySelector('#play-online');
 		playOnLine.addEventListener('click', (event) => {
@@ -46,8 +47,21 @@ class HomePage {
 			navigate('/local-game');
 		}
 		);
+
+		/*
+		const unregister = () => {
+			playLocal.removeEventListener('click', handler)
+		}
+
+		return {
+			page,
+			unregister
+		}
+		*/
+
 		return page;
 	}
+
 	changebackground() {
 		const body = document.body
 		body.style.backgroundImage = "url('../images/homepageBackground.svg')";
