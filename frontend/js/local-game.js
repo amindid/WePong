@@ -160,7 +160,7 @@ class localGame {
                             </div>
                             <div class="assets">
                                 <div class="asset-group">
-                                    <h4>Choose Paddle</h4>
+                                    <h4 id="assets-selection">Choose Paddle</h4>
                                     <div class="paddles">
                                         <div class="paddle paddle-classic">
                                             <button class="asset-button selected" data-type="paddle" data-name="Classic">
@@ -195,7 +195,7 @@ class localGame {
                                     </div>
                                 </div>
                                 <div class="asset-group">
-                                    <h4>Choose Ball</h4>
+                                    <h4 id="assets-selection">Choose Ball</h4>
                                     <div class="balls">
                                         <div class="ball ball-classic">
                                             <button class="asset-button selected" data-type="ball" data-name="Classic">
@@ -254,7 +254,7 @@ class localGame {
                             </div>
                             <div class="assets">
                                 <div class="asset-group">
-                                    <h4>Choose Paddle</h4>
+                                    <h4 id="assets-selection">Choose Paddle</h4>
                                     <div class="paddles">
                                         <div class="paddle paddle-classic">
                                             <button class="asset-button selected" data-type="paddle" data-name="Classic">
@@ -289,7 +289,7 @@ class localGame {
                                     </div>
                                 </div>
                                 <div class="asset-group">
-                                    <h4>Choose Ball</h4>
+                                    <h4 id="assets-selection">Choose Ball</h4>
                                     <div class="balls">
                                         <div class="ball ball-classic">
                                             <button class="asset-button selected" data-type="ball" data-name="Classic">
