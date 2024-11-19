@@ -1,6 +1,9 @@
 from django.urls import path
 from .views import ProfileByUsername,isTwoFA, UpdateWalletView,loginUser,setup_email_2fa,confirm_email_2fa,GoogleLogin,Login42,FacebookLogin,GoogleCallback,Callback42,FacebookCallback ,registerUser,ProfileById, deleteUser, updateUsername, sendRequest, AcceptRequest,DenyRequest, DeleteRequest, block, unblock, logoutUser, confirmEmail, userProfile, friendList, friendRequestList, myRequestsList, BlockedList, refreshAccessToken, changePassword, CheckAuthentication, PasswordResetRequestView
 from . import views
+from .views import GetIdByUsername
+from .views import removeFriend
+from .views import DenyRequest
 urlpatterns = [
 	path('users/checkAuthentication/', CheckAuthentication.as_view(), name='CheckAuthentication'),
 	path('users/login/', loginUser.as_view(), name='loginUser'),
@@ -38,4 +41,6 @@ urlpatterns = [
 	path('password_reset_confirm/<uid>/<token>/', views.PasswordResetConfirmView, name='password_reset_confirm'),
 	path('setup_2fa/', setup_email_2fa.as_view(), name='setup_email_2fa'),
 	path('2fa_confirmation/', confirm_email_2fa.as_view(), name='setup_email_2fa'),
+	path('users/getIdByUsername/', GetIdByUsername.as_view(), name='get_id_by_username'),
+	path('users/removeFriend/', removeFriend.as_view(), name='removeFriend'),
 ]

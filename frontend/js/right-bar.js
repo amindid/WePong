@@ -90,7 +90,7 @@ class RightBar {
 			}
 		};
 		setPlayerImage();
-	setOnlineFriends();
+		setOnlineFriends();
 	return content;
 	}
 }

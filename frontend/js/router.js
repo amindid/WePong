@@ -18,6 +18,9 @@ import { renderEightPlayers } from './eight_players.js';
 import { renderJoinTournament } from './list_tou.js';
 import { renderSettings } from './settings.js';
 import { renderTwoFaConfirmationPage } from './2fa_confirmation.js'
+import { renderProfile } from './profile.js'
+import { renderFriendList } from './friend_list.js'
+
 import { rendergameonline } from './game_online.js';
 import { renderFournames } from './four_names.js';
 import { rendertestmatch } from './test_match.js';
@@ -159,6 +162,7 @@ export { renderEightPlayers } from './eight_players.js'
 export { renderJoinTournament } from './list_tou.js'
 export { renderSettings } from './settings.js'
 import { showAlert } from './message-box.js';
+export { renderProfile } from './profile.js';
 export { rendergameonline } from './game_online.js';
 export { renderFournames } from './four_names.js';
 export { rendertestmatch } from './test_match.js';
@@ -249,6 +253,8 @@ async function loadPage(route) {
 							'/tournement/Eightplayers' : renderEightPlayers,
                             '/tournement/join' : renderJoinTournament,
 							'/settings' : renderSettings,
+							'/profile' : renderProfile,
+							'/friendList' : renderFriendList,
 							'/game-online' : rendergameonline,
 							'/tournement/test_match' : rendertestmatch ,
                             '/local-game' : renderLocalGame,

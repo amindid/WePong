@@ -64,14 +64,17 @@ class User (AbstractUser):
 		return False
 	
 	def addFriend(self, friend_id):
+
+		if not isinstance(self.friends, list):
+			self.friends = list(self.friends or [])
 		if friend_id not in self.friends:
 			self.friends.append(friend_id)
-			print("added to friends list successfully")
 			self.save()
 		else:
 			raise Exception("already a friend")
 
 	def DeleteFriend(self, friend_id):
+
 		if friend_id in self.friends:
 			self.friends.remove(friend_id)
 			self.save()
@@ -79,23 +82,27 @@ class User (AbstractUser):
 			raise Exception("not a friend")
 	
 	def addFriendRequest(self, sender_id):
+
 		if sender_id in self.friends:
 			raise Exception("already a friend")
+		if not isinstance(self.friendRequests, list):
+			self.friendRequests = list(self.friendRequests or [])
 		if sender_id not in self.friendRequests:
-			print("added to friend requests list successfully")
 			self.friendRequests.append(sender_id)
 			self.save()
 	
 	def DeleteFriendRequest(self, sender_id):
 		if sender_id in self.friendRequests:
 			self.friendRequests.remove(sender_id)
-			print("deleted from friend requests list successfully")
 			self.save()
 		else:
-			print("case 1")
 			raise Exception("request dose not exist 1")
 	
+	
 	def block(self, user_id):
+		
+		if not isinstance(self.Blocked, list):
+			self.Blocked = list(self.Blocked or [])
 		if user_id not in self.Blocked:
 			self.Blocked.append(user_id)
 			self.save()
@@ -110,19 +117,24 @@ class User (AbstractUser):
 			raise Exception("not blocked")
 
 	def sendRequest(self, user_id):
-		if user_id not in self.MyRequests:
-			self.MyRequests.append(user_id)
-			print("request sent successfully")
-			self.save()
-		else:
-			raise("already sent")
-	
+		# Ensure MyRequests is a list
+		if not isinstance(self.MyRequests, list):
+			self.MyRequests = list(self.MyRequests or [])
+
+		# Check if the user_id is already in MyRequests
+		if user_id in self.MyRequests:
+			raise Exception("Friend request already sent")
+
+		# Append the user_id and save
+		self.MyRequests.append(user_id)
+		self.save()
+		print(self.MyRequests)
+
 	def DeleteRequest(self, user_id):
 		if user_id in self.MyRequests:
 			self.MyRequests.remove(user_id)
 			self.save()
 		else:
-			print("case 2")
 			raise Exception("request dose not exist 2")
 	
 class RefreshTokens(models.Model):
