@@ -66,7 +66,7 @@
     transform: scale(1.05);
 }
 
-.searchbar {
+.searchbar_b {
     background: #0000005C;
     border-radius: 12px;
     padding: 8px 12px;
@@ -78,11 +78,11 @@
     transition: all 0.3s ease;
 }
 
-.searchbar::placeholder {
+.searchbar_b::placeholder {
     color: rgba(255, 255, 255, 0.6);
 }
 
-.searchbar:focus {
+.searchbar_b:focus {
     border-color: #ff00f7;
     box-shadow: 0 0 10px rgba(194, 18, 186, 0.3);
 }
@@ -158,6 +158,15 @@
     gap: 8px;
     transition: transform 0.2s ease;
 }
+.req-card {
+    background: #0000005C;
+    border-radius: 6px;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.2s ease;
+}
 
 .friend-avatar {
     width: 30px;
@@ -190,7 +199,7 @@
     margin-left: auto;
 }
 
-.button {
+.button_b {
     padding: 4px 8px;
     border-radius: 4px;
     border: none;
@@ -201,16 +210,16 @@
     white-space: nowrap;
 }
 
-.button:hover {
+.button_b:hover {
     transform: scale(1.05);
 }
 
-.button.chat {
+.button_b.chat {
     background: #4CAF50;
     color: white;
 }
 
-.button.chat:hover {
+.button_b.chat:hover {
     transform: scale(1.05);
     background: #45a049;
 }
@@ -239,7 +248,7 @@
 	.tabs{
 		flex-direction: column;
 	}
-    .container {
+    .container_b {
         padding: 5px;
     }
 
@@ -258,7 +267,7 @@
         font-size: 12px;
     }
 
-    .searchbar {
+    .searchbar_b {
         width: 120px;
         font-size: 12px;
         padding: 6px 10px;
@@ -268,12 +277,12 @@
         padding: 5px 8px;
     }
 
-    .button {
+    .button_b {
         padding: 3px 6px;
         font-size: 10px;
     }
 
-    .button.chat {
+    .button_b.chat {
         padding: 3px 6px;
         font-size: 10px;
     }

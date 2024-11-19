@@ -675,7 +675,7 @@ class sendRequest(APIView):
 	permission_classes = [IsAuthenticated]
 	def post(self, request):
 		try: 
-			sender = request.user
+			sender : User= request.user
 			if sender is None:
 				return Response({'error': 'user not found.'}, status=status.HTTP_404_NOT_FOUND)
 			reciever_id = request.data['reciever_id']
@@ -698,7 +698,7 @@ class AcceptRequest(APIView):
 	permission_classes = [IsAuthenticated]
 	def post(self, request):
 		try:
-			reciever = request.user
+			reciever : User = request.user
 			if reciever is None:
 				return Response({'error': 'user not found.'}, status=status.HTTP_404_NOT_FOUND)
 			sender_id = request.data['sender_id']
@@ -707,9 +707,9 @@ class AcceptRequest(APIView):
 			sender = User.objects.get(id=sender_id)
 			if sender_id == reciever.id:
 				return Response({'error': 'invalide request'}, status=status.HTTP_400_BAD_REQUEST)
-			sender.DeleteRequest(sender_id)
+			sender.DeleteRequest(reciever.id)
 			sender.addFriend(reciever.id)
-			reciever.DeleteFriendRequest(reciever.id)
+			reciever.DeleteFriendRequest(sender_id)
 			reciever.addFriend(sender_id)
 			return Response({'message': 'Friend request accepted successfully'},status=status.HTTP_200_OK)
 		except User.DoesNotExist:
@@ -721,24 +721,54 @@ class AcceptRequest(APIView):
 class DenyRequest(APIView):
 	authentication_classes = [CookieJWTAuthentication]
 	permission_classes = [IsAuthenticated]
-	def delete(self, request):
+
+	def post(self, request):
+			try:
+				receiver: User = request.user
+				if receiver is None:
+					return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+				# Extract sender_id from the request body
+				sender_id = request.data.get('sender_id')
+				if not sender_id:
+					return Response({'error': 'Sender ID is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+				# Verify sender exists
+				try:
+					sender = User.objects.get(id=sender_id)
+				except User.DoesNotExist:
+					return Response({'error': 'Sender not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+				if sender_id == receiver.id:
+					return Response({'error': 'Invalid request.'}, status=status.HTTP_400_BAD_REQUEST)
+
+				# Use the DeleteRequest method to remove the friend request
+				try:
+					receiver.DeleteFriendRequest(sender_id)
+					sender.DeleteRequest(receiver.id)
+				except Exception as e:
+					return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+				return Response({'message': 'Friend request denied successfully.'}, status=status.HTTP_200_OK)
+
+			except Exception as e:
+				return Response({'error': 'Invalid request.'}, status=status.HTTP_400_BAD_REQUEST)
+	
+class removeFriend(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def post(self, request):
 		try:
-			reciever = request.user
-			if reciever is None:
-				return Response({'error': 'user not found.'}, status=status.HTTP_404_NOT_FOUND)
-			sender_id = request.data['sender_id']
-			if not sender_id:
-				return Response({'error': 'Sender id is required.'}, status=status.HTTP_400_BAD_REQUEST)
-			sender = User.objects.get(id=sender_id)
-			if sender_id == reciever.id:
-				return Response({'error': 'invalide request'}, status=status.HTTP_400_BAD_REQUEST)
-			reciever.DeleteFriendRequest(sender_id)
-			sender.DeleteRequest(reciever.id)
-			return Response({'message': 'Friend request denyed successfully'},status=status.HTTP_204_NO_CONTENT)
+			user = request.user
+			friend_id = request.data.get('friend_id')
+			friend = User.objects.get(id=friend_id)
+			user.DeleteFriend(friend_id)
+			friend.DeleteFriend(user.id)
+			return Response({'message': 'friend removed successfully'}, status=status.HTTP_200_OK)
 		except User.DoesNotExist:
-			return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
-		except Exception as e:
-			return Response({'error': 'invalide request'}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({'error': 'User NOT found'}, status=status.HTTP_404_NOT_FOUND)
+		except:
+			return Response({'error': 'somthing went wrong'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class DeleteRequest(APIView):
@@ -864,4 +894,19 @@ class UpdateWalletView(APIView):
 		else:
 		    return Response({"error": "Amount not provided"}, status=status.HTTP_400_BAD_REQUEST)
 
-	
+class GetIdByUsername(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def post(self, request):
+		try:
+			username = request.data.get('username', None)
+			if not username:
+				return Response({'error': 'Username is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+			user = User.objects.get(username=username)
+			return Response({'id': user.id}, status=status.HTTP_200_OK)
+
+		except User.DoesNotExist:
+			return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
+		except Exception as e:
+			return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

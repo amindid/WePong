@@ -1,11 +1,11 @@
-.container{
+.container_b{
 	display: flex;
 	justify-content: center;
 	width: 80%;
 	height: 90%;
 }
 
-#profile{
+#profile_b {
 	display: flex;
 	background: linear-gradient(180deg, #65016D 71.69%, #2B043E 83.69%);
 	box-shadow: 0px 0px 50px 5px #0000004D;
@@ -40,7 +40,7 @@
 
 
 
-#username{
+#username_b{
 	/* position: relative; */
 	/* width: 381px;
 	height: 63px;
@@ -59,23 +59,23 @@
 }
 
 @media (max-width: 1024px) {
-	#profile {
+	#profile_b {
 		width: 90%;
 	}
-	/* #username{
+	/* #username_b{
 		font-size: 50px;
 	} */
 }	
 
 @media (max-width: 480px) {
-	#profile {
+	#profile_b {
 		width: 95%;
 	}
 	#profilePic{
 		width: 120px;
 		height: 120px;
 	}
-	#username{
+	#username_b{
 		font-size: 30px;
 	}
 }
@@ -85,13 +85,13 @@
 		width: 100px;
 		height: 100px;
 	}
-	#username{
+	#username_b{
 		font-size: 20px;
 	}
 }	
 
 @media (max-width: 560px) {
-	#username{
+	#username_b{
 		font-size: 30px;
 	}
 }

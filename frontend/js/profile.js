@@ -32,12 +32,12 @@ class Profile
 	{
 		const page = document.createDocumentFragment();
 		page.appendChild(renderLeftBar());
-		this.content.className = 'container';
+		this.content.className = 'container_b';
 		this.content.innerHTML = `
-			<div id="profile">
+			<div id="profile_b">
 				<img id="topimage" src="../images/1808a5d9274422bd26e9cc4cf1204bc0.png">
 				<img id="profilePic" src="../images/54f4e3933f3e8fc98452010f6578888a.png">
-				<div id="username">
+				<div id="username_b">
 				</div>
 				<div id="profileCards">
 					<div class="profileCard">
@@ -58,7 +58,7 @@ class Profile
 			</div>
 		`;
 		page.appendChild(this.content);
-		const usernameElement = page.querySelector('#username');
+		const usernameElement = page.querySelector('#username_b');
 		this.fetchUsername().then(username => {
             if (usernameElement) {
                 usernameElement.textContent = username; // Insert fetched username
