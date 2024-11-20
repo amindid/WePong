@@ -302,27 +302,63 @@ class gamePlay {
             }
         
             startTimer();
-                async function saveMatchHistory(player1Name, player2Name, player1Score, player2Score, winnerName) {
-                    try {
-                    await fetch('/api/stats', {
-                        method: 'POST',
-                        headers: {
-                        'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                        player1_name: player1Name,
-                        player2_name: player2Name,
-                        player1_score: player1Score,
-                        player2_score: player2Score,
-                        winner: winnerName
-                        })
-                    });
-                    console.log("Match history saved!");
-                    } catch (error) {
-                    console.error("Error saving match history:", error);
-                    }
+
+    async function visualizeData() {
+        try {
+            const response = await fetch('http://localhost:8000/api/users/UserMatchHistory/', {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
                 }
-                
+            });
+            
+            if (!response.ok) {
+                throw new Error('Network response was not ok: ' + response.statusText);
+            }
+            
+            const data = await response.json();
+            console.log("Match history data:", data);
+
+        } catch (error) {
+            console.error('There was a problem with the fetch operation:', error);
+            alert("Failed to load match history.");
+        }
+    }
+
+        async function saveMatchHistory(player1Name, player2Name, player1Score, player2Score, winnerName) {
+            const matchDetails = {
+                "player1name": player1Name,
+                "player2name": player2Name,
+                "player1score": player1Score,
+                "player2score": player2Score,
+                "gamedate": new Date().toISOString().split('T')[0],
+                "winner": winnerName
+            };
+
+            try {
+                const response = await fetch('http://localhost:8000/api/users/UpdateMatchHistory/', {
+                    method: 'POST',  
+                    credentials: 'include',  
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        match_details: matchDetails
+                    }), 
+                });
+
+                if (response.ok) {
+                    console.log("Match history saved!");
+                    visualizeData();
+                } else {
+                    const data = await response.json();  
+                    console.error("Error saving match history:", data);
+                }
+            } catch (error) {
+                console.error("Error saving match history:", error);
+            }
+        }        
             function showWinScreen(playerName, img_winner, player1Score, player2Score) {
                 
                 gameOver = true;
