@@ -19,14 +19,16 @@
 }
 
 
+
 @media (max-width: 800px) {
-	body {
+	/* body {
 	  justify-content: center;
-	}
+	} */
 	#display_winner
 	{
 		font-size: 80%;
 	}
+	
   }
 
 .create-tournament , .four-players , .list-tournament
@@ -746,17 +748,6 @@ join-tournament
 	flex-direction: column;
 }
 
-/* @media (max-width: 600px) {
-	four-players {
-		padding: 10px 20px;
-	}
-}
-
-@media (max-width: 400px) {
-	four-players {
-		padding: 8px 16px; 
-	}
-} */
 
 .tour_8_players
 {
@@ -854,39 +845,74 @@ join-tournament
 
 .container_tour
 {
-	width: 100%;
+	width: 95%;
+	height: 20%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: row;
+	background: rgba(30, 6, 36, 0.38);
+	border-radius: 15px;
+	min-height: 80px;
+}
+
+.container_tour1
+{
+	width: 60%;
 	height: 100%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	flex-direction: row;
-	background: rgba(111, 0, 139, 0.38);
-	border-radius: 15px;
-	gap: 1%;
+	/* background-color: #710566; */
+	
 }
-
-.container_tour_
+.container_tour2
 {
-	width: 33%;
+	width: 40%;
 	height: 100%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	flex-direction: row;
+	gap: 15%;
+	
+	/* background-color: #655e66; */
 }
 
-.tour_name
+.tour_name1
 {
 	width: 60%;
-	height: 60%;
-	position: relative;
+	height: 100%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	min-width: 300px;
+	/* min-width: 300px; */
 }
-.h1_class
+.tour_name
 {
-	position: absolute;
+	width: 40%;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	/* min-width: 300px; */
+}
+
+.tour_name > img
+{
+	display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1/1;
+    width: 50%;
+    border-radius: 100%;
+}
+.h2_class
+{
+	display: flex;
+	align-items: center;
+	justify-content: center;
 	color: white;
 	font-size: 100%;
 	font-family: Bungee_Inline;
@@ -898,13 +924,16 @@ join-tournament
 }
 .style-button
 {
-	width: 40%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 30%;
 	border-radius: 10px;
 	height: 50%;
 	font-size: 100%;
 	font-family: Bungee_Inline;
 	color: white;
-	background: linear-gradient(90deg, #710566 0%, #FF00E6 100%);
+	background: linear-gradient(90deg, #710566 0%, #600f58 100%);
 	cursor: pointer;
 	transform: scale(1.05);
 }
@@ -940,4 +969,28 @@ join-tournament
 	aspect-ratio: 1/1;
 	width: 30%;
 	border-radius: 100%;
+}
+
+@media (max-width: 800px) {
+    .container_tour {
+		width: 97%;
+        min-height: 50px;
+    }
+
+    .container_tour2 {
+        gap: 7%; 
+    }
+
+    .h2_class {
+        font-size: 60%;
+    }
+
+    .style-button {
+        height: 40%;
+		width: 50%;
+    }
+	.tour_name > img
+	{
+		width: 70%;
+	}
 }

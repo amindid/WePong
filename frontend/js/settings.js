@@ -116,10 +116,12 @@ class SettingComponent
 		page.appendChild(message);
 		const button = document.createElement('div');
 		button.className = "dispaly_2factory2";
-		// button.id = "switch_button";
+
 		button.innerHTML = `
+		<button id="switch_button_id" class="switch_button">
+			<img src="../images/icon-park-outline_switch.svg" alt="icon" width="100" height="100%"></img>	
+		</button>
 		
-		<img src="../images/icon-park-outline_switch.svg" id="switch_button" alt="icon" width="auto" height="100%" style="border: 2px solid black; cursor: pointer;">
 
 		`
 
@@ -134,7 +136,7 @@ class SettingComponent
 			// if (this.content == this.content1)
 			// {
 				
-			const switc = this.content.querySelector("#switch_button");
+			const switc = this.content.querySelector("#switch_button_id");
 			switc.addEventListener('click', event => {
 			event.preventDefault();
 			// console.log("ttttttttt");
