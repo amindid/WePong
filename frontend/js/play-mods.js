@@ -35,6 +35,7 @@ class PlayMods {
 	const tournament = content.querySelector("#tournement_id");
 	tournament.addEventListener('click', event => {
 		event.preventDefault();
+		localStorage.clear();
 		navigate('/tournement');
 	});
 	const game_online = content.querySelector("#gameonline_id");
@@ -45,6 +46,7 @@ class PlayMods {
 	const local_game = content.querySelector("#local-game-id");
 	local_game.addEventListener('click', event => {
 		event.preventDefault();
+		localStorage.clear();
 		localStorage.setItem("local-game", "1");
 		navigate('/local-game');
 	});

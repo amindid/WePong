@@ -14,9 +14,10 @@ class localGame {
 	{
 		if (localStorage.getItem("local-game") === "1")
 		{
-			
-			player2Name = "Guest";
-			player2img = "images/player2.png";
+			localStorage.setItem('Player_Name2', 'Guest');
+			localStorage.setItem('img_player2', '../images/player2.png');
+			player2Name =  'Guest';
+			player2img =  '../images/player2.png';
 		}
 		else if (localStorage.getItem('tournement8') === "1")
 		{
@@ -101,36 +102,42 @@ class localGame {
   
     }
     async setPlayer1Data() {
-        try {
-            console.log('before fetch');
-            const response = await fetch('http://localhost:8000/api/users/userProfile/', {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-            console.log('after fetch');
-            const data = await response.json();
-            if (response.ok) {
-                console.log('after await');
-                if (data.username === null) {
-                    player1Name = 'Guest';
-                } else
-                    player1Name = data.username;
-                if(data.avatar === null){
-                    player1img = "images/player1.png";
-                } else
-                    player1img = data.avatar;
-                console.log(player1img);
-            } else {
-                showAlert(data.error || 'failed to load user image');
-                console.log(data.error || 'failed to load user image');
-            }
-        } catch (error) {
-            showAlert(error || 'failed to fetch user profile ==> error: ');
-            console.log('failed to fetch user profile ==> error: ', error);
-        }
+			try {
+				console.log('before fetch');
+				const response = await fetch('http://localhost:8000/api/users/userProfile/', {
+					method: 'GET',
+					credentials: 'include',
+					headers: {
+						'Content-Type': 'application/json',
+					}
+				});
+				console.log('after fetch');
+				const data = await response.json();
+				if (response.ok) {
+					console.log('after await >>>==== ');
+					if (data.username === null) {
+						player1Name = 'Guest';
+					} else
+					{
+						player1Name = data.username;
+						localStorage.setItem('Player_Name1', data.username);
+					}
+					if(data.avatar === null){
+						player1img = "images/player1.png";
+					} else
+					{
+						localStorage.setItem('img_player1', data.avatar);
+						player1img = data.avatar;
+					}
+					// console.log(player1img);
+				} else {
+					showAlert(data.error || 'failed to load user image');
+					console.log(data.error || 'failed to load user image');
+				}
+			} catch (error) {
+				showAlert(error || 'failed to fetch user profile ==> error: ');
+				console.log('failed to fetch user profile ==> error: ', error);
+			}
     }
 
     render(){
@@ -345,12 +352,15 @@ class localGame {
         const body = document.body
         body.style.alignItems = 'center';
 
-        this.setPlayer1Data().then(() => {
-            const player1NameElement = this.content.querySelector('.player-left .player-name h1');
-            player1NameElement.innerText = player1Name;
-            const player1ImageElement = this.content.querySelector('.player-left .player-picture img');
-            player1ImageElement.src = player1img;
-        });
+		if (localStorage.getItem("local-game") === "1")
+		{
+			this.setPlayer1Data().then(() => {
+				const player1NameElement = this.content.querySelector('.player-left .player-name h1');
+				player1NameElement.innerText = player1Name;
+				const player1ImageElement = this.content.querySelector('.player-left .player-picture img');
+				player1ImageElement.src = player1img;
+			});
+		}
 
         
         const handleSelection = (playerSection, assetType) => {
