@@ -176,10 +176,10 @@ class gamePlay {
 
             
     
-            // player1Name = localStorage.getItem('player1Name') || 'Player 1';
-            // player2Name = localStorage.getItem('player2Name') || 'Player 2';
+            
+            
 
-            // console.log("selectedItems", {player1PaddleSrc, player1BallSrc, player2PaddleSrc, player2BallSrc, selectedMapSrc});
+            
     
             canvas.width = window.innerWidth * coefficient;
             canvas.height = window.innerHeight * coefficient;
@@ -228,13 +228,24 @@ class gamePlay {
                 }, 1000);
             }
             function resetRound() {
-                ball.x = canvas.width / 2 - ball.width / 2;
-                ball.y = canvas.height / 2 - ball.height / 2;
-                ball.speed = 6;
-                paddle1.speed = 5;
-                paddle2.speed = 5;
-                paddle1.y = canvas.height / 2 - paddle1.height / 2;
-                paddle2.y = canvas.height / 2 - paddle2.height / 2;
+                if (window.innerWidth <= 600 ) {
+
+                    ball.x = canvas.width / 2 - ball.width / 2;
+                    ball.y = canvas.height / 2 - ball.height / 2;
+                    ball.speed = 6;
+                    paddle1.speed = 5;
+                    paddle2.speed = 5;
+                    paddle1.y = canvas.height / 2 - paddle1.height / 2;
+                    paddle2.y = canvas.height / 2 - paddle2.height / 2;
+                }
+                else{
+                    ball.speed = 1; 
+                    paddle2.x = canvas.width - paddle2.width - 10; 
+                    paddle1.x = 10;
+                    paddle1.speed = 1;
+                    paddle2.speed = 1;
+
+                }
                 isBallMoving = false;
                 
                 showCountdown(() => {
@@ -397,11 +408,11 @@ class gamePlay {
 					}
                 });
             
-                // winScreen.querySelector('.replay-btn').addEventListener('click', () => {
-                //     document.body.removeChild(winScreen);
+                
+                
                     
-                //     navigate('/local-game');
-                // });
+                
+                
             }
         class Paddle {
             constructor(x, y, src) {
@@ -502,27 +513,54 @@ class gamePlay {
         }
     
         function adjustGameElements() {
-            const isSmallScreen = window.innerWidth <= 768; // Define breakpoint for small screens
+            const isSmallScreen = window.innerWidth <= 768; 
         
             if (isSmallScreen) {
-                paddle1.width = 20; // Smaller paddle width
-                paddle1.height = 120; // Smaller paddle height
-                paddle2.width = 20;
+                paddle1.width = 10;
+                paddle1.height = 120;
+                paddle1.speed = 3; 
+                paddle2.width = 10;
                 paddle2.height = 120;
-                ball.width = 30; // Smaller ball
-                ball.height = 60;
-                ball.speed = 0.1; // Slower ball speed
-                // Ensure paddles and ball are repositioned appropriately
+                paddle2.speed = 3;
+        
+                ball.width = 25;
+                ball.height = 50;
+                ball.speed = 1; 
+        
+                paddle2.x = canvas.width - paddle2.width - 10;
+                paddle1.x = 10;
             } else {
-                paddle1.width = 40; // Default paddle width
-                paddle1.height = 180; // Default paddle height
+                paddle1.width = 40;
+                paddle1.height = 180;
+                paddle1.speed = 5; 
                 paddle2.width = 40;
                 paddle2.height = 180;
-                ball.width = 60; // Default ball size
+                paddle2.speed = 5;
+        
+                ball.width = 60;
                 ball.height = 60;
+                ball.speed = 6; 
+        
+                paddle2.x = canvas.width - paddle2.width - 10;
+                paddle1.x = 10;
             }
         
+            
+            paddle1.y = canvas.height / 2 - paddle1.height / 2;
+            paddle2.y = canvas.height / 2 - paddle2.height / 2;
+            ball.x = canvas.width / 2 - ball.width / 2;
+            ball.y = canvas.height / 2 - ball.height / 2;
         }
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth * coefficient;
+            canvas.height = window.innerHeight * coefficient;
+            adjustGameElements();
+        });
+        
+        
+        adjustGameElements();
+        
         canvas.addEventListener('touchmove', (e) => {
             const touch = e.touches[0];
             if (touch.clientX < canvas.width / 2) {
@@ -532,18 +570,8 @@ class gamePlay {
             }
         });
         
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth * coefficient;
-            canvas.height = window.innerHeight * coefficient;
         
-            paddle2.x = canvas.width - paddle2.width - 30; // Adjust paddle2 x position
-            paddle1.x = 30; // Adjust paddle1 x position
         
-            adjustGameElements(); // Adjust dimensions for smaller screens
-            update();
-        });
-        
-        // Call this function once when the game loads
         adjustGameElements();
         
         window.addEventListener('keydown', function (event) {
