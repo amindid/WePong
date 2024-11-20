@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Stats, RefreshTokens, ResetPasswordModel
+from .models import User, MatchHistory, RefreshTokens, ResetPasswordModel
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.contrib.auth.tokens import default_token_generator
@@ -10,10 +10,10 @@ class UserSerializer(serializers.ModelSerializer):
 		model = User
 		fields = '__all__'
 
-class StatsSerializer(serializers.ModelSerializer):
+class MatchHistorySerializer(serializers.ModelSerializer):
 	class Meta:
-		model = Stats
-		fields = '__all__'
+		model = MatchHistory
+		fields = ['id', 'match_data', 'user']
 
 class RefreshTokensSerializer(serializers.ModelSerializer):
 	class Meta:

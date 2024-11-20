@@ -1,4 +1,4 @@
-from .serializers import UserSerializer, StatsSerializer, RefreshTokensSerializer, PasswordResetConfirmSerializer, PasswordResetRequestSerializer
+from .serializers import UserSerializer, MatchHistorySerializer, RefreshTokensSerializer, PasswordResetConfirmSerializer, PasswordResetRequestSerializer
 import hashlib
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.response import Response
@@ -7,7 +7,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework import status
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken, UntypedToken
 from rest_framework_simplejwt.exceptions import TokenError
-from .models import User, Stats, RefreshTokens, ResetPasswordModel
+from .models import User, MatchHistory, RefreshTokens, ResetPasswordModel
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from django.shortcuts import get_object_or_404, redirect
@@ -1046,3 +1046,37 @@ class GetIdByUsername(APIView):
 			return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 		except Exception as e:
 			return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+		
+
+class UpdateMatchHistory(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def post(self, request):
+		try:
+			user = request.user
+			match_details = request.data.get('match_details')
+			if match_details is None:
+				return Response({'error': 'match_details not provided'}, status=status.HTTP_400_BAD_REQUEST)
+			MatchHistory.objects.create(user=user, match_data=match_details)
+			return Response({'message' : 'match history updates successfully'}, status=status.HTTP_200_OK)
+		except User.DoesNotExist:
+			return Response({'error': 'user not found'}, status=status.HTTP_404_NOT_FOUND)
+		except:
+			return Response({'error': 'somthing went wrong'}, status=status.HTTP_400_BAD_REQUEST)
+		
+
+class UserMatchHistory(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def get(self, request):
+		try:
+			user = request.user
+			matches = MatchHistory.objects.filter(user=user)
+			if not matches.exists():
+				return Response({'error': 'no matches found'}, status=status.HTTP_404_NOT_FOUND)
+			serializer = MatchHistorySerializer(matches, many=True)
+			return Response(serializer.data, status=status.HTTP_200_OK)
+		except User.DoesNotExist:
+			return Response({'error': 'user not found'}, status=status.HTTP_404_NOT_FOUND)
+		except:
+			return Response({'error': 'somthing went wrong'}, status=status.HTTP_400_BAD_REQUEST)

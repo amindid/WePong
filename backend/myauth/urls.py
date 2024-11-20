@@ -4,6 +4,8 @@ from . import views
 from .views import GetIdByUsername
 from .views import removeFriend
 from .views import DenyRequest
+from .views import UpdateMatchHistory
+from .views import UserMatchHistory
 urlpatterns = [
 	path('users/checkAuthentication/', CheckAuthentication.as_view(), name='CheckAuthentication'),
 	path('users/login/', loginUser.as_view(), name='loginUser'),
@@ -43,4 +45,6 @@ urlpatterns = [
 	path('2fa_confirmation/', confirm_email_2fa.as_view(), name='setup_email_2fa'),
 	path('users/getIdByUsername/', GetIdByUsername.as_view(), name='get_id_by_username'),
 	path('users/removeFriend/', removeFriend.as_view(), name='removeFriend'),
+	path('users/UpdateMatchHistory/', UpdateMatchHistory.as_view(), name='UpdateMatchHistory'),
+	path('users/UserMatchHistory/', UserMatchHistory.as_view(), name='UserMatchHistory'),
 ]
