@@ -133,14 +133,15 @@ class gamePlay {
                 </div>
             </div>
             <canvas id="myCanvas"></canvas>
-            <div class="buttons">
+            <div class="buttons" id="two-btns">
                 <button id="toggleBallMovement">START</button>
+                <button id="leave-game-btn" class="leave-btn">Leave Game</button>
             </div>
             <div id="notification" class="notificationPop" style="display: none;">
             </div>
         `;
         page.appendChild(this.content);
-    
+        
         setTimeout(() => {
             var keys = {
                 paddle1: {
@@ -175,10 +176,38 @@ class gamePlay {
             const selectedMapSrc = localStorage.getItem('selectedMap');
 
             
-    
+            function AreYouSure() {
+                const ask = document.createElement('div');
+                ask.className = 'ask';
+                ask.innerHTML = `
+                    <div class="ask-content">
+                        <h2>Are you sure you want to leave the game?</h2>
+                        <div class="buttons">
+                            <button id="yes">Yes</button>
+                            <button id="no">No</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(ask);
+                setTimeout(() => {
+                    ask.classList.add('show');
+                }, 10);
+                document.getElementById('yes').addEventListener('click', () => {
+                    localStorage.clear();
+                    navigate('/');
+                });
+                document.getElementById('no').addEventListener('click', () => {
+                    ask.classList.remove('show');
+                    setTimeout(() => {
+                        document.body.removeChild(ask);
+                    }, 300);
+                });
+            }
             
             
-
+            document.getElementById('leave-game-btn').addEventListener('click', () => {
+                AreYouSure();
+            });
             
     
             canvas.width = window.innerWidth * coefficient;

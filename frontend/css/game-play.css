@@ -141,7 +141,26 @@
     /* border: 1px solid white ; */
 }
 
+
+#two-btns{
+    gap : 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 #toggleBallMovement{
+    /* position: absolute  ; */
+    background: none;
+    border-radius: 20px;
+    color: white;
+    width: 180px;
+    font-size: larger;  
+    border-color: #cb0ccb;
+    /* top: 75px; */
+    height: 3rem;
+}   
+#leave-game-btn{
     /* position: absolute  ; */
     background: none;
     border-radius: 20px;
@@ -242,6 +261,73 @@
     margin-bottom: 10px;
 }
 
+
+/* Styles for the AreYouSure confirmation dialog */
+.ask {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 300px;
+    padding: 20px;
+    background:linear-gradient(45deg, #96068f 30%, black 90%);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    z-index: 1000;
+    visibility: hidden;
+    opacity: 0;
+    border: 5px solid #FF00FF;
+    transition: opacity 0.3s ease;
+}
+
+.ask.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+.ask-content {
+    text-align: center;
+}
+
+.ask-content h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.ask-content .buttons {
+    display: flex;
+    justify-content: space-around;
+}
+
+.ask-content .buttons button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-family: 'Arial', sans-serif;
+    transition: background-color 0.3s ease;
+}
+
+.ask-content .buttons #yes {
+    background-color: #f027f7;
+    color: #fff;
+}
+
+.ask-content .buttons #yes:hover {
+    background-color: #d300b0;
+}
+
+.ask-content .buttons #no {
+    background-color: #5bc0de;
+    color: #fff;
+}
+
+.ask-content .buttons #no:hover {
+    background-color: #31b0d5;
+}
+
 .win-screen {
     position: fixed;
     display: flex  ;
@@ -264,6 +350,7 @@
     transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
     box-shadow: rgb(156, 7, 149) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
 }
+
 
 .win-screen.show {
     opacity: 1;
