@@ -110,8 +110,6 @@
 	margin-top: 15%;
 	transition: transform 0.3s;
 	border-radius: 50%;
-	/* border: 2px solid black; */
-	/* overflow: hidden; */
 }
 
 .user img {
