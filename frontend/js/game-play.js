@@ -133,14 +133,15 @@ class gamePlay {
                 </div>
             </div>
             <canvas id="myCanvas"></canvas>
-            <div class="buttons">
+            <div class="buttons" id="two-btns">
                 <button id="toggleBallMovement">START</button>
+                <button id="leave-game-btn" class="leave-btn">Leave Game</button>
             </div>
             <div id="notification" class="notificationPop" style="display: none;">
             </div>
         `;
         page.appendChild(this.content);
-    
+        
         setTimeout(() => {
             var keys = {
                 paddle1: {
@@ -175,10 +176,38 @@ class gamePlay {
             const selectedMapSrc = localStorage.getItem('selectedMap');
 
             
-    
+            function AreYouSure() {
+                const ask = document.createElement('div');
+                ask.className = 'ask';
+                ask.innerHTML = `
+                    <div class="ask-content">
+                        <h2>Are you sure you want to leave the game?</h2>
+                        <div class="buttons">
+                            <button id="yes">Yes</button>
+                            <button id="no">No</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(ask);
+                setTimeout(() => {
+                    ask.classList.add('show');
+                }, 10);
+                document.getElementById('yes').addEventListener('click', () => {
+                    localStorage.clear();
+                    navigate('/');
+                });
+                document.getElementById('no').addEventListener('click', () => {
+                    ask.classList.remove('show');
+                    setTimeout(() => {
+                        document.body.removeChild(ask);
+                    }, 300);
+                });
+            }
             
             
-
+            document.getElementById('leave-game-btn').addEventListener('click', () => {
+                AreYouSure();
+            });
             
     
             canvas.width = window.innerWidth * coefficient;
@@ -228,7 +257,7 @@ class gamePlay {
                 }, 1000);
             }
             function resetRound() {
-                if (window.innerWidth <= 600 ) {
+                if (!(window.innerWidth <= 600 )) {
 
                     ball.x = canvas.width / 2 - ball.width / 2;
                     ball.y = canvas.height / 2 - ball.height / 2;
@@ -244,6 +273,8 @@ class gamePlay {
                     paddle1.x = 10;
                     paddle1.speed = 1;
                     paddle2.speed = 1;
+                    ball.x = canvas.width / 2 - ball.width / 2;
+                    ball.y = canvas.height / 2 - ball.height / 2;
 
                 }
                 isBallMoving = false;
@@ -271,13 +302,34 @@ class gamePlay {
             }
         
             startTimer();
-            
+                async function saveMatchHistory(player1Name, player2Name, player1Score, player2Score, winnerName) {
+                    try {
+                    await fetch('/api/stats', {
+                        method: 'POST',
+                        headers: {
+                        'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                        player1_name: player1Name,
+                        player2_name: player2Name,
+                        player1_score: player1Score,
+                        player2_score: player2Score,
+                        winner: winnerName
+                        })
+                    });
+                    console.log("Match history saved!");
+                    } catch (error) {
+                    console.error("Error saving match history:", error);
+                    }
+                }
+                
             function showWinScreen(playerName, img_winner, player1Score, player2Score) {
                 
                 gameOver = true;
                 resrtTimer();
                 clearInterval(timerInterval);
                 
+                saveMatchHistory(player1Name, player2Name, player1Score, player2Score, playerName);
                 const winScreen = document.createElement('div');
                 winScreen.className = 'win-screen';
             
@@ -529,27 +581,7 @@ class gamePlay {
         
                 paddle2.x = canvas.width - paddle2.width - 10;
                 paddle1.x = 10;
-            } else {
-                paddle1.width = 40;
-                paddle1.height = 180;
-                paddle1.speed = 5; 
-                paddle2.width = 40;
-                paddle2.height = 180;
-                paddle2.speed = 5;
-        
-                ball.width = 60;
-                ball.height = 60;
-                ball.speed = 6; 
-        
-                paddle2.x = canvas.width - paddle2.width - 10;
-                paddle1.x = 10;
             }
-        
-            
-            paddle1.y = canvas.height / 2 - paddle1.height / 2;
-            paddle2.y = canvas.height / 2 - paddle2.height / 2;
-            ball.x = canvas.width / 2 - ball.width / 2;
-            ball.y = canvas.height / 2 - ball.height / 2;
         }
         
         window.addEventListener('resize', () => {
