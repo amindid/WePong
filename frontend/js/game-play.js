@@ -12,10 +12,14 @@ class gamePlay {
 		
 		if (localStorage.getItem("local-game") === "1")
 		{
-			player1Name = "Player1";
-			player2Name = "Player2";
-			player1img = "images/player1.png";
-			player2img = "images/player2.png";
+			player1img = localStorage.getItem('img_player1');
+			player2img = localStorage.getItem('img_player2');
+			player1Name = localStorage.getItem('Player_Name1');
+			player2Name = localStorage.getItem('Player_Name2');
+			// player1Name = "Player1";
+			// player2Name = "Player2";
+			// player1img = "images/player1.png";
+			// player2img = "images/player2.png";
 		}
 		else if (localStorage.getItem('tournement8') === "1")
 		{

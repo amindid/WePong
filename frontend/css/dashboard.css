@@ -264,11 +264,23 @@ input.searchInput.show {
 	background-color: #46035e;
 	border: 2px solid #ffffff;
 	border-radius: 10px;
-	
     flex-direction: column;
     align-items: center; 
-    justify-content: center; 
+	gap: 3%;
+	overflow-y: scroll;
+    /* justify-content: center;
+	 */
   }
+
+  .notification-div::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+	}
+
+	.notification-div::-webkit-scrollbar-thumb {
+	    background-color: black; 
+	    border-radius: 10px; 
+	}
 
   @media (max-width: 1200px)
   {

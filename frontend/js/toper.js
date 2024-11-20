@@ -1,4 +1,5 @@
 import { showAlert } from './message-box.js';
+import { Notification } from './notification.js' ;
 
 class Toper {
 	constructor() {}
@@ -43,7 +44,8 @@ class Toper {
 					<path d="M43.3711 40.3945L44.4453 40.4141C44.4688 40.4323 44.4935 40.4883 44.5195 40.582C44.6055 40.7227 44.7044 40.8099 44.8164 40.8438C45.1393 40.8438 45.3008 40.5898 45.3008 40.082C45.3008 39.7799 45.2617 39.5703 45.1836 39.4531C45.1081 39.3359 44.9805 39.2773 44.8008 39.2773C44.6211 39.2773 44.5091 39.3724 44.4648 39.5625V39.5664C44.4596 39.5846 44.4557 39.6094 44.4531 39.6406C44.4505 39.6693 44.4466 39.6953 44.4414 39.7188C44.4362 39.7422 44.4102 39.7565 44.3633 39.7617C44.1784 39.7539 43.9089 39.75 43.5547 39.75H42.6562C42.5599 39.75 42.5117 39.6237 42.5117 39.3711V39.207L42.5156 39.1523L42.5039 38.293C42.4987 37.944 42.4961 37.6862 42.4961 37.5195V36.7695C42.4961 36.6289 42.4987 36.5208 42.5039 36.4453V36.3047C42.5039 36.1615 42.5273 36.0547 42.5742 35.9844C42.7018 35.9896 42.8789 35.9922 43.1055 35.9922L46.9492 36.0273L47.0078 36.0234C47.1042 36.0234 47.1628 36.0417 47.1836 36.0781V37.0859C47.1836 37.2318 47.1784 37.3307 47.168 37.3828C47.1602 37.4323 47.1328 37.457 47.0859 37.457H47.0117C46.0508 37.457 45.1953 37.4622 44.4453 37.4727C44.4245 37.556 44.4141 37.6458 44.4141 37.7422C44.4141 37.8385 44.4128 37.8984 44.4102 37.9219L44.3828 38.2969C44.3828 38.3073 44.3815 38.3346 44.3789 38.3789C44.3789 38.4206 44.3789 38.4453 44.3789 38.4531C44.7695 38.1953 45.1797 38.0664 45.6094 38.0664C46.1849 38.0664 46.6458 38.2422 46.9922 38.5938C47.3411 38.9453 47.5156 39.3971 47.5156 39.9492C47.5156 40.2799 47.4635 40.5781 47.3594 40.8438C47.1719 41.3203 46.8333 41.6797 46.3438 41.9219C45.9193 42.1302 45.4089 42.2344 44.8125 42.2344C44.2188 42.2344 43.6966 42.1224 43.2461 41.8984C42.9805 41.7682 42.7669 41.6003 42.6055 41.3945C42.4648 41.181 42.362 40.8672 42.2969 40.4531C42.3151 40.4115 42.4258 40.3906 42.6289 40.3906L42.7188 40.3945H43.3711ZM44.4688 39.5586L44.5352 39.5938L44.4648 39.5664C44.4648 39.5638 44.4648 39.5625 44.4648 39.5625C44.4674 39.5625 44.4688 39.5612 44.4688 39.5586Z" fill="white"/>
 				</svg>
 			</div>
-			<div class="notification-div">This is a notification.
+			<div class="notification-div">
+			
 			</div>
 			`;
 			content.appendChild(toper);
@@ -99,11 +101,80 @@ class Toper {
 					console.log('SOMTHING WENT WRONG', error);
 				}
 			});
+			
+
+			async function fetch_by_id(user_id)
+			{
+				if (user_id != null) {
+					try {
+						const response = await fetch(`http://localhost:8000/api/users/ProfileById/?friend=${user_id}`, {
+							method: 'GET',
+							credentials: 'include',
+							headers: {
+								'Content-Type': 'application/json',
+							}
+						});
+			
+						const data = await response.json();
+			
+						if (response.ok) {
+							console.log(data);
+							let test = toper.querySelector(".notification-div");
+							const notification = new Notification(data.user_name, data.avatar, user_id);
+							test.append(notification.render());
+							// notification.setAttribute('name', data.user_name);
+							// notification.setAttribute('img', data.avatar);
+							
+						} else {
+							showAlert(data.error || 'Failed to load second user data');
+							console.log(data.error || 'Failed to load second user data');
+						}
+					} catch (error) {
+						showAlert(error || 'Failed to fetch user profile ==> error: ');
+						console.log('Failed to fetch second user profile ==> error: ', error);
+					}
+				}
+			};
+
+
+			async function fetchfriendRequestList() 
+			{
+				const response = await fetch('http://localhost:8000/api/users/friendRequestList/',
+				{
+					method: 'GET',
+					credentials: 'include',
+					headers: {
+						'Content-Type': 'application/json',
+					}
+				});
+				const data = await response.json();
+				if (response.ok) 
+				{
+					if (data.friendsRequests.length === 0)
+						console.log("no friendsRequests");
+					else
+					{
+						console.log(" friendsRequests length >> ", data.friendsRequests.length)
+						fetch_by_id(data.friendsRequests[0]);
+					}
+				}
+				else
+				{
+					showAlert(data.error || 'failed to fetch friendRequestList');
+				}
+			};
+
+
+
 			const notificationDiv = content.querySelector('.notification-div');
 			function toggleNotification(event) {
 				event.stopPropagation(); 
 				notificationDiv.style.display = "flex";
+				notificationDiv.innerHTML=``;
+				fetchfriendRequestList();
 			  }
+
+
 
 			var notification = content.querySelector("#notification_id");
 			notification.addEventListener('click', toggleNotification);
