@@ -155,6 +155,7 @@ export { renderRegistrationPage } from './registration.js';
 export { renderLoginPage } from './login.js';
 export { renderResetPasswordPage } from './reset_password.js';
 export { renderShop } from './shop.js'
+import { renderChat } from './chat.js';
 export { rendertournamant } from './tournament.js'
 export { renderCreateTournament } from './create_tou.js'
 export { renderFourPlayers } from './four_players.js'
@@ -245,6 +246,7 @@ async function loadPage(route) {
 
     const secretRoutes = {  '/dashboard': renderDashboard,
                             '/shop' : renderShop,
+                            '/chat': renderChat,
                             '/tournement' : rendertournamant,
                             '/tournement/fournames' : renderFournames,
                             '/tournement/eightnames' : renderEightnames,
@@ -293,8 +295,10 @@ async function loadPage(route) {
         return renderPage(startRoutes[route]());
     }
     else if (secretRoutes[route]) {
-        if (isAuthenticated)
-            return renderPage(secretRoutes[route]());
+        if (isAuthenticated){
+            const page = await secretRoutes[route]();
+            return renderPage(page);
+        }
         history.pushState({}, '', '/login');
         return renderPage(startRoutes['/login']());
     }
