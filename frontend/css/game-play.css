@@ -160,6 +160,11 @@
     /* top: 75px; */
     height: 3rem;
 }   
+
+#toggleBallMovement:hover{
+    background-color: #cb0ccb;
+    color: white;
+}
 #leave-game-btn{
     /* position: absolute  ; */
     background: none;
@@ -170,7 +175,12 @@
     border-color: #cb0ccb;
     /* top: 75px; */
     height: 3rem;
-}   
+} 
+
+#leave-game-btn:hover{
+    background-color: #cb0ccb;
+    color: white;
+}
 .time-block {
     /* border-right: 1px solid white; */
     /* border-left: 1px solid white; */
