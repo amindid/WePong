@@ -905,7 +905,7 @@ join-tournament
     align-items: center;
     justify-content: center;
     aspect-ratio: 1/1;
-    width: 60%;
+    width: 50%;
     border-radius: 100%;
 }
 .h2_class
