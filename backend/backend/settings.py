@@ -35,10 +35,13 @@ AUTH_USER_MODEL = 'myauth.User'
 # Application definition
 
 
+ASGI_APPLICATION = 'backend.asgi.application'
 
 
 
 INSTALLED_APPS = [
+    'daphne',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -52,12 +55,31 @@ INSTALLED_APPS = [
 	'django_extensions',
 	'rest_framework_simplejwt.token_blacklist',
 	'corsheaders',
+    
+    'channels',
+
+    'chat',
 ]
 
 REST_FRAMEWORK = {
 	'DEFAULT_AUTHENTICATION_CLASSES': (
 	    'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+}
+
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels.layers.RedisChannelLayer',  # Use Redis as the channel layer backend
+#         'CONFIG': {
+#             'hosts': [('127.0.0.1', 6379)],  # Adjust the host and port as per your Redis configuration
+#         },
+#     },
+# }
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',  # Use Redis for production
+    },
 }
 
 
@@ -146,6 +168,19 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# for postgres integration later:
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'ft_transcendence',
+#         'USER': 'postgres',
+#         'PASSWORD': 'postgres',
+#         'HOST': 'localhost',
+#         'PORT': '',
+#     }
+# }
+
 
 
 # Password validation
