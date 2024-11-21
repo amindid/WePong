@@ -198,8 +198,11 @@ function renderPage(page) {
 }
 
 
-export function navigate(route) {
-    history.pushState({}, '', route);
+export function navigate(route, param = null) {
+    if (param !== null)
+        history.pushState({}, '', route + '?user='+param);
+    else
+        history.pushState({}, '', route);
     loadPage(route).then(() => {
         console.log('Navigation to', route, 'was successful.');
     }).catch((error) => {

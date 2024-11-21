@@ -220,6 +220,12 @@ input.searchInput.show {
 	background: #E1319A;
 }
 
+#searchResultButton {
+	all: unset;
+    cursor: pointer;
+}
+
+
 .div4 {
 	margin-top: 20px;
 	margin-right: 20px;

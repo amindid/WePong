@@ -702,7 +702,7 @@ class ProfileByUsername(APIView):
 		except User.DoesNotExist:
 			return Response({'error': 'user not found'})
 		if request.user == user:
-			return Response({'error': 'you are looking for your self'},status=-status.HTTP_400_BAD_REQUEST)
+			return Response({'error': 'you are looking for your self'},status=status.HTTP_400_BAD_REQUEST)
 		data = {
 			'username': user.username,
 			'avatar' : user.avatar,
