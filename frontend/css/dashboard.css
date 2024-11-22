@@ -248,9 +248,9 @@ input.searchInput.show {
 } */
 
 @media (max-width: 800px) {
-	.contenue {
+	/* .contenue {
 		width: 70%;
-	}
+	} */
 
 	.wallet {
 		font-size: 100%;

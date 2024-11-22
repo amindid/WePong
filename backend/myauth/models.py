@@ -44,6 +44,8 @@ class User (AbstractUser):
 	friends = models.JSONField(default=list,blank=True,null=True)
 	friendRequests = models.JSONField(default=list,blank=True,null=True)
 	MyRequests = models.JSONField(default=list, blank=True, null=True)
+	wins = models.IntegerField(default=0)
+	loses = models.IntegerField(default=0)
 	createdAt = models.DateTimeField(default=timezone.now)
 	updatedAt = models.DateTimeField(auto_now=True)
 
@@ -56,6 +58,14 @@ class User (AbstractUser):
 				setattr(self, field, value)
 		self.save()
 	
+	def NewWin(self):
+		self.wins = self.wins + 1
+		self.save()
+
+	def NewLose(self):
+		self.loses = self.loses + 1
+		self.save()
+
 	def set_password(self, password):
 		self.password = password
 		self.save()
