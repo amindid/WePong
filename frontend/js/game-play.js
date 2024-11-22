@@ -704,6 +704,8 @@ class gamePlay {
     
 }
 
+
+
 export function renderGamePlay() {
     console.log('renderGamePlay');
     const page = new gamePlay();
