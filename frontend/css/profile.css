@@ -318,3 +318,9 @@ p{
     font-family: "Poppins";
     font-size: 35px;
 }
+
+#zero-match{
+    color: white;
+    font-size: 25px;
+    margin-top: 20px;
+}

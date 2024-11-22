@@ -74,7 +74,6 @@ class Profile {
         }
     }
 
-
         /* UPDATES LI DARO : 
         1 = TBDL UI 
         2 = TZADO APIS DYAL FETCH USERNAME AVATAR W MATCH HISTORY
@@ -148,18 +147,22 @@ class Profile {
         const nGame = this.content.querySelector('.n-game');
         nGame.textContent = matchHistory.length;
         const matchesContainer = this.content.querySelector('.matches');
-        // hna hta tzid lia fields f api dyal userMatchHistory dyal player1state, player2state, player1image, player2image 
-        matchesContainer.innerHTML = matchHistory.map(match => `
-            <div class="match">
-                <img src="${match.match_data.player1Image}" alt="Player 1" class="player-icon">
-                <p class="p1-state ${match.match_data.player1State}">${match.match_data.player1State}</p>
-                <p class="score1">${match.match_data.player1score}</p>
-                <p class="vss">vs</p>
-                <p class="score2">${match.match_data.player2score}</p>
-                <p class="p2-state ${match.match_data.player2State}">${match.match_data.player2State}</p>
-                <img src="${match.match_data.player2Image}" alt="Player 2" class="player-icon">
-            </div>
-        `).join('');
+        // hna hta tzid lia fields f api dyal userMatchHistory dyal player1state, player2state, player1image, player2image
+        if (matchHistory.length === 0) {
+            matchesContainer.innerHTML = '<p id="zero-match";">No matches played yet</p>';
+        } 
+        else
+            matchesContainer.innerHTML = matchHistory.map(match => `
+                <div class="match">
+                    <img src="${match.match_data.player1Image}" alt="Player 1" class="player-icon">
+                    <p class="p1-state ${match.match_data.player1State}">${match.match_data.player1State}</p>
+                    <p class="score1">${match.match_data.player1score}</p>
+                    <p class="vss">vs</p>
+                    <p class="score2">${match.match_data.player2score}</p>
+                    <p class="p2-state ${match.match_data.player2State}">${match.match_data.player2State}</p>
+                    <img src="${match.match_data.player2Image}" alt="Player 2" class="player-icon">
+                </div>
+            `).join('');
 
         const winRateElement = this.content.querySelector('.win-rate .circle p');
         const totalGames = wins + losses;
