@@ -56,7 +56,10 @@ class Profile
 				<div class="profileTitle">win rate</div>
 				<div class="winRate">100%</div>
 			</div>
-		`;
+		`;  
+		const urlParams = new URLSearchParams(window.location.search);
+		if (urlParams.has('user'))
+			console.log("=================>>>>>" ,urlParams.get('user'));
 		page.appendChild(this.content);
 		const usernameElement = page.querySelector('#username_b');
 		this.fetchUsername().then(username => {

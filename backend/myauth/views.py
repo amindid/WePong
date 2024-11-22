@@ -509,10 +509,10 @@ class registerUser(APIView):
 		if serializer.is_valid():
 			if serializer.validated_data['password'] == request.data['passwordConfirmation']:
 				if User.objects.filter(username=serializer.validated_data['username']).exists():
-					log_to_elasticsearch("register fail", event_type="error")
+					# log_to_elasticsearch("register fail", event_type="error")
 					return Response({'error': 'username is already in use.'}, status=status.HTTP_400_BAD_REQUEST)
 				if User.objects.filter(username=serializer.validated_data['email']).exists():
-					log_to_elasticsearch("register fail", event_type="error")
+					# log_to_elasticsearch("register fail", event_type="error")
 					return Response({'error': 'email is already in use.'}, status=status.HTTP_400_BAD_REQUEST)
 				user = serializer.save()
 				user.password = hash_password(serializer.validated_data['password'])
@@ -531,15 +531,15 @@ class registerUser(APIView):
 						secure=False,
 						samesite='lax'
 					)
-					log_to_elasticsearch(f"new user registred named {user.username}", event_type="regitration")
+					# log_to_elasticsearch(f"new user registred named {user.username}", event_type="regitration")
 					return response
 				else:
-					log_to_elasticsearch("register fail", event_type="error")
+					# log_to_elasticsearch("register fail", event_type="error")
 					return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 			else:
-				log_to_elasticsearch("register fail", event_type="error")
+				# log_to_elasticsearch("register fail", event_type="error")
 				return Response({'error': 'passwords do not match!'}, status=status.HTTP_400_BAD_REQUEST)
-		log_to_elasticsearch("register fail", event_type="error")
+		# log_to_elasticsearch("register fail", event_type="error")
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
