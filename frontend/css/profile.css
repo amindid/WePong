@@ -72,13 +72,17 @@
     display: flex;
     justify-content: center;
     align-items: center;
+<<<<<<< HEAD
     width: 80%;
     height: 100%;
+=======
+    /* height: 100vh; */
+>>>>>>> 09e31e2a07ce609d10197da4605e598673d9171a
 }
 /* body {
     margin: 0 !important;
     padding: 0 !important;
-    height: 100vh;
+    /* height: 100vh; */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -127,7 +131,13 @@
     background-size: cover;
     background-position: center;
     padding: 20px 0;
+<<<<<<< HEAD
     width: 100%;
+=======
+    width: 600px;
+       
+   
+>>>>>>> 09e31e2a07ce609d10197da4605e598673d9171a
     display: flex;
     align-items: flex-end;  
     justify-content: center;
@@ -277,7 +287,6 @@
     justify-content: center;
     align-items: center;
     font-size: 28px;
-   
     color: #fff;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
