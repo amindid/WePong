@@ -1,3 +1,50 @@
+
+
+:root{
+    --classic-color: #ffffff;
+    /* --neon-color: #00DCFF; */
+    --neon-color: #F941FF;
+    --fire-color: #FF774D;
+    --water-color: #63CBFF;
+    --earth-color: #43FF74;
+    --primary-color: #bb07a3;
+    --secondary-color: #cb0ccb;
+    --tertiary-color: #B821FF;
+    --background-color:linear-gradient(45deg, #511569 30%, black 90%);
+    --nav-color: linear-gradient(180deg, rgba(132,0,135,1) 0%, rgba(23,0,44,1) 100%);
+}
+
+@font-face {
+    font-family: 'BowblyOne';
+    src: url('../images/fonts/BowlbyOne-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;     
+}
+@font-face {
+    font-family: 'Bungee';
+    src: url('../images/fonts/Bungee-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Bungeeline';
+    src: url('../images/fonts/BungeeInline-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Saira';
+    src: url('../images/fonts/saira.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../images/fonts/Poppins-Black.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 .eightnames
 {
 	width: 90%;
@@ -37,8 +84,15 @@
 	align-items: center;
 	justify-content: center;
 	aspect-ratio: 1/1;
-	width: 30%;
-	border-radius: 100%;
+	width: 25%;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease-in-out;
+}
+.img_test_ > img:hover {
+    transform: rotate(360deg) scale(1.2);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+	cursor: pointer;
 }
 
 .img_test_1
@@ -50,15 +104,18 @@
 	width: 100%;
 	height: 40%;
 }
-.eightnames_ > h1
-{
-	background: linear-gradient(90.03deg, #FFFFFF -123.25%, #FFFFFF -118.12%, #FFFFFF 41.28%, #FF00E6 94.78%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-	font-family: Bungee_Inline;
-	font-size: 300%;
+.img_test_1 h1{
+	font-family: 'Bungee' !important;
+	font-size: 200%;
+	color: white;
 }
+.eightnames_  h1
+{
+	font-family: 'Bungee' !important;
+	font-size: 300%;
+	color: white;
+}
+
 
 .eightblocks
 {
@@ -91,10 +148,19 @@
 	align-items: center;
 	justify-content: center;
 	border-radius: 20px;
-	background-color: rgb(213, 231, 231);
+	border: 15px solid #bb07a3;
+    border-radius: 100px;
 	flex-direction: column;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+
 	min-width: 200px;
 	min-height: 200px;
+}
+.local_player8:hover {
+	transform: scale(1.05);
+	background: linear-gradient(135deg, #c700cf, #490241);	
+	transition: all 0.3s ease-in-out;
+	box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
 }
 
 .to_play_tou8

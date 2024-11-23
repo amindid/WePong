@@ -4,7 +4,13 @@ export function renderNotFoundPage() {
     page.innerHTML = `
         <h1>404 - Page Not Found</h1>
         <p>The page you are looking for does not exist.</p>
-        <a href="/" class="link">Go to Home</a>
+         <btn class="btn">Go to Home</btn>
     `;
+
+    const btn = page.querySelector('btn');
+    btn.addEventListener('click', () => {
+        window.location.href = '/';
+    });
+
     return page;
 }

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import ProfileByUsername,isTwoFA, UpdateWalletView,loginUser,setup_email_2fa,confirm_email_2fa,GoogleLogin,Login42,FacebookLogin,GoogleCallback,Callback42,FacebookCallback ,registerUser,ProfileById, deleteUser, updateUsername, sendRequest, AcceptRequest,DenyRequest, DeleteRequest, block, unblock, logoutUser, confirmEmail, userProfile, friendList, friendRequestList, myRequestsList, BlockedList, refreshAccessToken, changePassword, CheckAuthentication, PasswordResetRequestView
+from .views import ProfileByUsername,isTwoFA,is_blocked_by, UpdateWalletView,loginUser,setup_email_2fa,confirm_email_2fa,GoogleLogin,Login42,FacebookLogin,GoogleCallback,Callback42,FacebookCallback ,registerUser,ProfileById, deleteUser, updateUsername, sendRequest, AcceptRequest,DenyRequest, DeleteRequest, block, unblock, logoutUser, confirmEmail, userProfile, friendList, friendRequestList, myRequestsList, BlockedList, refreshAccessToken, changePassword, CheckAuthentication, PasswordResetRequestView
 from . import views
 from .views import GetIdByUsername
 from .views import removeFriend
@@ -33,6 +33,8 @@ urlpatterns = [
 	path('friends/DeleteRequest/', DeleteRequest.as_view(), name='DeleteRequest'),
 	path('friends/block/', block.as_view(), name='block'),
 	path('friends/unblock/', unblock.as_view(), name='unblock'),
+	path('friends/is_blocked/', views.is_blocked.as_view(), name='is_blocked'),
+    path('friends/is_blocked_by/', is_blocked_by.as_view(), name='is_blocked_by'),
 	path('google_login/', GoogleLogin.as_view(), name='google_login'),
 	path('google_callback/', GoogleCallback.as_view(), name='google_callback'),
 	path('facebook_login/', FacebookLogin.as_view(), name='facebook_login'),

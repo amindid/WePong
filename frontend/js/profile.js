@@ -1,6 +1,7 @@
 import { navigate } from "./router.js";
 import { renderRightBar } from './right-bar.js';
 import { renderLeftBar } from './left-bar.js';
+import { showAlert } from "./message-box.js";
 
 class Profile {
     content = document.createElement('span');
@@ -46,7 +47,7 @@ class Profile {
             return {'avatar': data.avatar, 'wins' : data.wins, 'loses': data.loses};
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
-			return {'avatar': 'images/profile.png', 'wins' : 0, 'loses': 0};
+			return {};
         }
     }
 
@@ -97,6 +98,11 @@ class Profile {
 		}
         const level = 13;
 		const userData = await this.fetchUserData(UserName);
+        if (Object.keys(userData).length === 0) {
+            console.log('catch the error');
+            navigate('/user-dose-not-exist');
+            return;
+        }
         let wins = userData['wins']; // fch hatzid dok stats dyal user hatytgado hado
         let losses = userData['loses'];
         const rankImage = "../images/ranks/diamond.svg";

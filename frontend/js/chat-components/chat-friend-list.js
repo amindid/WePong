@@ -2,52 +2,48 @@ class ChatFriendList extends HTMLElement {
     constructor() {
         super();
         this.attachShadow({ mode: 'open' });
+        let originalFriends = [];
+        let displayedFriends = [];
 
         const wrapper = document.createElement('div');
         wrapper.classList.add('friend-list-wrapper');
 
-        // Create the search section
         const searchSection = document.createElement('chat-search-friend-input');
         searchSection.classList.add('search-section');
 
-        // Create the friend list section
         const friendList = document.createElement('div');
         friendList.classList.add('friend-list');
 
-        // Example friends - original full list
-        this.originalFriends = [
-            { id: '1', photo: '', username: 'alicej' },
-            { id: '2', photo: '', username: 'bobsmith' },
-            { id: '3', photo: '', username: 'charlieb' },
-            { id: '4', photo: '', username: 'davew' },
-        ];
-
-        // instead of this dummy data, we can fetch the friends from the backend
-        // fetch('http://localhost:8080/users/friendList/')
-        //     .then(response => response.json())
-        //     .then(data => {
-        //         console.log(data);
-        //         this.originalFriends = data;
-        //         this.displayedFriends = [...this.originalFriends];
-        //         updateFriendList(this.displayedFriends);
-        //     });
-
-        // Displayed friends list, initially all friends
-        this.displayedFriends = [...this.originalFriends];
+        fetch('http://localhost:8000/api/users/friendList/', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }).then(response => {
+            if (!response.ok){
+                throw new Error('Error getting friend list: ' + response.statusText);
+            }
+            return response.json();
+        }).then(data => {
+            this.originalFriends = data.friends;
+            this.displayedFriends = data.friends;
+            updateFriendList(this.displayedFriends);
+        }).catch(error => {
+            console.error('Error: ', error);
+        });
 
         const updateFriendList = (newFriends) => {
+            console.log(newFriends);
             friendList.innerHTML = '';  // Clear the list
-            newFriends.forEach(friend => {
+            for (const [key, value] of Object.entries(newFriends)) {
                 const friendCard = document.createElement('chat-friend-card');
-                friendCard.setAttribute('id', friend.id || '');
-                friendCard.setAttribute('photo', friend.photo || '../images/you.png');
-                friendCard.setAttribute('username', friend.username || 'Unknown');
+                friendCard.setAttribute('id', key);
+                friendCard.setAttribute('photo', value[1]);
+                friendCard.setAttribute('username', value[0]);
                 friendList.appendChild(friendCard);
-            });
+            }
         };
-
-        // Initial friend list population
-        updateFriendList(this.displayedFriends);
 
         // Listen for search event and filter the friend list based on the search input
         searchSection.addEventListener('searchFriend', (event) => {
@@ -71,12 +67,7 @@ class ChatFriendList extends HTMLElement {
             allCards.forEach(card => {
                 card.shadowRoot.querySelector('.friend-card').classList.remove('selected');
             });
-
-            // Select the clicked card
             clickedCard.shadowRoot.querySelector('.friend-card').classList.add('selected');
-
-            const username = clickedCard.getAttribute('username');
-            // console.log(`Selected friend: ${username}`);
         });
 
         this.addEventListener('deselectFriend', () => {
