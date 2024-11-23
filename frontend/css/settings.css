@@ -13,10 +13,8 @@
 	align-items: center;
 	justify-content: center;
 	width: 80%;
-	height: 90%;
-	display: flex;
+	height: 80%;
 	flex-direction: column;
-	align-items: center;
 }
 
 .settings1
@@ -175,18 +173,13 @@
 
 #print-account-details
 {
-	width: 97%;
-	height: 20%;
-	display: flex;
-	align-items: center;
-	justify-content: flex-start;
-	font-family: 'MPLUSRounded1c';
-	margin-left: 3%;
-	font-size: 100%;
-	/* left: 10%; */
 
-	/* padding-left: 10%; */
-	/* color: rgba(191, 195, 205, 1); */
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	color: white;
 }
 
 #edit
@@ -196,8 +189,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	flex-direction: column;
-	gap: 5%;
+	flex-direction: column;	
 	color: white;
 }
 
@@ -212,31 +204,9 @@
 	height: 20%;
 	gap: 20%;
 }
-.logout
-{
-	display: flex;
-	align-items: flex-end;
-	width: 50%;
-	height: 15%;
-}
-.logout:hover {
-	transition: all 0.5 ease-in-out;
-	transform: scale(1.1);
-}
 
 
-.delete
-{
-	display: flex;
-	align-items: flex-start;
-	width: 50%;
-	height: 15%;
-}
 
-.delete:hover {
-	transition: all 0.5 ease-in-out;
-	transform: scale(1.1);
-}
 
 .switch
 {
@@ -270,6 +240,7 @@
 	justify-content: center;
 	width: 100%;
 	height: 15%;
+	font-family: "Bungee" !important;
 	/* font-size: 100%; */
 }
 .input_username
@@ -277,7 +248,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 50%;
+	width: 40%;
 	height: 50%;
 	font-size: 100%;
 	border-radius: 10px;
@@ -288,23 +259,33 @@
 
 .logout_button
 {
-	width: 30%;
-	height: 70%;
-	font-size: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.5rem;
 	background-color: rgba(80, 0, 93, 1);
 	border: 3px solid white;
 	border-radius: 5px;
 	color: white;
 	cursor: pointer;
-	min-width: 150px;
+	transition: all 0.5 ease-in-out;
 }
 .logout_button:hover {
 	transition: all 0.5 ease-in-out;
 	transform: scale(1.1);
+	background: rgba(228, 0, 205, 1);
+
+}
+
+#settings-btns{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 20px;
 }
 .submit_btn
 {
-	width: 20%;
+	width: 10%;
 	height: 40%;
 	font-size: 100%;
 	background-color: rgba(80, 0, 93, 1);
@@ -312,13 +293,16 @@
 	border-radius: 5px;
 	color: white;
 	cursor: pointer;
+	transition: all 0.5 ease-in-out;
 
 }
+
 .submit_btn:hover {
 	transition: all 0.5 ease-in-out;
-	transform: scale(1.1);
+	background: rgba(228, 0, 205, 1);
+	border-radius: 10px;
+	
 }
-
 
 
 
