@@ -559,9 +559,35 @@
 	display: none;
 }
 
+@media (max-width: 2400px)
+{
+	.settings1
+	{
+		width: 70%;
+	}	
+	.dispaly_2factory2
+	{
+		width: 70%;
+	}
+}
+@media (max-width: 1200px)
+{
+	.dispaly_2factory2
+	{
+		width: 90%;
+	}
+	.settings1
+	{
+		width: 90%;
+	}
+	.button_change_password
+	{
+		height: 45%;
+	}
+}
 
 
-@media (max-width: 1500px) {
+@media (max-width: 800px) {
 	.input_username{
 		height: 40%;
 	}
@@ -625,15 +651,15 @@
 	}
 	.dispaly_2factory1 > h1
 	{
-		font-size: 65%;
+		font-size: 4vw;
 	}
 	.display_secur > h1
 	{
-		font-size: 40%;
+		font-size: 3vw;
 	}
 	.display_secur > h3
 	{
-		font-size: 40%;
+		font-size: 2vw;
 	}
 	.button_2fa{
 		font-size: 40%;
