@@ -1,14 +1,14 @@
 .containerFL {
 	display: flex;
 	justify-content: center;
-	width: 70%;
+	width: 80%;
 	height: 90%;
 }
 
 #friendsList{
 	display: flex;
 	flex-direction: column;
-	width: 60%;
+	width: 50%;
 	height: 100%;
 	max-width: 880px;
 	gap: 0px;
