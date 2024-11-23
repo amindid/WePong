@@ -1,5 +1,6 @@
 import { showAlert } from './message-box.js';
 import { Notification } from './notification.js' ;
+import { navigate } from './router.js';
 
 class Toper {
 	constructor() {}
@@ -22,7 +23,7 @@ class Toper {
     			<input type="text" placeholder="Search" class='searchInput' id='searchInput' required>
 				<div id='searchResult' class='searchResult'>
 					<img id='searchImage'>
-					<span class='searchUsername' id='searchUsername'>no result</span>
+					<button id="searchResultButton"><span class='searchUsername' id='searchUsername'>no result</span></button>
 				</div>
 			</div>
 			<div class="div4">
@@ -88,6 +89,13 @@ class Toper {
 							searchImage.classList.add('show');
 							console.log(searchImage.src);
 							searchUsername.textContent = userdata.username;
+							const searchResultButton = document.querySelector('#searchResultButton');
+							if (searchResultButton) {
+								searchResultButton.addEventListener('click', (event) => {
+									event.preventDefault();
+									navigate('/profile', userdata.username);
+								});
+							}
 						} else {
 							searchImage.classList.remove('show');
 							searchUsername.textContent = 'no result'

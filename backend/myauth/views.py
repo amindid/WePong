@@ -509,10 +509,10 @@ class registerUser(APIView):
 		if serializer.is_valid():
 			if serializer.validated_data['password'] == request.data['passwordConfirmation']:
 				if User.objects.filter(username=serializer.validated_data['username']).exists():
-					log_to_elasticsearch("register fail", event_type="error")
+					# log_to_elasticsearch("register fail", event_type="error")
 					return Response({'error': 'username is already in use.'}, status=status.HTTP_400_BAD_REQUEST)
 				if User.objects.filter(username=serializer.validated_data['email']).exists():
-					log_to_elasticsearch("register fail", event_type="error")
+					# log_to_elasticsearch("register fail", event_type="error")
 					return Response({'error': 'email is already in use.'}, status=status.HTTP_400_BAD_REQUEST)
 				user = serializer.save()
 				user.password = hash_password(serializer.validated_data['password'])
@@ -531,15 +531,15 @@ class registerUser(APIView):
 						secure=False,
 						samesite='lax'
 					)
-					log_to_elasticsearch(f"new user registred named {user.username}", event_type="regitration")
+					# log_to_elasticsearch(f"new user registred named {user.username}", event_type="regitration")
 					return response
 				else:
-					log_to_elasticsearch("register fail", event_type="error")
+					# log_to_elasticsearch("register fail", event_type="error")
 					return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 			else:
-				log_to_elasticsearch("register fail", event_type="error")
+				# log_to_elasticsearch("register fail", event_type="error")
 				return Response({'error': 'passwords do not match!'}, status=status.HTTP_400_BAD_REQUEST)
-		log_to_elasticsearch("register fail", event_type="error")
+		# log_to_elasticsearch("register fail", event_type="error")
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -700,13 +700,15 @@ class ProfileByUsername(APIView):
 		try:
 			user = User.objects.get(username=username)
 		except User.DoesNotExist:
-			return Response({'error': 'user not found'})
-		if request.user == user:
-			return Response({'error': 'you are looking for your self'},status=-status.HTTP_400_BAD_REQUEST)
+			return Response({'error': 'user not found'},status=status.HTTP_404_NOT_FOUND)
+		# if request.user == user:
+		# 	return Response({'error': 'you are looking for your self'},status=status.HTTP_400_BAD_REQUEST)
 		data = {
 			'username': user.username,
 			'avatar' : user.avatar,
 			'email' : user.email,
+			'wins'  : user.wins,
+			'loses' : user.loses
 		}
 		return Response(data, status=status.HTTP_200_OK)
 
@@ -931,39 +933,70 @@ class block(APIView):
 	def post(self,request):
 		try:
 			user: User = request.user
-			toBeBlocked = User.objects.get(id=request.data['toBeBlocked_id'])
+			toBeBlocked = User.objects.get(id=request.data['id'])
 			if not toBeBlocked:
-					return Response({'error': 'toBeBlocked user_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
+				return Response({'error': 'toBeBlocked user_id is required.'}, status=status.HTTP_400_BAD_REQUEST)
 			if user.id == toBeBlocked.id:
 				return Response({'error': 'you cannot block yourself'}, status=status.HTTP_400_BAD_REQUEST)
 			user.block(toBeBlocked.id)
-			user.DeleteFriend(toBeBlocked.id)
-			toBeBlocked.DeleteFriend(user)
-			log_to_elasticsearch("user blocked successfully", event_type="block")
+			# user.DeleteFriend(toBeBlocked.id)
+			# toBeBlocked.DeleteFriend(user)
+			# log_to_elasticsearch("user blocked successfully", event_type="block")
 			return Response({'message': 'user blocked successfully'},status=status.HTTP_200_OK)
 		except User.DoesNotExist:
 			return Response({'error':'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 		except Exception as e:
-			return Response({'error': 'invalide request'}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({'error': str(e)},status=status.HTTP_400_BAD_REQUEST)
 
 
 
 class unblock(APIView):
 	authentication_classes = [CookieJWTAuthentication]
 	permission_classes = [IsAuthenticated]
-	def delete(self,request):
+	def post(self,request):
 		try:
 			user: User = request.user
-			toBeUnblocked = User.objects.get(id=request.data['toBeUnblocked'])
-			user.unblock(toBeUnblocked)
-			log_to_elasticsearch("user unblocked successfully", event_type="unblock")
+
+			toBeUnblocked = User.objects.get(id=request.data['id'])
+			user.unblock(toBeUnblocked.id)
+			# log_to_elasticsearch("user unblocked successfully", event_type="unblock")
 			return Response({'message': 'user unblocked successfully'},status=status.HTTP_204_NO_CONTENT)
 		except User.DoesNotExist:
 			return Response({'error': 'User not found.'},status=status.HTTP_404_NOT_FOUND)
 		except Exception as e:
 			return Response({'error':'invalide request.'},status=status.HTTP_400_BAD_REQUEST)
 
+class is_blocked(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def post(self,request):
+		try:
+			user = request.user
+			friend = request.data.get('friend_id')
+			if friend is None:
+				return Response({'error' : 'friend_id is required'}, status=status.HTTP_400_BAD_REQUEST)
+			return Response({'friend_id': friend, 'is_blocked': (friend in user.Blocked)}, status=status.HTTP_200_OK)
+		except User.DoesNotExist:
+			return Response({'error' : 'user not found'}, status=status.HTTP_404_NOT_FOUND)
+		except:
+			return Response({'error' : 'somthing went wrong'}, status=status.HTTP_400_BAD_REQUEST)
 
+
+class is_blocked_by(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def post(self,request):
+		try:
+			user = request.user
+			friend_id = request.data.get('friend_id')
+			if friend_id is None:
+				return Response({'error' : 'friend_id is required'}, status=status.HTTP_400_BAD_REQUEST)
+			friend = User.objects.get(id=friend_id)
+			return Response({'user_id': user.id, 'is_blocked': (user.id in friend.Blocked)}, status=status.HTTP_200_OK)
+		except User.DoesNotExist:	
+			return Response({'error' : 'user not found'}, status=status.HTTP_404_NOT_FOUND)
+		except:
+			return Response({'error' : 'somthing went wrong'}, status=status.HTTP_400_BAD_REQUEST)
 
 class PasswordResetRequestView(APIView):
 	def post(self, request):
@@ -1055,8 +1088,15 @@ class UpdateMatchHistory(APIView):
 		try:
 			user = request.user
 			match_details = request.data.get('match_details')
+			winner = request.data.get('winner')
 			if match_details is None:
 				return Response({'error': 'match_details not provided'}, status=status.HTTP_400_BAD_REQUEST)
+			if winner is None:
+				return Response({'error': 'winner not provided'}, status=status.HTTP_400_BAD_REQUEST)
+			if (winner == user.username):
+				user.NewWin()
+			else:
+				user.NewLose()
 			MatchHistory.objects.create(user=user, match_data=match_details)
 			return Response({'message' : 'match history updates successfully'}, status=status.HTTP_200_OK)
 		except User.DoesNotExist:
@@ -1068,9 +1108,10 @@ class UpdateMatchHistory(APIView):
 class UserMatchHistory(APIView):
 	authentication_classes = [CookieJWTAuthentication]
 	permission_classes = [IsAuthenticated]
-	def get(self, request):
+	def post(self, request):
 		try:
-			user = request.user
+			username = request.data.get('username')
+			user = User.objects.get(username=username)
 			matches = MatchHistory.objects.filter(user=user)
 			if not matches.exists():
 				return Response({'error': 'no matches found'}, status=status.HTTP_404_NOT_FOUND)

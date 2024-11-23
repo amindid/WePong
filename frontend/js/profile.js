@@ -1,12 +1,12 @@
 import { navigate } from "./router.js";
 import { renderRightBar } from './right-bar.js';
 import { renderLeftBar } from './left-bar.js';
+import { showAlert } from "./message-box.js";
 
 class Profile {
     content = document.createElement('div');
-
+	
     constructor() {}
-
     async fetchUserName() {
         try {
             const response = await fetch('http://localhost:8000/api/users/userProfile/', {
@@ -26,16 +26,17 @@ class Profile {
             return 'Guest';
         }
     }
-
     // fetch user profile picture
-    async fetchAvatar() {
+    async fetchUserData(username) {
+
         try {
-            const response = await fetch('http://localhost:8000/api/users/userProfile/', {
-                method: 'GET',
+            const response = await fetch('http://localhost:8000/api/users/ProfileByUsername/', {
+                method: 'POST',
                 credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
-                }
+                },
+				body: JSON.stringify({'username' : username})
             });
 
             if (!response.ok) {
@@ -43,22 +44,23 @@ class Profile {
             }
 
             const data = await response.json();
-            return data.avatar;
+            return {'avatar': data.avatar, 'wins' : data.wins, 'loses': data.loses};
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
-            return 'images/profile.png';
+			return {};
         }
     }
 
     // Fetch match history
-    async fetchMatchHistory() {
+    async fetchMatchHistory(username) {
         try {
             const response = await fetch('http://localhost:8000/api/users/UserMatchHistory/', {
-                method: 'GET',
+                method: 'POST',
                 credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
-                }
+                },
+				body: JSON.stringify({'username' : username})
             });
 
             if (!response.ok) {
@@ -85,9 +87,24 @@ class Profile {
         DOK NAV BAR MAEFTCH KI KADIRO TRENDWIWHOM MACHI RESPONSIVE 
         */
     async render() {
+		const urlParams = new URLSearchParams(window.location.search);
+		let UserName;
+		if (urlParams.has('user')) {
+			UserName = urlParams.get('user');
+		}
+		else {
+			UserName = await this.fetchUserName();
+			console.log('fetch for authenticated user')
+		}
         const level = 10;
-        let wins = 10; // fch hatzid dok stats dyal user hatytgado hado
-        let losses = 10;
+		const userData = await this.fetchUserData(UserName);
+        if (Object.keys(userData).length === 0) {
+            console.log('catch the error');
+            navigate('/user-dose-not-exist');
+            return;
+        }
+        let wins = userData['wins']; // fch hatzid dok stats dyal user hatytgado hado
+        let losses = userData['loses'];
 
         const page = document.createDocumentFragment();
         page.appendChild(renderLeftBar());
@@ -120,8 +137,19 @@ class Profile {
                         </div>
                         <div class="win-rate">
                             <h2>WIN RATE</h2>
-                            <div class="circle">
-                                <p>0%</p>
+                            <div class="d-flex justify-content-center align-items-center">
+                                <svg class="circle-svg" viewBox="0 0 36 36">
+                                    <path class="circle-bg"
+                                          d="M18 2.0845
+                                             a 15.9155 15.9155 0 0 1 0 31.831
+                                             a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    <path id="progress-circle" class="circle_"
+                                          stroke-dasharray="0, 100"
+                                          d="M18 2.0845
+                                             a 15.9155 15.9155 0 0 1 0 31.831
+                                             a 15.9155 15.9155 0 0 1 0 -31.831" />
+                                    <text x="18" y="20.35" id="percentage-text" class="percentage">0%</text>
+                                </svg>
                             </div>
                         </div>
                         <div class="match-history">
@@ -135,15 +163,14 @@ class Profile {
 
         page.appendChild(this.content);
 
-        const username = await this.fetchUserName();
+        // const username = await this.fetchUserName();
         const usernameElement = this.content.querySelector('.username');
-        usernameElement.textContent = username;
-
-        const avatar = await this.fetchAvatar();
+        usernameElement.textContent = UserName;
+        const avatar = userData['avatar'];
         const avatarElement = this.content.querySelector('.profile-picture');
         avatarElement.src = avatar;
 
-        const matchHistory = await this.fetchMatchHistory();
+        const matchHistory = await this.fetchMatchHistory(UserName);
         const nGame = this.content.querySelector('.n-game');
         nGame.textContent = matchHistory.length;
         const matchesContainer = this.content.querySelector('.matches');
@@ -152,22 +179,29 @@ class Profile {
             matchesContainer.innerHTML = '<p id="zero-match";">No matches played yet</p>';
         } 
         else
-            matchesContainer.innerHTML = matchHistory.map(match => `
-                <div class="match">
-                    <img src="${match.match_data.player1Image}" alt="Player 1" class="player-icon">
-                    <p class="p1-state ${match.match_data.player1State}">${match.match_data.player1State}</p>
-                    <p class="score1">${match.match_data.player1score}</p>
-                    <p class="vss">vs</p>
-                    <p class="score2">${match.match_data.player2score}</p>
-                    <p class="p2-state ${match.match_data.player2State}">${match.match_data.player2State}</p>
-                    <img src="${match.match_data.player2Image}" alt="Player 2" class="player-icon">
-                </div>
-            `).join('');
+        matchesContainer.innerHTML = matchHistory.map(match => `
+        <div class="match">
+            <img src="${avatar}" alt="Player 1" class="player-icon">
+            <p class="p1-state ${match.match_data.player1name}">${match.match_data.player1name}</p>
+            <p class="score1">${match.match_data.player1score}</p>
+            <p class="vss">vs</p>
+            <p class="score2">${match.match_data.player2score}</p>
+            <p class="p2-state ${match.match_data.player2name}">${match.match_data.player2name}</p>
+            <img src="../images/cat.png" alt="Player 2" class="player-icon">
+        </div>
+    `).join('');
 
-        const winRateElement = this.content.querySelector('.win-rate .circle p');
+        const winRateElement = this.content.querySelector('.percentage');
         const totalGames = wins + losses;
-        const winRateValue = ((wins / totalGames) * 100).toFixed(1);
+		let winRateValue;
+		if (totalGames === 0)
+			winRateValue = 0;
+		else
+        	winRateValue = ((wins / totalGames) * 100).toFixed(1);
         winRateElement.textContent = `${winRateValue}%`;
+        const circle = this.content.querySelector("#progress-circle");
+        const dasharray = `${winRateValue}, 100`;
+        circle.setAttribute("stroke-dasharray", dasharray);
 
         page.appendChild(renderRightBar());
 

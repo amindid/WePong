@@ -38,6 +38,35 @@
     font-style: normal;
 }
 
+.circle-svg {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .circle-bg {
+    fill: none;
+    stroke: #e9ecef;
+    stroke-width: 3.8;
+  }
+  
+  .circle_ {
+    fill: none;
+    stroke: #007bff;
+    stroke-width: 2.8;
+    stroke-linecap: round;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+    transition: stroke-dasharray 0.3s;
+  }
+  
+  .percentage {
+    font-size: 0.45rem;
+    text-anchor: middle;
+    fill: #007bff;
+    font-weight: bold;
+  }
+
+
 
 .profile{
     display: flex;
@@ -45,7 +74,7 @@
     align-items: center;
     /* height: 100vh; */
 }
-body {
+/* body {
     margin: 0 !important;
     padding: 0 !important;
     /* height: 100vh; */
@@ -54,7 +83,7 @@ body {
     align-items: center;
     background: var(--background-color);
     font-family: 'Poppins', sans-serif;
-}
+} */
 
 .wrapper {
     display: flex;
