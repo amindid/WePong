@@ -1,30 +1,9 @@
-<<<<<<< HEAD
-.container_b{
-	display: flex;
-	justify-content: center;
-	width: 80%;
-	height: 90%;
-}
-
-#profile_b {
-	display: flex;
-	background: linear-gradient(180deg, #65016D 71.69%, #2B043E 83.69%);
-	box-shadow: 0px 0px 50px 5px #0000004D;
-	border-radius: 30px;
-	flex-direction: column;	
-	width: 50%;
-	height: 100%;
-	max-width: 880px;
-	gap: 0px;
-	align-content: center;
-=======
 :root{
     --primary-color: #bb07a3;
     --secondary-color: #cb0ccb;
     --tertiary-color: #B821FF;
     --background-color: linear-gradient(45deg, #511569 30%, black 90%);
     --nav-color: linear-gradient(180deg, rgba(132,0,135,1) 0%, rgba(23,0,44,1) 100%);
->>>>>>> 596fae93f402caaabd206e6677cb9592ec8a3e40
 }
 
 
@@ -350,25 +329,10 @@ p{
     padding: 0px 10px;
 }
 
-<<<<<<< HEAD
-.winRate{
-	font-family: Bayon;
-	font-size: 500%;
-	font-weight: 400;
-	line-height: 100px;
-	letter-spacing: 0.11em;
-	text-align: center;
-
-	color: #FFFFFF;
-	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-
-	position: relative;
-=======
 .win {
     color: #35c43a;
     font-weight: bold;
     font-size: 30px;
->>>>>>> 596fae93f402caaabd206e6677cb9592ec8a3e40
 }
 
 .lose {
