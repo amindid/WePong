@@ -700,7 +700,7 @@ class ProfileByUsername(APIView):
 		try:
 			user = User.objects.get(username=username)
 		except User.DoesNotExist:
-			return Response({'error': 'user not found'})
+			return Response({'error': 'user not found'},status=status.HTTP_404_NOT_FOUND)
 		# if request.user == user:
 		# 	return Response({'error': 'you are looking for your self'},status=status.HTTP_400_BAD_REQUEST)
 		data = {
