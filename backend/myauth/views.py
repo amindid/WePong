@@ -509,10 +509,10 @@ class registerUser(APIView):
 		if serializer.is_valid():
 			if serializer.validated_data['password'] == request.data['passwordConfirmation']:
 				if User.objects.filter(username=serializer.validated_data['username']).exists():
-					log_to_elasticsearch("register fail", event_type="error")
+					# log_to_elasticsearch("register fail", event_type="error")
 					return Response({'error': 'username is already in use.'}, status=status.HTTP_400_BAD_REQUEST)
 				if User.objects.filter(username=serializer.validated_data['email']).exists():
-					log_to_elasticsearch("register fail", event_type="error")
+					# log_to_elasticsearch("register fail", event_type="error")
 					return Response({'error': 'email is already in use.'}, status=status.HTTP_400_BAD_REQUEST)
 				user = serializer.save()
 				user.password = hash_password(serializer.validated_data['password'])
@@ -531,15 +531,15 @@ class registerUser(APIView):
 						secure=False,
 						samesite='lax'
 					)
-					log_to_elasticsearch(f"new user registred named {user.username}", event_type="regitration")
+					# log_to_elasticsearch(f"new user registred named {user.username}", event_type="regitration")
 					return response
 				else:
-					log_to_elasticsearch("register fail", event_type="error")
+					# log_to_elasticsearch("register fail", event_type="error")
 					return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 			else:
-				log_to_elasticsearch("register fail", event_type="error")
+				# log_to_elasticsearch("register fail", event_type="error")
 				return Response({'error': 'passwords do not match!'}, status=status.HTTP_400_BAD_REQUEST)
-		log_to_elasticsearch("register fail", event_type="error")
+		# log_to_elasticsearch("register fail", event_type="error")
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -701,12 +701,14 @@ class ProfileByUsername(APIView):
 			user = User.objects.get(username=username)
 		except User.DoesNotExist:
 			return Response({'error': 'user not found'})
-		if request.user == user:
-			return Response({'error': 'you are looking for your self'},status=-status.HTTP_400_BAD_REQUEST)
+		# if request.user == user:
+		# 	return Response({'error': 'you are looking for your self'},status=status.HTTP_400_BAD_REQUEST)
 		data = {
 			'username': user.username,
 			'avatar' : user.avatar,
 			'email' : user.email,
+			'wins'  : user.wins,
+			'loses' : user.loses
 		}
 		return Response(data, status=status.HTTP_200_OK)
 
@@ -1086,8 +1088,15 @@ class UpdateMatchHistory(APIView):
 		try:
 			user = request.user
 			match_details = request.data.get('match_details')
+			winner = request.data.get('winner')
 			if match_details is None:
 				return Response({'error': 'match_details not provided'}, status=status.HTTP_400_BAD_REQUEST)
+			if winner is None:
+				return Response({'error': 'winner not provided'}, status=status.HTTP_400_BAD_REQUEST)
+			if (winner == user.username):
+				user.NewWin()
+			else:
+				user.NewLose()
 			MatchHistory.objects.create(user=user, match_data=match_details)
 			return Response({'message' : 'match history updates successfully'}, status=status.HTTP_200_OK)
 		except User.DoesNotExist:
@@ -1099,9 +1108,10 @@ class UpdateMatchHistory(APIView):
 class UserMatchHistory(APIView):
 	authentication_classes = [CookieJWTAuthentication]
 	permission_classes = [IsAuthenticated]
-	def get(self, request):
+	def post(self, request):
 		try:
-			user = request.user
+			username = request.data.get('username')
+			user = User.objects.get(username=username)
 			matches = MatchHistory.objects.filter(user=user)
 			if not matches.exists():
 				return Response({'error': 'no matches found'}, status=status.HTTP_404_NOT_FOUND)

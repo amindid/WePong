@@ -220,6 +220,12 @@ input.searchInput.show {
 	background: #E1319A;
 }
 
+#searchResultButton {
+	all: unset;
+    cursor: pointer;
+}
+
+
 .div4 {
 	margin-top: 20px;
 	margin-right: 20px;
@@ -242,9 +248,9 @@ input.searchInput.show {
 } */
 
 @media (max-width: 800px) {
-	.contenue {
+	/* .contenue {
 		width: 70%;
-	}
+	} */
 
 	.wallet {
 		font-size: 100%;

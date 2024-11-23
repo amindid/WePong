@@ -348,13 +348,14 @@ class gamePlay {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        match_details: matchDetails
+                        match_details: matchDetails,
+                        winner : winnerName
                     }), 
                 });
 
                 if (response.ok) {
                     console.log("Match history saved!");
-                    visualizeData();
+                    // visualizeData();
                 } else {
                     const data = await response.json();  
                     console.error("Error saving match history:", data);
@@ -703,6 +704,8 @@ class gamePlay {
     
     
 }
+
+
 
 export function renderGamePlay() {
     console.log('renderGamePlay');
