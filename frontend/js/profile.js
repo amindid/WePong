@@ -1,9 +1,10 @@
 import { navigate } from "./router.js";
 import { renderRightBar } from './right-bar.js';
 import { renderLeftBar } from './left-bar.js';
+import { showAlert } from "./message-box.js";
 
 class Profile {
-    content = document.createElement('div');
+    content = document.createElement('span');
 	
     constructor() {}
     async fetchUserName() {
@@ -46,7 +47,7 @@ class Profile {
             return {'avatar': data.avatar, 'wins' : data.wins, 'loses': data.loses};
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
-			return {'avatar': 'images/profile.png', 'wins' : 0, 'loses': 0};
+			return {};
         }
     }
 
@@ -95,17 +96,22 @@ class Profile {
 			UserName = await this.fetchUserName();
 			console.log('fetch for authenticated user')
 		}
-        const level = 10;
+        const level = 13;
 		const userData = await this.fetchUserData(UserName);
+        if (Object.keys(userData).length === 0) {
+            console.log('catch the error');
+            navigate('/user-dose-not-exist');
+            return;
+        }
         let wins = userData['wins']; // fch hatzid dok stats dyal user hatytgado hado
         let losses = userData['loses'];
-
+        const rankImage = "../images/ranks/diamond.svg";
         const page = document.createDocumentFragment();
         page.appendChild(renderLeftBar());
 
         this.content.className = 'profile';
         this.content.innerHTML = `
-            <div class="wrapper">
+            // <div class="wrapper">
                 <div class="profile-card">
                     <div class="profile-container">
                         <div class="banner">
@@ -128,6 +134,10 @@ class Profile {
                                     <span class="n-lose">${losses}</span>
                                 </div>
                             </div>
+                            <div class="stat-box2">
+                                <h3>RANK</h3>
+                                <img src="${rankImage}" class="rank-badge" alt="Rank Badge">
+                             </div>
                         </div>
                         <div class="win-rate">
                             <h2>WIN RATE</h2>

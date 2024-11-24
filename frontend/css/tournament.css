@@ -1,3 +1,49 @@
+
+:root{
+    --classic-color: #ffffff;
+    /* --neon-color: #00DCFF; */
+    --neon-color: #F941FF;
+    --fire-color: #FF774D;
+    --water-color: #63CBFF;
+    --earth-color: #43FF74;
+    --primary-color: #bb07a3;
+    --secondary-color: #cb0ccb;
+    --tertiary-color: #B821FF;
+    --background-color:linear-gradient(45deg, #511569 30%, black 90%);
+    --nav-color: linear-gradient(180deg, rgba(132,0,135,1) 0%, rgba(23,0,44,1) 100%);
+}
+
+@font-face {
+    font-family: 'BowblyOne';
+    src: url('../images/fonts/BowlbyOne-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;     
+}
+@font-face {
+    font-family: 'Bungee';
+    src: url('../images/fonts/Bungee-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Bungeeline';
+    src: url('../images/fonts/BungeeInline-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Saira';
+    src: url('../images/fonts/saira.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../images/fonts/Poppins-Black.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 .tournament-element
 {
 	display: flex;
@@ -19,17 +65,6 @@
 }
 
 
-
-@media (max-width: 800px) {
-	/* body {
-	  justify-content: center;
-	} */
-	#display_winner
-	{
-		font-size: 80%;
-	}
-	
-  }
 
 .create-tournament , .four-players , .list-tournament
 {
@@ -291,10 +326,12 @@ join-tournament
 	justify-content: center;
 	width: 80%;
 	height: 40%;
-	font-size: 100%;
+	font-size: 5rem;
 	color: white;
+	font-family: 'Bungee';
 	/* background-color: #FF00E6; */
 }
+
 #tournment_name_img
 {
 	display: flex;
@@ -311,8 +348,8 @@ join-tournament
 	justify-content: center;
 	width: 50%;
 	height: 20%;
-	background: linear-gradient(180deg, #87007A 0%, #7B008F 97.69%);
-	border-radius: 5px;
+	background: linear-gradient(180deg, #ff17e8 0%, #7B008F 97.69%);
+	border-radius: 20px;
 }
 
 #input_name_tournment
@@ -995,3 +1032,6 @@ join-tournament
 		width: 70%;
 	}
 }
+
+
+

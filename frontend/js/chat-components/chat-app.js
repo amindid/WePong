@@ -6,9 +6,9 @@ class ChatApp extends HTMLElement {
         this.selectedFriend = null;
         this.loggedUser = null;
         this.selectedFriendIsBlocked = false;
+        this.isBlokcedByFriend = false;
 
         this.fetchLoggedUser();
-        this.callIsBlockedUserApi();
 
         const wrapper = document.createElement('div');
         wrapper.classList.add('chat-app');
@@ -26,32 +26,6 @@ class ChatApp extends HTMLElement {
 
         // Append styles
         const style = document.createElement('style');
-        // style.textContent = `
-        //     .chat-app {
-        //         display: flex;
-        //         width: 100%;
-        //         height: 100vh;
-        //         background-color: #510054;
-        //         margin: 0;
-        //         padding: 0;
-        //     }
-
-        //     .friend-list {
-        //         width: 20%;
-        //         background-color: #510054;
-        //     }
-
-        //     .chat-container {
-        //         display: flex;
-        //         flex-direction: column;
-        //         width: 80%;
-        //         background-color: #300141;
-        //         // justify-content: center;
-        //         // align-items: center;
-        //     }
-
-        // `;
-
         style.textContent = `
             * {
                 margin: 0;
@@ -126,7 +100,7 @@ class ChatApp extends HTMLElement {
         this.chatContainer = chatContainer;
         this.showNoFriendSelectedMessage();
 
-        friendList.addEventListener('friendCardClick', (event) => {
+        friendList.addEventListener('friendCardClick', async (event) => {
             const clickedCard = event.detail.card;
 
             this.selectedFriend = {
@@ -136,8 +110,10 @@ class ChatApp extends HTMLElement {
             };
     
             console.log(`Selected friend: ${this.selectedFriend.id}`);
-            this.updateChatContainer(this.selectedFriend, this.loggedUser);
-            this.connectWebSocket(this.selectedFriend.id, this.loggedUser.id);
+            await this.callIsBlockedUserApi();
+            await this.isBlokcedByFriendApi();
+            await this.updateChatContainer(this.selectedFriend, this.loggedUser);
+            await this.connectWebSocket(this.selectedFriend.id, this.loggedUser.id);
         });
 
         this.chatContainer.addEventListener('close-chat', () => {
@@ -156,10 +132,11 @@ class ChatApp extends HTMLElement {
         });
 
         // block-unblock-user
-        this.chatContainer.addEventListener('block-unblock-user', () => {
+        this.chatContainer.addEventListener('block-unblock-user', async () => {
             if (this.selectedFriend) {
-                this.blockUnblockUser(this.selectedFriend.id);
-                this.updateChatContainer(this.selectedFriend);
+                await this.blockUnblockUser(this.selectedFriend.id);
+                await this.updateChatContainer(this.selectedFriend, this.loggedUser);
+                await this.connectWebSocket(this.selectedFriend.id, this.loggedUser.id);
             }
         });
         
@@ -169,7 +146,7 @@ class ChatApp extends HTMLElement {
         fetch('http://localhost:8000/api/users/userProfile/', {
             method: 'GET',
             credentials: 'include',
-            headers: {
+            headers: {  
                 'Content-Type': 'application/json',
             }
         }).then((response) => {
@@ -183,31 +160,77 @@ class ChatApp extends HTMLElement {
         });
     }
 
-    callIsBlockedUserApi() {
-        // fetch('http://localhost:8000/api/friends/is_blocked/', {
-        //     method: 'GET',
-        //     credentials: 'include',
-        //     headers: {
-        //         'Content-Type': 'application/json',
-        //     }
-        // }).then((response) => {
-        //     if (!response.ok) throw new Error(`Error getting isBlockedUser Data : ${response.statusText}`);
-        //     return response.json();
-        // }).then((data) => {
-        //     this.isBlocked = data.is_blocked;
-        //     console.log('Is blocked user:', this.isBlocked);
-        // }).catch((error) => {
-        //     console.error('Error fetching isBlockedUser:', error);
-        // });
+    async callIsBlockedUserApi() {
+        try {
+            const response = await fetch('http://localhost:8000/api/friends/is_blocked/', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ friend_id: this.selectedFriend.id })
+            });
+    
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`Error: ${errorData.error || response.statusText}`);
+            }
+    
+            const data = await response.json();
+            this.selectedFriendIsBlocked = data.is_blocked;
+        } catch (error) {
+            console.error('Error fetching isBlockedUser:', error.message);
+        }
     }
 
-    blockUnblockUser(friendId) {
-        console.log("friendId==> ", friendId);
-        if (this.isBlocked) {
-            // call the unblock user api
+    async isBlokcedByFriendApi() {
+        console.log('isBlokcedByFriendApi');
+        try {
+            const response = await fetch('http://localhost:8000/api/friends/is_blocked_by/', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ friend_id: this.selectedFriend.id })
+            });
+        
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(`Error: ${errorData.error || response.statusText}`);
+            }
+        
+            const data = await response.json();
+            this.isBlokcedByFriend = data.is_blocked;
+            console.log('isBlokcedByFriend:', data.is_blocked);
+        } catch (error) {
+            console.error('Error fetching isBlockedUser:', error.message);
         }
-        else {
-            // call the block user api
+    }
+
+    async blockUnblockUser(friendId) {
+        const url = this.selectedFriendIsBlocked ? 'http://localhost:8000/api/friends/unblock/'
+                                                 : 'http://localhost:8000/api/friends/block/';
+
+        const action = this.selectedFriendIsBlocked ? 'unblock' : 'block';
+    
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id: friendId })
+            });
+    
+            if (!response.ok) {
+                throw new Error(`Error ${action}ing user: ${response.statusText}`);
+            }
+            
+            this.selectedFriendIsBlocked = !this.selectedFriendIsBlocked;
+        } catch (error) {
+            console.error(`Error ${action}ing user:`, error);
         }
     }
 
@@ -216,7 +239,7 @@ class ChatApp extends HTMLElement {
     }
 
     // Update chat container with selected friend
-    updateChatContainer(friend, logedUser) {
+    async updateChatContainer(friend, logedUser) {
         // Clear the chat container by removing all previous components
         while (this.chatContainer.firstChild) {
             this.chatContainer.removeChild(this.chatContainer.firstChild);
@@ -232,24 +255,35 @@ class ChatApp extends HTMLElement {
         const chatBadge = document.createElement('chat-badge');
         chatBadge.setAttribute('profile-pic', friend.photo);
         chatBadge.setAttribute('username', friend.username);
-        chatBadge.setAttribute('blocked', this.isBlocked);
+        chatBadge.setAttribute('blocked', this.selectedFriendIsBlocked);
     
         this.chatContainer.appendChild(chatBadge);
         // this.chatContainer.appendChild(header);
         this.chatContainer.appendChild(messageList);
         // check if the user is blocked
-        if (this.isBlocked) {
+        if (this.selectedFriendIsBlocked) {
             const blockedMessage = document.createElement('div');
             blockedMessage.textContent = "Can't send a message to blocked contact " + friend.username + " .";
 
             blockedMessage.style.margin = '10px auto';
             blockedMessage.style.padding = '10px 15px';
-            // blockedMessage.style.backgroundColor = '#f8d7da';
             blockedMessage.style.color = '#FFFFFF';
             blockedMessage.style.textAlign = 'center';
             blockedMessage.style.fontSize = '16px';
             this.chatContainer.appendChild(blockedMessage);
-        } else {
+        } 
+        else if (this.isBlokcedByFriend) {
+            const blockedMessage = document.createElement('div');
+            blockedMessage.textContent = friend.username + " has blocked you.";
+            
+            blockedMessage.style.margin = '10px auto';
+            blockedMessage.style.padding = '10px 15px';
+            blockedMessage.style.color = '#FFFFFF';
+            blockedMessage.style.textAlign = 'center';
+            blockedMessage.style.fontSize = '16px';
+            this.chatContainer.appendChild(blockedMessage);
+        }
+        else {
             const input = document.createElement('chat-input');
             input.classList.add('chat-input');
             this.chatContainer.appendChild(input);
@@ -260,16 +294,15 @@ class ChatApp extends HTMLElement {
                 messageList.addMessage(userMessage, 'me');
             });
         }
-
-        this.fetchChatMessages(logedUser, friend, messageList);
+        await this.fetchChatMessages(logedUser, friend, messageList);
     }
 
-    fetchChatMessages(logedUser, friend, messageList) {
+    async fetchChatMessages(logedUser, friend, messageList) {
         const [firstId, secondId] = [logedUser.id, friend.id].sort((a, b) => a - b);
         const roomName = `${firstId}_${secondId}`;
 
         // create a room between the two users if it doesn't exist
-        fetch(`http://127.0.0.1:8000/api/chat/rooms/`, {
+        await fetch(`http://127.0.0.1:8000/api/chat/rooms/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -291,7 +324,7 @@ class ChatApp extends HTMLElement {
         })
 
         // fetch messages from the room
-        fetch(`http://127.0.0.1:8000/api/chat/rooms/${roomName}/messages/`, {
+        await fetch(`http://127.0.0.1:8000/api/chat/rooms/${roomName}/messages/`, {
             method: 'GET',
             credentials: 'include',
             headers: {

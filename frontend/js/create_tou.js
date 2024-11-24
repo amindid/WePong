@@ -10,28 +10,7 @@ class CreateTournament
 {
 	content = document.createElement('span');
 	constructor()
-	{
-		
-		// this.querySelector('#four_players').addEventListener('click', to_four_players);
-		
-		// function  to_four_players() {
-		// 		const bodyContent = document.querySelector("body-component");
-		// 		bodyContent.innerHTML = "";
-			
-		// 		const Four = new FourPlayers;
-		// 		bodyContent.appendChild(Four);
-		// 	}
-			// this.querySelector('#eight_players').addEventListener('click', to_eight_players);
-			
-			// function  to_eight_players() {
-				// 	const bodyContent = document.querySelector("body-component");
-				// 	bodyContent.innerHTML = "";
-				
-				// 	const Eight = new EightPlayers;
-				// 	bodyContent.appendChild(Eight);
-				// }
-				
-				
+	{			
 	}
 			
 	render()
@@ -162,7 +141,7 @@ class CreateTournament
 				navigate('/tournement/fournames');
 			}
 			else
-				showAlert("Error : tournemant name");
+				showAlert("Error : Chose tournemant name");
 		});
 		const eight_players = this.content.querySelector("#eight_players");
 		eight_players.addEventListener('click', event =>
@@ -175,14 +154,10 @@ class CreateTournament
 				navigate('/tournement/eightnames');
 			}
 			else
-				showAlert("Error : tournemant name");
+				showAlert("Error : Chose tournemant name");
 		});
 		return page;
 	}
-
-	// connectedCallback()
-	// {
-	// }
 }
 
 export function renderCreateTournament() {
