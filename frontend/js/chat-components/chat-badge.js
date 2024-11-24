@@ -30,6 +30,7 @@ class ChatBadge extends HTMLElement {
         this.menu.innerHTML = `
             <ul>
                 <li>Go to profile</li>
+                <li>Invite to play</li>
                 <li>Close chat</li>
                 <li id="block-option">Block</li>
             </ul>
@@ -155,6 +156,9 @@ class ChatBadge extends HTMLElement {
                     case 'Close chat':
                         this.handleCloseChat();
                         break;
+                    case 'Invite to play':
+                        this.handleInviteToPlay();
+                        break;
                     case 'Block':
                     case 'Unblock':
                         this.handleBlockUnblock();
@@ -171,12 +175,15 @@ class ChatBadge extends HTMLElement {
     
     // Define methods to handle each action
     handleGoToProfile() {
-        console.log('Go to profile clicked');
-        // Add custom behavior for navigating to profile
+        this.dispatchEvent(new CustomEvent('go-profile', { bubbles: true, composed: true }));
     }
     
     handleCloseChat() {
         this.dispatchEvent(new CustomEvent('close-chat', { bubbles: true, composed: true }));
+    }
+
+    handleInviteToPlay() {
+        this.dispatchEvent(new CustomEvent('invite-play', { bubbles: true, composed: true }));
     }
     
     handleBlockUnblock() {

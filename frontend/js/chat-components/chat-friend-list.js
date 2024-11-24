@@ -41,6 +41,7 @@ class ChatFriendList extends HTMLElement {
                 friendCard.setAttribute('id', key);
                 friendCard.setAttribute('photo', value[1]);
                 friendCard.setAttribute('username', value[0]);
+                friendCard.setAttribute('status', true);
                 friendList.appendChild(friendCard);
             }
         };

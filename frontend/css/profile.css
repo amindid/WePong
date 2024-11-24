@@ -74,16 +74,6 @@
     align-items: center;
     /* height: 100vh; */
 }
-/* body {
-    margin: 0 !important;
-    padding: 0 !important;
-    /* height: 100vh; */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: var(--background-color);
-    font-family: 'Poppins', sans-serif;
-} */
 
 .wrapper {
     display: flex;

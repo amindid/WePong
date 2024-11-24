@@ -1,3 +1,5 @@
+import { navigate } from '../router.js';
+
 class ChatApp extends HTMLElement {
     constructor() {
         super();
@@ -108,8 +110,7 @@ class ChatApp extends HTMLElement {
                 username: clickedCard.getAttribute('username'),
                 photo: clickedCard.getAttribute('photo')
             };
-    
-            console.log(`Selected friend: ${this.selectedFriend.id}`);
+
             await this.callIsBlockedUserApi();
             await this.isBlokcedByFriendApi();
             await this.updateChatContainer(this.selectedFriend, this.loggedUser);
@@ -139,7 +140,15 @@ class ChatApp extends HTMLElement {
                 await this.connectWebSocket(this.selectedFriend.id, this.loggedUser.id);
             }
         });
-        
+
+        this.chatContainer.addEventListener('go-profile', () => {
+            navigate(`/profile`, this.selectedFriend.username);
+        });
+
+        // invite-play
+        this.chatContainer.addEventListener('invite-play', () => {
+            console.log('Invite to play clicked');
+        });
     }
 
     fetchLoggedUser() {
@@ -411,6 +420,14 @@ class ChatApp extends HTMLElement {
                                sender,
                                this.selectedFriend.photo, 
                                messageData.timestamp);
+    }
+
+    // Disconnect WebSocket when the component is removed
+    disconnectedCallback() {
+        if (this.socket) {
+            this.socket.close();
+            console.log('WebSocket disconnected');
+        }
     }
 }
 

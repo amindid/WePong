@@ -1,6 +1,6 @@
 class ChatFriendCard extends HTMLElement {
     static get observedAttributes() {
-        return ['id', 'photo', 'username'];
+        return ['id', 'photo', 'username', 'status'];
     }
 
     constructor() {
@@ -16,14 +16,25 @@ class ChatFriendCard extends HTMLElement {
         this.img.src = this.getAttribute('photo') || '../images/me.png';
         this.img.alt = this.getAttribute('username') || 'Friend';
 
+        // Friend status
+        this.status = document.createElement('div');
+        this.status.classList.add('friend-status');
+        this.updateStatus(this.getAttribute('status'));
+
         // Friend username
         this.username = document.createElement('div');
         this.username.classList.add('friend-username');
         this.username.textContent = this.getAttribute('username') || 'Unknown';
 
-        // Append photo and username
+        // Content container for status and username
+        const content = document.createElement('div');
+        content.classList.add('friend-content');
+        content.appendChild(this.username);
+        content.appendChild(this.status);
+
+        // Append photo and content
         wrapper.appendChild(this.img);
-        wrapper.appendChild(this.username);
+        wrapper.appendChild(content);
 
         // Card click event
         wrapper.addEventListener('click', () => {
@@ -48,14 +59,34 @@ class ChatFriendCard extends HTMLElement {
             }
 
             .friend-photo {
-                width: 40px;
-                height: 40px;
+                width: 50px;
+                height: 50px;
                 border-radius: 50%;
                 margin-right: 10px;
             }
 
+            .friend-content {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .friend-status {
+                font-size: 14px;
+                font-weight: bold;
+                color: gray;
+            }
+
+            .friend-status.online {
+                color: green;
+            }
+
+            .friend-status.offline {
+                color: red;
+            }
+
             .friend-username {
                 font-size: 16px;
+                font-weight: bold;
                 color: #FFFFFF;
             }
 
@@ -75,6 +106,21 @@ class ChatFriendCard extends HTMLElement {
                 this.username.textContent = newValue.charAt(0).toUpperCase() + newValue.slice(1);
             else
                 this.username.textContent = 'Unknown';
+        } else if (name === 'status') {
+            this.updateStatus(newValue);
+        }
+    }
+
+    updateStatus(status) {
+        if (status === 'true') {
+            this.status.textContent = 'Online';
+            this.status.className = 'friend-status online';
+        } else if (status === 'false') {
+            this.status.textContent = 'Offline';
+            this.status.className = 'friend-status offline';
+        } else {
+            this.status.textContent = '';
+            this.status.className = 'friend-status';
         }
     }
 }
