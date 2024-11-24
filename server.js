@@ -17,7 +17,7 @@
 // })
 
 // app.listen(port, () => {
-//   console.log(`App listening at http://127.0.0.1:${port}`);
+//   console.log(`App listening at http://localhost:${port}`);
 // });
 
 const express = require('express');
@@ -49,5 +49,5 @@ app.get('*', (req, res) => {
 
 // Start the server
 app.listen(port, () => {
-  console.log(`App listening at http://127.0.0.1:${port}`);
+  console.log(`App listening at http://localhost:${port}`);
 });

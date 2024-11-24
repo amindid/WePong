@@ -40,7 +40,7 @@ class ListTournament
 
 
 	// async fetchTournaments() {
-	// 	const response = await fetch('http://127.0.0.1:8000/chat/tournemnent/');
+	// 	const response = await fetch('http://localhost:8000/chat/tournemnent/');
 	// 	const tournaments = await response.json();
 		
 	// 	const tournamentList = document.getElementById('container-tour');

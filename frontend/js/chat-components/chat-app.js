@@ -1,4 +1,5 @@
 import { navigate } from '../router.js';
+import { logedUser } from '../router.js';
 
 class ChatApp extends HTMLElement {
     constructor() {
@@ -6,11 +7,9 @@ class ChatApp extends HTMLElement {
         this.attachShadow({ mode: 'open' });
 
         this.selectedFriend = null;
-        this.loggedUser = null;
+        console.log('Logged User:', logedUser);
         this.selectedFriendIsBlocked = false;
         this.isBlokcedByFriend = false;
-
-        this.fetchLoggedUser();
 
         const wrapper = document.createElement('div');
         wrapper.classList.add('chat-app');
@@ -113,8 +112,8 @@ class ChatApp extends HTMLElement {
 
             await this.callIsBlockedUserApi();
             await this.isBlokcedByFriendApi();
-            await this.updateChatContainer(this.selectedFriend, this.loggedUser);
-            await this.connectWebSocket(this.selectedFriend.id, this.loggedUser.id);
+            await this.updateChatContainer(this.selectedFriend);
+            await this.connectWebSocket(this.selectedFriend.id, logedUser.id);
         });
 
         this.chatContainer.addEventListener('close-chat', () => {
@@ -136,8 +135,8 @@ class ChatApp extends HTMLElement {
         this.chatContainer.addEventListener('block-unblock-user', async () => {
             if (this.selectedFriend) {
                 await this.blockUnblockUser(this.selectedFriend.id);
-                await this.updateChatContainer(this.selectedFriend, this.loggedUser);
-                await this.connectWebSocket(this.selectedFriend.id, this.loggedUser.id);
+                await this.updateChatContainer(this.selectedFriend, logedUser);
+                await this.connectWebSocket(this.selectedFriend.id, logedUser.id);
             }
         });
 
@@ -148,24 +147,6 @@ class ChatApp extends HTMLElement {
         // invite-play
         this.chatContainer.addEventListener('invite-play', () => {
             console.log('Invite to play clicked');
-        });
-    }
-
-    fetchLoggedUser() {
-        fetch('http://localhost:8000/api/users/userProfile/', {
-            method: 'GET',
-            credentials: 'include',
-            headers: {  
-                'Content-Type': 'application/json',
-            }
-        }).then((response) => {
-            if (!response.ok) throw new Error(`Error getting userProfile Data : ${response.statusText}`);
-            return response.json();
-        }).then((data) => {
-            this.loggedUser = data;
-            console.log('Logged in user ID:', this.loggedUser);
-        }).catch((error) => {
-            console.error('Error fetching logged-in user:', error);
         });
     }
 
@@ -248,7 +229,7 @@ class ChatApp extends HTMLElement {
     }
 
     // Update chat container with selected friend
-    async updateChatContainer(friend, logedUser) {
+    async updateChatContainer(friend) {
         // Clear the chat container by removing all previous components
         while (this.chatContainer.firstChild) {
             this.chatContainer.removeChild(this.chatContainer.firstChild);
@@ -303,15 +284,15 @@ class ChatApp extends HTMLElement {
                 messageList.addMessage(userMessage, 'me');
             });
         }
-        await this.fetchChatMessages(logedUser, friend, messageList);
+        await this.fetchChatMessages(friend, messageList);
     }
 
-    async fetchChatMessages(logedUser, friend, messageList) {
+    async fetchChatMessages(friend, messageList) {
         const [firstId, secondId] = [logedUser.id, friend.id].sort((a, b) => a - b);
         const roomName = `${firstId}_${secondId}`;
 
         // create a room between the two users if it doesn't exist
-        await fetch(`http://127.0.0.1:8000/api/chat/rooms/`, {
+        await fetch(`http://localhost:8000/api/chat/rooms/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -333,7 +314,7 @@ class ChatApp extends HTMLElement {
         })
 
         // fetch messages from the room
-        await fetch(`http://127.0.0.1:8000/api/chat/rooms/${roomName}/messages/`, {
+        await fetch(`http://localhost:8000/api/chat/rooms/${roomName}/messages/`, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -369,19 +350,26 @@ class ChatApp extends HTMLElement {
     }
 
     // WebSocket connection to server
-    connectWebSocket(friendId, logedUserId) {
+    async connectWebSocket(friendId, logedUserId) {
         const [firstId, secondId] = [logedUserId, friendId].sort((a, b) => a - b);
         const roomName = `${firstId}_${secondId}`;
-        console.log({
-            name: roomName,
-            users: [firstId, secondId]
-        });
-
-        const socketUrl = `ws://127.0.0.1:8000/ws/chat/${roomName}/?userId=${logedUserId}`;
-        console.log('Connecting to WebSocket:', socketUrl);
-
+        
+        // Create WebSocket URL without token query parameter
+		
+		const ticket_res = await fetch('http://localhost:8000/api/chat/ticket/')
+		if (!ticket_res.ok) {
+			console.error('Error getting ticket:', ticket_res.statusText);
+			return;
+		}
+		const socketUrl = `ws://localhost:8000/ws/chat/${roomName}/?${res.body.ticket}`;
+        // Create WebSocket with credentials
         this.socket = new WebSocket(socketUrl);
-
+        
+        // Enable credentials
+        this.socket.withCredentials = true;
+        
+        console.log('Connecting to WebSocket:', socketUrl);
+    
         this.socket.addEventListener('open', () => {
             console.log('WebSocket connection established');
         });

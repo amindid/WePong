@@ -188,6 +188,16 @@ export { renderGamePlay } from './game-play.js';
     }
 */
 
+
+export const logedUser = {
+    id: null,
+    username: null,
+    email: null,
+    avatar: null,
+    notificationSocket: null,
+    wallet: null
+}
+
 function renderPage(page) {
     document.body.innerHTML = '';
     document.body.appendChild(page);
@@ -197,7 +207,6 @@ function renderPage(page) {
         showAlert(message_text);
     }
 }
-
 
 export function navigate(route, param = null) {
     if (param !== null)
@@ -234,7 +243,6 @@ async function ask_refreshing_token() {
         return false;
     }
 }
-
 
 async function loadPage(route) {
     const startRoutes = {   '/': renderHomePage,
@@ -278,6 +286,7 @@ async function loadPage(route) {
         });
         if (response.ok) {
             isAuthenticated = true;
+            await fetchLoggedUser();
         } else {
             const data = await response.json();
             if (data.error === 'token expired')
@@ -288,7 +297,6 @@ async function loadPage(route) {
         console.log('Authentication check error:',error);
         isAuthenticated = false;
     }
- 
 
     if (startRoutes[route]) {
         if (isAuthenticated) {
@@ -307,6 +315,30 @@ async function loadPage(route) {
     }
     else {
         return renderPage(renderNotFoundPage());
+    }
+}
+
+async function fetchLoggedUser() {
+    try {
+        const response = await fetch('http://localhost:8000/api/users/userProfile/', {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+        if (response.ok) {
+            const data = await response.json();
+            logedUser.id = data.id;
+            logedUser.username = data.username;
+            logedUser.email = data.email;
+            logedUser.avatar = data.avatar;
+            logedUser.wallet = data.wallet;
+        } else {
+            console.log('Error fetching logged user:',response.statusText);
+        }
+    } catch (error) {
+        console.error('Error fetching logged user:',error);
     }
 }
 
