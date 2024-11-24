@@ -24,6 +24,26 @@ class ChatHeader extends HTMLElement {
 
       const style = document.createElement('style');
       style.textContent = `
+      :host{
+        --classic-color: #ffffff;
+        /* --neon-color: #00DCFF; */
+        --neon-color: #F941FF;
+        --fire-color: #FF774D;
+        --water-color: #63CBFF;
+        --earth-color: #43FF74;
+        --primary-color: #bb07a3;
+        --secondary-color: #cb0ccb;
+        --tertiary-color: #B821FF;
+        --background-color:linear-gradient(45deg, #511569 30%, black 90%);
+        --nav-color: linear-gradient(180deg, rgba(132,0,135,1) 0%, rgba(23,0,44,1) 100%);
+        --hover-bg-color: white;
+        --text-color: white;
+        --text-color-light: black;
+        --msg-bg-color-green: #239B56;
+        --online-color: #00ff00;
+        --offline-color: #ff0000;
+    }
+
       .chat-header {
         width: 100%;
         display: flex;
@@ -45,7 +65,7 @@ class ChatHeader extends HTMLElement {
         font-weight: bold;
         color : #FFFFFF;
       }
-
+      
       @media (max-width: 600px) {
         .chat-header {
           padding: 12px;

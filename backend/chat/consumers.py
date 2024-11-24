@@ -14,10 +14,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
         query_params = parse_qs(self.scope["query_string"].decode())
         self.user_id = query_params.get("userId", [None])[0]  # Get userId or None if not provided
 
+        # print (self.scope["cookies"]["access_token"].split(".")[1])
+        print (self.scope["cookies"])
+        # print self.scope.get("headers")
+        print ("HEADERS: ", self.scope.get("headers"))
         # Validate userId (optional, but recommended)
-        if not self.user_id:
-            await self.close()
-            return
+        # if not self.user_id:
+        #     await self.close()
+        #     return
 
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'chat_{self.room_name}'

@@ -35,8 +35,8 @@ class ChatInput extends HTMLElement {
                 display: flex;
                 padding: 8px;
                 background-color: #300141;
-                border: 1px solid #FFFFFF;
-                border-radius: 4px;
+                border: 2px solid #FFFFFF;
+                border-radius: 30px;
                 width: 80%;
             }
 
@@ -47,19 +47,30 @@ class ChatInput extends HTMLElement {
                 border: none;
                 width: 100%; /* Make input take full width of input-container */
                 font-size: 1em;
-                color: #FFFFFF; /* Change font-color to color */
+                color: white;
                 font-weight: bold;
             }
 
             input:focus {
                 outline: none; /* Remove default focus outline */
                 border: none; /* Remove any border on focus */
+                transform: scale(1.05); /* Scale up the input on focus */
+               
             }
-
+            input[type="text"]::placeholder {
+                color: #999;
+                transition: opacity 0.3s;
+            }
+        
+            input[type="text"]:focus::placeholder {
+                opacity: 0;
+            }
             .chat-input-button {
                 border: none;
                 background-color: #EE36A4;
-                border-radius: 4px;
+                width: 40px;
+                height: 40px;
+                border-radius: 20px;
                 cursor: pointer;
                 display: flex;
                 align-items: center;
@@ -84,7 +95,8 @@ class ChatInput extends HTMLElement {
             }
 
             .chat-input-button:hover {
-                border: 1px solid #FFFFFF;
+                box-shadow: rgba(240, 46, 170, 0.4) -5px 5px, rgba(240, 46, 170, 0.3) -10px 10px, rgba(240, 46, 170, 0.2) -15px 15px, rgba(240, 46, 170, 0.1) -20px 20px, rgba(240, 46, 170, 0.05) -25px 25px;
+                transform: scale(1.1); /* Scale up the button on hover */
             } 
 
             @media (max-width: 600px) {
