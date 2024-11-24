@@ -7,6 +7,50 @@
 	margin: 0;
 	background: linear-gradient(139.98deg, #300141 10.69%, #2E0140 20.26%, #2D013F 30.76%, #2C013E 40.02%, #2B013D 51.46%, #2C0041 55.88%, #2C0041 63.86%, #2F0046 78.08%, #2B043E 83.04%);
 } */
+:root{
+    --classic-color: #ffffff;
+    /* --neon-color: #00DCFF; */
+    --neon-color: #F941FF;
+    --fire-color: #FF774D;
+    --water-color: #63CBFF;
+    --earth-color: #43FF74;
+    --primary-color: #bb07a3;
+    --secondary-color: #cb0ccb;
+    --tertiary-color: #B821FF;
+    --background-color:linear-gradient(45deg, #511569 30%, black 90%);
+    --nav-color: linear-gradient(180deg, rgba(132,0,135,1) 0%, rgba(23,0,44,1) 100%);
+}
+
+@font-face {
+    font-family: 'BowblyOne';
+    src: url('../images/fonts/BowlbyOne-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;     
+}
+@font-face {
+    font-family: 'Bungee';
+    src: url('../images/fonts/Bungee-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Bungeeline';
+    src: url('../images/fonts/BungeeInline-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Saira';
+    src: url('../images/fonts/saira.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Poppins';
+    src: url('../images/fonts/Poppins-Black.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
 
 dashboard-component {
 	width: 100%;
@@ -112,11 +156,11 @@ dashboard-component {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	width: 30%;
+	width: 20%;
 	/* min-width: 200px; */
 	min-height: 40px;
 	/* max-width: 110px; */
-	height: 100%;
+	height: 80%;
 	position: relative;
 	/* border: 2px solid red; */
 }
@@ -148,7 +192,11 @@ input.searchInput {
 input.searchInput.show {
 	display: flex;
 }
-
+.svg-search {
+	width: 100%;
+	height: 100%;
+	fill : white;
+}
 @media (max-width: 900px) {
 	input.searchInput {
 		display: none;
@@ -177,7 +225,7 @@ input.searchInput.show {
 .searchResult {
 	/* border: 2px solid red; */
 	width: 100%;
-	height: 140%;
+	height: 100%;
 	position: absolute;
 	top: 100%;
 	display: none;
@@ -191,7 +239,7 @@ input.searchInput.show {
 	box-sizing: border-box;
 	padding-left: 5%;
 	border-top: none;
-	background: #060247;
+	background: #570544;
 	z-index: 5px;
 }
 .searchResult.show {
@@ -201,7 +249,7 @@ input.searchInput.show {
 .searchUsername {
 	color: white;
 	font-size: 130%;
-	font-family: Saira Stencil One;
+	font-family: 'Saira Stencil One';
 }
 
 .searchResult img {
@@ -217,6 +265,7 @@ input.searchInput.show {
 }
 
 .searchButton:hover {
+	cursor: pointer;
 	background: #E1319A;
 }
 

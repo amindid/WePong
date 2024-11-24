@@ -1070,3 +1070,15 @@ h4{
 .not-found .link:hover {
     background-color: #FF00FF; /* Match the hover color of your project */
 }
+
+.btn-nfound{
+    background-color: #FF00FF;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #fff;
+    margin: 10px;
+    font-weight: bold;
+    font-size: 20px;
+}

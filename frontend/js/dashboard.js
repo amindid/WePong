@@ -55,7 +55,7 @@ class Dashboard {
 	changebackground() {
 		const body = document.body
 		body.style.backgroundImage = "";
-		body.style.alignItems = 'unset';
+		body.style.alignItems = 'unset';	
 	}
 }
 export function renderDashboard() {

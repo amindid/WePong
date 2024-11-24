@@ -113,6 +113,7 @@ class EightName
 		page.appendChild(this.content);
 		const body = document.body
 		body.style.alignItems = 'center';
+		body.style.justifyContent = 'center';
 
 
 		const quit = this.content.querySelector("#quitt");

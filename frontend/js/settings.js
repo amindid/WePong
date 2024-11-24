@@ -42,21 +42,23 @@ class SettingComponent
 							</div>
 							<div id="edit">
 								<div class="edit_username">
-									<h1 class="display_change_username"> change username </h1>
+									<h1 class="display_change_username"> - change username -  </h1>
 									<input class="input_username" id="input_username"> </input>
 								</div>
 								<div class="edit_username ">
 									<button class="submit_btn" id="submit_change_username">submit</button>
 								</div>
-								<div class="logout" >
-									<button class="logout_button" id="logoutButton">LOG OUT</button>
 								</div>
-								<div class="delete">
-									<button class="logout_button" id="deleteButton">DELETE ACCOUNT</button>
 								</div>
-							</div>
-						</div>
-					</div>
+								</div>
+								<div id="settings-btns">
+									<div class="logout" >
+										<button class="logout_button" id="logoutButton">LOG OUT</button>
+									</div>
+									<div class="delete">
+										<button class="logout_button" id="deleteButton">DELETE ACCOUNT</button>
+									</div>
+								</div>
 				</div>
 			</div>
 			<div class="settings1 container2" id="container2">
@@ -268,63 +270,64 @@ class SettingComponent
 			
 
 
-			this.content.querySelector('#deleteButton').addEventListener('click', function() {
-				deleteUser();
+			this.content.querySelector('#deleteButton').addEventListener('click', function () {
+				confirmAction('Are you sure you want to delete your account?', deleteUser);
 			});
-			function deleteUser() {
-			    fetch('http://localhost:8000/api/users/delete', {
-			        method: 'DELETE',  // Change to DELETE
-			        credentials: 'include',
-			        headers: {
-			            'Content-Type': 'application/json',
-			        },
-			    })
-			    .then(response => {
-			        if (response.status === 204) {  // Change to 204
-			            showAlert('User deleted successfully');
-						navigate("/");
-			        } else {
-			            throw new Error('User deletion failed');
-			        }
-			    })
-			    .catch(error => {
-			        console.error('Error:', error);
-			        alert('Error deleting user');
-			    });
+			
+			this.content.querySelector('#logoutButton').addEventListener('click', function () {
+				confirmAction('Are you sure you want to log out?', logoutUser);
+			});
+			
+			function confirmAction(message, callback) {
+				const isConfirmed = confirm(message);
+				if (isConfirmed) {
+					callback(); 
+				}
 			}
-
-
-			this.content.querySelector('#logoutButton').addEventListener('click', function() {
-				logoutUser();
-			});
-			function logoutUser() {
-				fetch('http://localhost:8000/api/users/logout/', {
-					method: 'POST',
-					credentials: 'include',  
+			
+			function deleteUser() {
+				fetch('http://localhost:8000/api/users/delete', {
+					method: 'DELETE',
+					credentials: 'include',
 					headers: {
 						'Content-Type': 'application/json',
 					},
 				})
-				.then(response => {
-					console.log("then1");
-					if (response.status === 205) {
-						navigate("/login");
-					} else {
-						alert("error while logout");
-					}
-				})
-				// .then(data => {
-				// 	console.log("then2");
-				// 	alert(data.message);
-				// 	// Redirect to the login page or perform any other necessary actions
-				// 	navigate("/login");  // Update with your login page URL
-				// })
-				.catch(error => {
-					console.log("catsh");
-					console.error('Error:', error);
-					alert('Error logging out');
-				});
+					.then(response => {
+						if (response.status === 204) {
+							showAlert('User deleted successfully');
+							navigate("/");
+						} else {
+							throw new Error('User deletion failed');
+						}
+					})
+					.catch(error => {
+						console.error('Error:', error);
+						alert('Error deleting user');
+					});
 			}
+			
+			function logoutUser() {
+				fetch('http://localhost:8000/api/users/logout/', {
+					method: 'POST',
+					credentials: 'include',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+				})
+					.then(response => {
+						if (response.status === 205) {
+							navigate("/login");
+						} else {
+							alert("Error while logging out");
+						}
+					})
+					.catch(error => {
+						console.error('Error:', error);
+						alert('Error logging out');
+					});
+			}
+			
 			let newcontent = this.content;
 			this.content.querySelector('#buttonchangepassword').addEventListener('click', function() {
 				changePassword();
