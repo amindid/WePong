@@ -40,7 +40,7 @@ class ChatSearchFriendInput extends HTMLElement {
                 justify-content: start;
                 align-items: center;
                 padding: 8px;
-                width: 100%;
+                width: 80%;
             }
             .input-container {
                 display: flex;

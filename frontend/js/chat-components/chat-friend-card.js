@@ -7,6 +7,7 @@ class ChatFriendCard extends HTMLElement {
         super();
         this.attachShadow({ mode: 'open' });
 
+        // Wrapper element
         const wrapper = document.createElement('div');
         wrapper.classList.add('friend-card');
 
@@ -15,6 +16,11 @@ class ChatFriendCard extends HTMLElement {
         this.img.classList.add('friend-photo');
         this.img.src = this.getAttribute('photo') || '../images/me.png';
         this.img.alt = this.getAttribute('username') || 'Friend';
+
+        // Friend message count
+        this.msgCount = document.createElement('div');
+        this.msgCount.classList.add('friend-msg-count');
+        this.msgCount.textContent = this.getAttribute('msgCount') || '10';
 
         // Friend status
         this.status = document.createElement('div');
@@ -26,17 +32,18 @@ class ChatFriendCard extends HTMLElement {
         this.username.classList.add('friend-username');
         this.username.textContent = this.getAttribute('username') || 'Unknown';
 
-        // Content container for status and username
+        // Content container
         const content = document.createElement('div');
         content.classList.add('friend-content');
         content.appendChild(this.username);
         content.appendChild(this.status);
 
-        // Append photo and content
+        // Append children to wrapper
         wrapper.appendChild(this.img);
         wrapper.appendChild(content);
+        wrapper.appendChild(this.msgCount);
 
-        // Card click event
+        // Add click event
         wrapper.addEventListener('click', () => {
             this.dispatchEvent(new CustomEvent('friendCardClick', {
                 detail: { card: this },
@@ -45,9 +52,30 @@ class ChatFriendCard extends HTMLElement {
             }));
         });
 
-        // Styling
+        // Define styles with palette
         const style = document.createElement('style');
         style.textContent = `
+            :host{
+                --classic-color: #ffffff;
+                /* --neon-color: #00DCFF; */
+                --neon-color: #F941FF;
+                --fire-color: #FF774D;
+                --water-color: #63CBFF;
+                --earth-color: #43FF74;
+                --primary-color: #bb07a3;
+                --secondary-color: #cb0ccb;
+                --tertiary-color: #B821FF;
+                --background-color:linear-gradient(45deg, #511569 30%, black 90%);
+                --nav-color: linear-gradient(180deg, rgba(132,0,135,1) 0%, rgba(23,0,44,1) 100%);
+                --hover-bg-color: white;
+                --text-color: white;
+                --text-color-light: black;
+                --msg-bg-color-green: #239B56;
+                --online-color: #00ff00;
+                --offline-color: #ff0000;
+            }
+        
+
             .friend-card {
                 display: flex;
                 align-items: center;
@@ -56,6 +84,41 @@ class ChatFriendCard extends HTMLElement {
                 cursor: pointer;
                 transition: background 0.3s;
                 width: 90%;
+                background-color: var(--primary-color);
+                margin: 5px;
+                box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+            }
+
+            .friend-card.selected {
+                background-color: white;
+                border: 2px solid var(--neon-color);
+                .friend-username {
+                    color: black;
+                }
+            }
+
+            .friend-card:hover {
+                background-color: var(--hover-bg-color);
+                transition: background 0.3s;
+                .friend-username {
+                    color: var(--text-color-light);
+                }
+            }
+
+            .friend-msg-count {
+                margin-left: auto;
+                font-size: 14px;
+                font-weight: bold;
+                color: white;
+                background-color: var(--msg-bg-color-green);
+                padding: 8px;
+                border-radius: 50%;
+                margin-right: 10px;
+                width: 15px;
+                height: 15px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
 
             .friend-photo {
@@ -77,21 +140,17 @@ class ChatFriendCard extends HTMLElement {
             }
 
             .friend-status.online {
-                color: green;
+                color: var(--online-color);
             }
 
             .friend-status.offline {
-                color: red;
+                color: var(--offline-color);
             }
 
             .friend-username {
                 font-size: 16px;
                 font-weight: bold;
-                color: #FFFFFF;
-            }
-
-            .selected {
-                background-color: #bb5fc6;
+                color: white ;
             }
         `;
 
@@ -102,10 +161,9 @@ class ChatFriendCard extends HTMLElement {
         if (name === 'photo') {
             this.img.src = newValue || '../images/me.png';
         } else if (name === 'username') {
-            if (newValue)
-                this.username.textContent = newValue.charAt(0).toUpperCase() + newValue.slice(1);
-            else
-                this.username.textContent = 'Unknown';
+            this.username.textContent = newValue ? 
+                newValue.charAt(0).toUpperCase() + newValue.slice(1) : 
+                'Unknown';
         } else if (name === 'status') {
             this.updateStatus(newValue);
         }

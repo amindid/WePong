@@ -156,8 +156,8 @@ class Profile {
                                 </svg>
                             </div>
                         </div>
+                        <h2 id="match-history-h2">MATCH HISTORY</h2>
                         <div class="match-history">
-                            <h2>MATCH HISTORY</h2>
                             <div class="matches"></div> <!-- Matches will be dynamically added here -->
                         </div>
                     </div>
