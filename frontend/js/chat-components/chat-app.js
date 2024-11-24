@@ -10,6 +10,7 @@ class ChatApp extends HTMLElement {
         console.log('Logged User:', logedUser);
         this.selectedFriendIsBlocked = false;
         this.isBlokcedByFriend = false;
+        this.socket = null;
 
         const wrapper = document.createElement('div');
         wrapper.classList.add('chat-app');
@@ -248,7 +249,6 @@ class ChatApp extends HTMLElement {
         chatBadge.setAttribute('blocked', this.selectedFriendIsBlocked);
     
         this.chatContainer.appendChild(chatBadge);
-        // this.chatContainer.appendChild(header);
         this.chatContainer.appendChild(messageList);
         // check if the user is blocked
         if (this.selectedFriendIsBlocked) {
@@ -331,7 +331,7 @@ class ChatApp extends HTMLElement {
                 let picture;
                 if (record.user_id == logedUser.id) {
                     sender = 'me';
-                    picture = logedUser.photo;
+                    picture = logedUser.avatar;
                 } else if (record.user_id == friend.id) {
                     sender = 'you';
                     picture = friend.photo;
@@ -354,14 +354,10 @@ class ChatApp extends HTMLElement {
         const [firstId, secondId] = [logedUserId, friendId].sort((a, b) => a - b);
         const roomName = `${firstId}_${secondId}`;
         
-        // Create WebSocket URL without token query parameter
-		
-		const ticket_res = await fetch('http://localhost:8000/api/chat/ticket/')
-		if (!ticket_res.ok) {
-			console.error('Error getting ticket:', ticket_res.statusText);
-			return;
-		}
-		const socketUrl = `ws://localhost:8000/ws/chat/${roomName}/?${res.body.ticket}`;
+        if (this.socket) {
+            this.socket.close();
+        }        
+        const socketUrl = `ws://localhost:8000/ws/chat/${roomName}/`;
         // Create WebSocket with credentials
         this.socket = new WebSocket(socketUrl);
         
@@ -410,13 +406,6 @@ class ChatApp extends HTMLElement {
                                messageData.timestamp);
     }
 
-    // Disconnect WebSocket when the component is removed
-    disconnectedCallback() {
-        if (this.socket) {
-            this.socket.close();
-            console.log('WebSocket disconnected');
-        }
-    }
 }
 
 customElements.define('chat-app', ChatApp);
