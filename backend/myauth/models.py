@@ -31,7 +31,7 @@ class User (AbstractUser):
 	wallet = models.IntegerField(default=400)
 	username = models.CharField(max_length=255, unique=True)
 	password = models.CharField(max_length=255, null=True)
-	avatar = models.CharField(max_length=255, blank=True, null=True, default="../images/cat.png")
+	avatar = models.CharField(max_length=255, blank=True, null=True, default="../images/player1.png")
 	isTwoFA = models.BooleanField(default=False)
 	isAuth = models.BooleanField(default=False)
 	authProvider = models.CharField(max_length=255,null=True)

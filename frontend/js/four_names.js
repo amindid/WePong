@@ -30,7 +30,7 @@ class FourName
 				<div class="fourblocks1">
 					<div class="local_player">
 						<div class="img_test"> 
-							<img src="../images/cat.png">
+							<img src="../images/player1.png">
 						</div>
 						<div class="img_test1"> 
 							<h1> Player 1  </h1>
@@ -39,7 +39,7 @@ class FourName
 					</div>
 					<div class="local_player">
 						<div class="img_test"> 
-							<img src="../images/dog.png">
+							<img src="../images/player4.png">
 						</div>
 						<div class="img_test1"> 
 							<h1> Player 2  </h1>
@@ -50,7 +50,7 @@ class FourName
 				<div class="fourblocks1">
 					<div class="local_player">
 						<div class="img_test"> 
-							<img src="../images/dog2.png">
+							<img src="../images/player2.png">
 						</div>
 						<div class="img_test1">
 							<h1> Player 3  </h1>
@@ -59,7 +59,7 @@ class FourName
 					</div>
 					<div class="local_player">
 						<div class="img_test"> 
-							<img src="../images/cat2.png">
+							<img src="../images/player3.png">
 						</div>
 						<div class="img_test1">
 							<h1> Player 4  </h1>
@@ -122,10 +122,10 @@ class FourName
 			else
 			{
 				localStorage.setItem('tournement4', "1");
-				localStorage.setItem('img_player_semifinale1', "../images/cat.png");
-				localStorage.setItem('img_player_semifinale2', "../images/dog.png");
-				localStorage.setItem('img_player_semifinale3', "../images/cat2.png");
-				localStorage.setItem('img_player_semifinale4', "../images/dog2.png");
+				localStorage.setItem('img_player_semifinale1', "../images/player1.png");
+				localStorage.setItem('img_player_semifinale2', "../images/player4.png");
+				localStorage.setItem('img_player_semifinale3', "../images/player3.png");
+				localStorage.setItem('img_player_semifinale4', "../images/player2.png");
 				localStorage.setItem('player_semifinale1', input1.trim());
 				localStorage.setItem('player_semifinale2', input2.trim());
 				localStorage.setItem('player_semifinale3', input3.trim());

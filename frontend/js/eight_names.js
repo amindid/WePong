@@ -30,7 +30,7 @@ class EightName
 				<div class="eightblocks1">
 					<div class="local_player8">
 						<div class="img_test_"> 
-							<img src="../images/cat.png">
+							<img src="../images/player1.png">
 						</div>
 						<div class="img_test_1"> 
 							<h1> Player 1  </h1>
@@ -39,7 +39,7 @@ class EightName
 					</div>
 					<div class="local_player8">
 						<div class="img_test_"> 
-							<img src="../images/dog.png">
+							<img src="../images/player4.png">
 						</div>
 						<div class="img_test_1"> 
 							<h1> Player 2  </h1>
@@ -48,7 +48,7 @@ class EightName
 					</div>
 					<div class="local_player8">
 						<div class="img_test_"> 
-							<img src="../images/cat2.png">
+							<img src="../images/player3.png">
 						</div>
 						<div class="img_test_1"> 
 							<h1> Player 3  </h1>
@@ -57,7 +57,7 @@ class EightName
 					</div>
 					<div class="local_player8">
 						<div class="img_test_"> 
-							<img src="../images/dog2.png">
+							<img src="../images/player2.png">
 						</div>
 						<div class="img_test_1"> 
 							<h1> Player 4  </h1>
@@ -164,10 +164,10 @@ class EightName
 			else
 			{
 				localStorage.setItem('tournement8', "1");
-				localStorage.setItem('img_player1', "../images/cat.png");
-				localStorage.setItem('img_player2', "../images/dog.png");
-				localStorage.setItem('img_player3', "../images/cat2.png");
-				localStorage.setItem('img_player4', "../images/dog2.png");
+				localStorage.setItem('img_player1', "../images/player1.png");
+				localStorage.setItem('img_player2', "../images/player4.png");
+				localStorage.setItem('img_player3', "../images/player3.png");
+				localStorage.setItem('img_player4', "../images/player2.png");
 				localStorage.setItem('img_player5', "../images/gon.jpg");
 				localStorage.setItem('img_player6', "../images/KILLUA.jpg");
 				localStorage.setItem('img_player7', "../images/kurabika.jpg");

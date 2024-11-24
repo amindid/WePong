@@ -197,7 +197,7 @@ class Profile {
             <p class="vss">vs</p>
             <p class="score2">${match.match_data.player2score}</p>
             <p class="p2-state ${match.match_data.player2name}">${match.match_data.player2name}</p>
-            <img src="../images/cat.png" alt="Player 2" class="player-icon">
+            <img src="../images/player1.png" alt="Player 2" class="player-icon">
         </div>
     `).join('');
 

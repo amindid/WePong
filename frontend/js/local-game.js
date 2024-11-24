@@ -17,7 +17,7 @@ class localGame {
 			localStorage.setItem('Player_Name2', 'Guest');
 			localStorage.setItem('img_player2', '../images/player2.png');
 			player2Name =  'Guest';
-			player2img =  '../images/player2.png';
+			player2img =  '../images/player1.png';
 		}
 		else if (localStorage.getItem('tournement8') === "1")
 		{

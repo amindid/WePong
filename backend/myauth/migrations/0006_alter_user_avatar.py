@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='user',
             name='avatar',
-            field=models.CharField(blank=True, default='../images/cat.png', max_length=255, null=True),
+            field=models.CharField(blank=True, default='../images/player1.png', max_length=255, null=True),
         ),
     ]
