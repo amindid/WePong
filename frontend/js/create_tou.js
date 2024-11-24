@@ -43,7 +43,7 @@ class CreateTournament
 					<h1>Tournament Name</h1>
 				</div>
 				<div id="tournment_name_img" >
-					<img src="../images/Group2411.svg" width="100%">
+					<img src="../images/Group2411.svg" width="100%" height="100%">
 				</div>
 				<div id="name_tournment">
 					<input id="input_name_tournment" placeholder="Tournament Name" > </input>
