@@ -292,7 +292,7 @@ class ChatApp extends HTMLElement {
         const roomName = `${firstId}_${secondId}`;
 
         // create a room between the two users if it doesn't exist
-        await fetch(`http://127.0.0.1:8000/api/chat/rooms/`, {
+        await fetch(`http://localhost:8000/api/chat/rooms/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -314,7 +314,7 @@ class ChatApp extends HTMLElement {
         })
 
         // fetch messages from the room
-        await fetch(`http://127.0.0.1:8000/api/chat/rooms/${roomName}/messages/`, {
+        await fetch(`http://localhost:8000/api/chat/rooms/${roomName}/messages/`, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -350,13 +350,18 @@ class ChatApp extends HTMLElement {
     }
 
     // WebSocket connection to server
-    connectWebSocket(friendId, logedUserId) {
+    async connectWebSocket(friendId, logedUserId) {
         const [firstId, secondId] = [logedUserId, friendId].sort((a, b) => a - b);
         const roomName = `${firstId}_${secondId}`;
         
         // Create WebSocket URL without token query parameter
-        const socketUrl = `ws://localhost:8000/ws/chat/${roomName}/`;
-        
+		
+		const ticket_res = await fetch('http://localhost:8000/api/chat/ticket/')
+		if (!ticket_res.ok) {
+			console.error('Error getting ticket:', ticket_res.statusText);
+			return;
+		}
+		const socketUrl = `ws://localhost:8000/ws/chat/${roomName}/?${res.body.ticket}`;
         // Create WebSocket with credentials
         this.socket = new WebSocket(socketUrl);
         

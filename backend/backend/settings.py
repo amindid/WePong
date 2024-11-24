@@ -70,7 +70,7 @@ REST_FRAMEWORK = {
 #     'default': {
 #         'BACKEND': 'channels.layers.RedisChannelLayer',  # Use Redis as the channel layer backend
 #         'CONFIG': {
-#             'hosts': [('127.0.0.1', 6379)],  # Adjust the host and port as per your Redis configuration
+#             'hosts': [('localhost', 6379)],  # Adjust the host and port as per your Redis configuration
 #         },
 #     },
 # }

@@ -206,7 +206,8 @@ class GoogleCallback(APIView):
 			value=token,
 			httponly=True,
 			secure=False,
-			samesite='lax'
+			samesite='lax',
+			max_age=60*60*24*7
 		)
 		log_to_elasticsearch("google auth success", event_type="google auth")
 		return response
@@ -289,7 +290,8 @@ class Callback42(APIView):
 			value=token,
 			httponly=True,
 			secure=False,
-			samesite='lax'
+			samesite='lax',
+			max_age=60*60*24*7
 		)
 		log_to_elasticsearch("42 auth success", event_type="42 auth")
 		return response
@@ -374,7 +376,8 @@ class FacebookCallback(APIView):
 			value=token,
 			httponly=True,
 			secure=False,
-			samesite='lax'
+			samesite='lax',
+			max_age=60*60*24*7
 		)
 		log_to_elasticsearch("google auth success", event_type="facbook auth")
 		return response
@@ -475,7 +478,8 @@ class loginUser(APIView):
 				value=refresh.get_access_token(),
 				httponly=True,
 				secure=False,
-				samesite='lax'
+				samesite='none',
+				max_age=60*60*24*7
 			)
 			log_to_elasticsearch("login success", event_type="login")
 			return response
@@ -529,7 +533,8 @@ class registerUser(APIView):
 						value=refresh_token.get_access_token(),
 						httponly=True,
 						secure=False,
-						samesite='lax'
+						samesite='lax',
+						max_age=60*60*24*7
 					)
 					# log_to_elasticsearch(f"new user registred named {user.username}", event_type="regitration")
 					return response
@@ -583,7 +588,8 @@ class confirm_email_2fa(APIView):
 				value=token,
 				httponly=True,
 				secure=False,
-				samesite='lax'
+				samesite='lax',
+				max_age=60*60*24*7
 			)
 			log_to_elasticsearch("2fa confirmation", event_type="2fa")
 			return response
@@ -1121,3 +1127,11 @@ class UserMatchHistory(APIView):
 			return Response({'error': 'user not found'}, status=status.HTTP_404_NOT_FOUND)
 		except:
 			return Response({'error': 'somthing went wrong'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+def generate_chat_ticket(request):
+	ticket = Ticket(user=request.user, ticket=secrets.token_hex(16))
+	ticket.save()
+	return JsonResponse({'ticket': ticket.ticket}, status=200)

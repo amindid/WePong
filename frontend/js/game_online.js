@@ -34,7 +34,7 @@ class GameOnline {
 	};
 
     create_socket(user_idd) {
-        this.socket = new WebSocket(`ws://127.0.0.1:2100/ws/game_online/`);
+        this.socket = new WebSocket(`ws://localhost:2100/ws/game_online/`);
 
 
         this.socket.addEventListener('open', () => {

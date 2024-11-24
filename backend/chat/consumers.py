@@ -17,7 +17,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         print (self.scope["cookies"])
 
         # print self.scope.get("headers")
-        print ("HEADERS: ", self.scope.get("headers"))
+        print ("HEADERS: ", self.scope)
         # Validate userId (optional, but recommended)
         # if not self.user_id:
         #     await self.close()
@@ -26,20 +26,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'chat_{self.room_name}'
 
-        # Mark all messages as read for this user in this room
-        # try:
-        #     # Fetch all unread messages in the room
-        #     messages_to_mark = await sync_to_async(
-        #         lambda: Message.objects.filter(
-        #             room__name=self.room_name,
-        #             is_read=False
-        #         ).exclude(user_id=self.user_id)
-        #     )()
-            
-        #     # Update the is_read field for the fetched messages
-        #     await sync_to_async(lambda: messages_to_mark.update(is_read=True))()
-        # except Exception as e:
-        #     print(f"Error marking messages as read: {e}")
         
         # Join room group
         await self.channel_layer.group_add(
