@@ -40,41 +40,24 @@ ASGI_APPLICATION = 'backend.asgi.application'
 
 
 INSTALLED_APPS = [
+    'daphne',
 
-    "daphne",
-    "channels",
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
-    "corsheaders",
-    "rest_framework",
-    "rest_framework_simplejwt",
-    "rest_framework_simplejwt.token_blacklist",
-    "django_extensions",
-    'myauth',
-    "chat",
-    "social_django",
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+	# 'myauth.apps.MyauthConfig',
+	'rest_framework',
+	'social_django',
+	'myauth',
+	'django_extensions',
+	'rest_framework_simplejwt.token_blacklist',
+	'corsheaders',
+    
 
-    # 'daphne',
-
-    # 'chat',
-
-    # 'django.contrib.admin',
-    # 'django.contrib.auth',
-    # 'django.contrib.contenttypes',
-    # 'django.contrib.sessions',
-    # 'django.contrib.messages',
-    # 'django.contrib.staticfiles',
-	# # 'myauth.apps.MyauthConfig',
-	# 'rest_framework',
-	# 'social_django',
-	# 'myauth',
-	# 'django_extensions',
-	# 'rest_framework_simplejwt.token_blacklist',
-	# 'corsheaders',
+    'chat',
 ]
 
 REST_FRAMEWORK = {
@@ -139,34 +122,16 @@ SIMPLE_JWT = {
 }
 
 
-# MIDDLEWARE = [
-#     'django.middleware.security.SecurityMiddleware',
-#     'django.contrib.sessions.middleware.SessionMiddleware',
-#     'django.middleware.common.CommonMiddleware',
-#     'django.middleware.csrf.CsrfViewMiddleware',
-# 	'corsheaders.middleware.CorsMiddleware',
-#     'django.contrib.auth.middleware.AuthenticationMiddleware',
-#     'django.contrib.messages.middleware.MessageMiddleware',
-#     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-# ]
-
 MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    # 'backend.middlewares.UserCacheMiddleware',
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
-    "backend.middlewares.JWTFromCookieMiddleware",
-    # "backend.middlewares.JsonResponseMiddleware",
-    # 'social_django.middleware.SocialAuthExceptionMiddleware',
-    # 'project.middlewares.SocialAuthExceptionMiddleware',
-
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+	'corsheaders.middleware.CorsMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.common.CommonMiddleware',
 ]
-
 
 
 CORS_ALLOW_ALL_ORIGINS = True

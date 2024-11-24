@@ -5,55 +5,92 @@ from .models import Room, Message
 from asgiref.sync import sync_to_async
 from django.contrib.auth import get_user_model
 from datetime import datetime
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.exceptions import AuthenticationFailed
+
+
 
 class ChatConsumer(AsyncWebsocketConsumer):
-    async def connect(self):
-        print("=====> WebSocket connected")
+    # async def connect(self):
+    #     print("=====> WebSocket connected")
         
-        # Parse the query string to get userId
-        query_params = parse_qs(self.scope["query_string"].decode())
-        self.user_id = query_params.get("userId", [None])[0]  # Get userId or None if not provided
+    #     # Parse the query string to get userId
+    #     # query_params = parse_qs(self.scope["query_string"].decode())
+    #     # self.user_id = query_params.get("userId", [None])[0]  # Get userId or None if not provided
 
-        # print (self.scope["cookies"]["access_token"].split(".")[1])
-        print (self.scope["cookies"])
-        # print self.scope.get("headers")
-        print ("HEADERS: ", self.scope.get("headers"))
-        # Validate userId (optional, but recommended)
-        # if not self.user_id:
-        #     await self.close()
-        #     return
+    #     # print (self.scope["cookies"]["access_token"].split(".")[1])
+    #     print (self.scope["cookies"])
+    #     # print self.scope.get("headers")
+    #     print ("HEADERS: ", self.scope.get("headers"))
+    #     # Validate userId (optional, but recommended)
+    #     # if not self.user_id:
+    #     #     await self.close()
+    #     #     return
 
-        self.room_name = self.scope['url_route']['kwargs']['room_name']
-        self.room_group_name = f'chat_{self.room_name}'
+    #     self.room_name = self.scope['url_route']['kwargs']['room_name']
+    #     self.room_group_name = f'chat_{self.room_name}'
 
-        # Mark all messages as read for this user in this room
-        # try:
-        #     # Fetch all unread messages in the room
-        #     messages_to_mark = await sync_to_async(
-        #         lambda: Message.objects.filter(
-        #             room__name=self.room_name,
-        #             is_read=False
-        #         ).exclude(user_id=self.user_id)
-        #     )()
+    #     # Mark all messages as read for this user in this room
+    #     # try:
+    #     #     # Fetch all unread messages in the room
+    #     #     messages_to_mark = await sync_to_async(
+    #     #         lambda: Message.objects.filter(
+    #     #             room__name=self.room_name,
+    #     #             is_read=False
+    #     #         ).exclude(user_id=self.user_id)
+    #     #     )()
             
-        #     # Update the is_read field for the fetched messages
-        #     await sync_to_async(lambda: messages_to_mark.update(is_read=True))()
-        # except Exception as e:
-        #     print(f"Error marking messages as read: {e}")
+    #     #     # Update the is_read field for the fetched messages
+    #     #     await sync_to_async(lambda: messages_to_mark.update(is_read=True))()
+    #     # except Exception as e:
+    #     #     print(f"Error marking messages as read: {e}")
         
-        # Join room group
-        await self.channel_layer.group_add(
-            self.room_group_name,
-            self.channel_name
-        )
-        await self.accept()
+    #     # Join room group
+    #     await self.channel_layer.group_add(
+    #         self.room_group_name,
+    #         self.channel_name
+    #     )
+    #     await self.accept()
 
-    async def disconnect(self, close_code):
-        print(f"WebSocket disconnected with code: {close_code}")
-        await self.channel_layer.group_discard(
-            self.room_group_name,
-            self.channel_name
-        )
+    # async def disconnect(self, close_code):
+    #     print(f"WebSocket disconnected with code: {close_code}")
+    #     await self.channel_layer.group_discard(
+    #         self.room_group_name,
+    #         self.channel_name
+    #     )
+
+
+    # async def connect(self):
+    #     print("=====> WebSocket connected")
+
+    #     # Extract JWT from cookies
+    #     jwt_token = self.scope["cookies"].get("jwt")  # Replace 'jwt' with your actual cookie name
+
+    #     if not jwt_token:
+    #         print("JWT not found in cookies.")
+    #         await self.close()
+    #         return
+
+    #     # Validate the token and authenticate the user
+    #     try:
+    #         validated_token = await sync_to_async(JWTAuthentication().get_validated_token)(jwt_token)
+    #         self.user = await sync_to_async(JWTAuthentication().get_user)(validated_token)
+    #         self.user_id = self.user.id
+    #     except AuthenticationFailed as e:
+    #         print(f"Authentication failed: {e}")
+    #         await self.close()
+    #         return
+
+    #     self.room_name = self.scope['url_route']['kwargs']['room_name']
+    #     self.room_group_name = f'chat_{self.room_name}'
+
+    #     # Join room group
+    #     await self.channel_layer.group_add(
+    #         self.room_group_name,
+    #         self.channel_name
+    #     )
+    #     await self.accept()
+
 
     async def receive(self, text_data):
         try:
