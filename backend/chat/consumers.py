@@ -13,19 +13,20 @@ from rest_framework.exceptions import AuthenticationFailed
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         print("=====> WebSocket connected")
+        access_tocken = self.scope["cookies"].get("access_token")
 
-        print (self.scope["cookies"])
-
-        # print self.scope.get("headers")
-        print ("HEADERS: ", self.scope)
-        # Validate userId (optional, but recommended)
-        # if not self.user_id:
-        #     await self.close()
-        #     return
+        # Validate the token and authenticate the user
+        try:
+            validated_token = await sync_to_async(JWTAuthentication().get_validated_token)(access_tocken)
+            self.user = await sync_to_async(JWTAuthentication().get_user)(validated_token)
+            self.user_id = self.user.id
+        except AuthenticationFailed as e:
+            print(f"Authentication failed: {e}")
+            await self.close()
+            return
 
         self.room_name = self.scope['url_route']['kwargs']['room_name']
         self.room_group_name = f'chat_{self.room_name}'
-
         
         # Join room group
         await self.channel_layer.group_add(
@@ -40,39 +41,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
-
-
-    # async def connect(self):
-    #     print("=====> WebSocket connected")
-
-    #     # Extract JWT from cookies
-    #     jwt_token = self.scope["cookies"].get("jwt")  # Replace 'jwt' with your actual cookie name
-
-    #     if not jwt_token:
-    #         print("JWT not found in cookies.")
-    #         await self.close()
-    #         return
-
-    #     # Validate the token and authenticate the user
-    #     try:
-    #         validated_token = await sync_to_async(JWTAuthentication().get_validated_token)(jwt_token)
-    #         self.user = await sync_to_async(JWTAuthentication().get_user)(validated_token)
-    #         self.user_id = self.user.id
-    #     except AuthenticationFailed as e:
-    #         print(f"Authentication failed: {e}")
-    #         await self.close()
-    #         return
-
-    #     self.room_name = self.scope['url_route']['kwargs']['room_name']
-    #     self.room_group_name = f'chat_{self.room_name}'
-
-    #     # Join room group
-    #     await self.channel_layer.group_add(
-    #         self.room_group_name,
-    #         self.channel_name
-    #     )
-    #     await self.accept()
-
 
     async def receive(self, text_data):
         try:
