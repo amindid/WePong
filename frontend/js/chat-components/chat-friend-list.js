@@ -48,14 +48,17 @@ class ChatFriendList extends HTMLElement {
 
         // Listen for search event and filter the friend list based on the search input
         searchSection.addEventListener('searchFriend', (event) => {
+            this.displayedFriends = {};
             if (event.detail.searchValue === '') {
                 updateFriendList(this.originalFriends);
                 return;
             }
             const searchValue = event.detail.searchValue.toLowerCase();
-            this.displayedFriends = this.originalFriends.filter(friend =>
-                friend.username.toLowerCase().includes(searchValue)
-            );
+            for (const [key, value] of Object.entries(this.originalFriends)) {
+                if (value[0].toLowerCase().includes(searchValue)) {
+                    this.displayedFriends[key] = value;
+                }
+            }
             updateFriendList(this.displayedFriends);
         });
 

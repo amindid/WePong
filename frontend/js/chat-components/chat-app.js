@@ -46,7 +46,7 @@ class ChatApp extends HTMLElement {
             .friend-list {
                 width: 20%;
                 background-color: #510054;
-                overflow-y: auto;
+                // overflow-y: auto;
             }
             .no-friend-message {
                 color: white;
@@ -57,12 +57,13 @@ class ChatApp extends HTMLElement {
                 height: 100%;
             }
             .chat-container {
+                width: 80%;
                 display: flex;
                 flex-direction: column;
                 flex-grow: 1;
                 background-color: #300141;
                 padding: 1rem;
-                overflow-y: auto;
+                // overflow-y: auto;
             }
 
             /* Responsive design */

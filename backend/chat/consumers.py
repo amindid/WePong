@@ -20,7 +20,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             validated_token = await sync_to_async(JWTAuthentication().get_validated_token)(access_tocken)
             self.user = await sync_to_async(JWTAuthentication().get_user)(validated_token)
             self.user_id = self.user.id
-            print ("self.user_id: ", self.user_id)
         except AuthenticationFailed as e:
             print(f"Authentication failed: {e}")
             await self.close()

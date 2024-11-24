@@ -26,8 +26,7 @@ class ChatSearchFriendInput extends HTMLElement {
             }));
         };        
 
-        searchButton.addEventListener('click', dispatchSearchEvent);
-        searchInput.addEventListener('keydown', (event) => { if (event.key === 'Enter') {dispatchSearchEvent(); } });
+        searchInput.addEventListener('input', dispatchSearchEvent);
 
         inputWrapper.append(searchButton, searchInput);
         wrapper.append(inputWrapper);
