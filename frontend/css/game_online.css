@@ -96,3 +96,9 @@
 	transition: all 0.5 ease-in-out;
 	transform: scale(1.1);
 }
+
+#commingP{
+	color : white;
+	font-size: 10rem;
+	
+}

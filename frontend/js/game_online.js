@@ -100,25 +100,9 @@ class GameOnline {
 
         this.content.className = 'game_online';
         this.content.innerHTML = `
-            <div class="game_online">
-                <div class="chrono">
-                    <h1> 32 </h1>
-                </div>
-                <div class="img_vs_img">
-                    <div class="vs">
-                        <img id="player-imag-1"  alt="Player Image" >
-                    </div>
-                    <div class="vs">
-                        <h1> vs </h1>
-                    </div>
-                    <div class="vs" >
-						<img id="player-imag-2"  alt="Player Image" >
-					</div>
-                </div>
-                <div class="quit_play">
-                    <button class="buuton_quit_play" id="quit-play-online">QUIT</button>
-                </div>
-            </div>
+            <marquee class="game_online" behavior="scroll" direction="left" scrollamount="80" speed="100">
+              <p id="commingP">Comming Soon...</p>	
+            </marquee>
         `;
         page.appendChild(this.content);
         const body = document.body;
@@ -130,28 +114,28 @@ class GameOnline {
 
         
 	
-		this.setPlayerImage().then(data => {
-			if (data) {
-				let image = this.content.querySelector("#player-imag-1");
-				image.src = data.avatar;
-				this.create_socket(data.id);
+		// this.setPlayerImage().then(data => {
+		// 	if (data) {
+		// 		let image = this.content.querySelector("#player-imag-1");
+		// 		image.src = data.avatar;
+		// 		this.create_socket(data.id);
 				
-			} else {
-				console.log('Failed to retrieve user ID');
-			}
-		});
+		// 	} else {
+		// 		console.log('Failed to retrieve user ID');
+		// 	}
+		// });
 		
 
 
-        const quit = this.content.querySelector("#quit-play-online");
-        quit.addEventListener('click', event => {
-            event.preventDefault();
-            if (this.socket) {
-				console.log("disconect socket");
-                this.socket.close();
-            }
-            navigate('/dashboard');  
-        });
+        // const quit = this.content.querySelector("#quit-play-online");
+        // quit.addEventListener('click', event => {
+        //     event.preventDefault();
+        //     if (this.socket) {
+		// 		console.log("disconect socket");
+        //         this.socket.close();
+        //     }
+        //     navigate('/dashboard');  
+        // });
 
         return page;
     }

@@ -2,6 +2,7 @@ import { navigate } from "./router.js";
 import { renderRightBar } from './right-bar.js';
 import { renderLeftBar } from './left-bar.js';
 import { showAlert } from "./message-box.js";
+import { renderPlayerPhoto } from "./playerPhoto.js";
 
 class Profile {
     content = document.createElement('span');
@@ -115,7 +116,7 @@ class Profile {
                 <div class="profile-card">
                     <div class="profile-container">
                         <div class="banner">
-                            <img src="" alt="Profile Picture" class="profile-picture">
+
                         </div>
                         <h1 class="username"></h1>
                         <div class="stats">
@@ -167,12 +168,17 @@ class Profile {
 
         page.appendChild(this.content);
 
+        const banner = this.content.querySelector('.banner');
+        banner.appendChild(renderPlayerPhoto());
+
         // const username = await this.fetchUserName();
         const usernameElement = this.content.querySelector('.username');
         usernameElement.textContent = UserName;
         const avatar = userData['avatar'];
-        const avatarElement = this.content.querySelector('.profile-picture');
-        avatarElement.src = avatar;
+        const bannerImage = banner.querySelector('#player-image');
+        bannerImage.src = avatar;
+        // const avatarElement = this.content.querySelector('.profile-picture');
+        // avatarElement.src = avatar;
 
         const matchHistory = await this.fetchMatchHistory(UserName);
         const nGame = this.content.querySelector('.n-game');

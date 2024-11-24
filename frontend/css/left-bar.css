@@ -39,7 +39,7 @@
 
 @media (max-width: 800px) {
 	.left-bar {
-		gap: 2%;
+		gap: 20%;
 		border-radius: 15px;
 		height: 90%;
 	}
