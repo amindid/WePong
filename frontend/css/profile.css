@@ -296,8 +296,34 @@
     align-items: center;
     gap: 20px;
     width: 100%;
+    max-height: 500px;
+    overflow-y: scroll;
 }
-.match-history h2 {
+
+/* Style the scrollbar */
+.match-history::-webkit-scrollbar {
+    width: 12px;
+}
+
+.match-history::-webkit-scrollbar-thumb {
+    background-color: var(--primary-color);
+    border-radius: 10px; 
+}
+
+.match-history::-webkit-scrollbar-thumb:hover {
+    background-color: #ffffff;
+}
+
+.match-history::-webkit-scrollbar-track {
+    background-color: #f1f1f1; 
+    border-radius: 10px; 
+}
+
+.match-history::-webkit-scrollbar-track:hover {
+    background-color: #e0e0e0; /* Change track color on hover */
+}
+
+#match-history-h2 {
     margin-bottom: 30px;
     font-family: "Bungee";
     color: white;
@@ -420,8 +446,9 @@ p{
         flex-direction: column;
         align-items: center;
         width: 100% !important;
+        
     }
-    .match-history h2 {
+    #match-history-h2 {
         font-family: "Bungee";
         color: white;
         font-size: 10px;
@@ -618,7 +645,7 @@ p{
         align-items: center;
         width: 100% !important;
     }
-    .match-history h2 {
+    #match-history-h2 {
         font-family: "Bungee";
         color: white;
         font-size: 10px;

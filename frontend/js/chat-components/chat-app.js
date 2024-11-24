@@ -44,7 +44,7 @@ class ChatApp extends HTMLElement {
             }
 
             .friend-list {
-                width: 30%;
+                width: 20%;
                 background-color: #510054;
                 overflow-y: auto;
             }

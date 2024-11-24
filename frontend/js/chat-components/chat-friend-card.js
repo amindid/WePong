@@ -83,10 +83,18 @@ class ChatFriendCard extends HTMLElement {
                 border-radius: 15px;
                 cursor: pointer;
                 transition: background 0.3s;
-                width: 95%;
+                width: 90%;
                 background-color: var(--primary-color);
                 margin: 5px;
                 box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;
+            }
+
+            .friend-card.selected {
+                background-color: white;
+                border: 2px solid var(--neon-color);
+                .friend-username {
+                    color: black;
+                }
             }
 
             .friend-card:hover {

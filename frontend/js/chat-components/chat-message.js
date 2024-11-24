@@ -74,8 +74,12 @@ class ChatMessage extends HTMLElement {
                 background-color: #EE36A4;
                 padding: 15px;
                 border-radius: 10px;
-                word-wrap: break-word;
+                word-wrap: break-word; 
+                word-break: break-word; 
+                overflow-wrap: break-word;
+                max-width: 100%; 
             }
+            
             .time {
                 font-size: 0.8em;
                 color: #CCCCCC;

@@ -124,7 +124,7 @@ class ChatBadge extends HTMLElement {
             position: absolute;
             top: 100%;
             right: 0;
-            background-color: none;
+            background-color: rgba(0, 0, 0, 0.8);
             color: var(--text-color);
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
