@@ -102,7 +102,7 @@ class Tournament
 		const join = this.content.querySelector("#join");
 		join.addEventListener('click', event => {
 		event.preventDefault();
-		navigate('/tournement/join');
+		navigate('/game-online');
 		});
 		return page;
 	}

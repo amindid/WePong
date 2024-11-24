@@ -34,7 +34,7 @@ class GameOnline {
 	};
 
     create_socket(user_idd) {
-        this.socket = new WebSocket(`ws://localhost:2100/ws/game_online/`);
+        this.socket = new WebSocket(`ws://127.0.0.1:2100/ws/game_online/`);
 
 
         this.socket.addEventListener('open', () => {
@@ -91,54 +91,38 @@ class GameOnline {
         });
     }
 
-    render() {
-        const page = document.createDocumentFragment();
+	render() {
+		const page = document.createDocumentFragment();
 		const message = document.createElement('div');
 		message.id = 'alert-box';
 		message.className = 'alert-box';
 		page.appendChild(message);
-
-        this.content.className = 'game_online';
-        this.content.innerHTML = `
-            <marquee class="game_online" behavior="scroll" direction="left" scrollamount="80" speed="100">
-              <p id="commingP">Comming Soon...</p>	
-            </marquee>
-        `;
-        page.appendChild(this.content);
-        const body = document.body;
-        body.style.alignItems = 'center';
-
-        // let image = this.content.querySelector("#player-imag-1");
-        // let username;
-        
-
-        
 	
-		// this.setPlayerImage().then(data => {
-		// 	if (data) {
-		// 		let image = this.content.querySelector("#player-imag-1");
-		// 		image.src = data.avatar;
-		// 		this.create_socket(data.id);
-				
-		// 	} else {
-		// 		console.log('Failed to retrieve user ID');
-		// 	}
-		// });
-		
+		this.content.className = 'game_online';
+		this.content.innerHTML = `
+			<div class="coming-soon-wrapper">
+				<div class="coming-soon-content">
+					<h1 class="coming-soon-title">Comming Soon ..</h1>
+					<p class="coming-soon-subtitle">makaynch hdchi db</p>
+					<div class="loader">
+						<div class="dot"></div>
+						<div class="dot"></div>
+						<div class="dot"></div>
+					</div>
+					</div>
+					<btn class="btn-return" id="btn-return">Go Back</btn>
+			</div>
+		`;
 
-
-        // const quit = this.content.querySelector("#quit-play-online");
-        // quit.addEventListener('click', event => {
-        //     event.preventDefault();
-        //     if (this.socket) {
-		// 		console.log("disconect socket");
-        //         this.socket.close();
-        //     }
-        //     navigate('/dashboard');  
-        // });
-
-        return page;
-    }
+	
+		page.appendChild(this.content);
+		const btnReturn = this.content.querySelector('#btn-return');
+		btnReturn.addEventListener('click', () => {
+			navigate('/');
+		});
+		return page;
+	}
+	
 }
 
 export function rendergameonline() {

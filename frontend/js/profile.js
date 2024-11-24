@@ -112,7 +112,7 @@ class Profile {
 
         this.content.className = 'profile';
         this.content.innerHTML = `
-            // <div class="wrapper">
+             <div class="wrapper">
                 <div class="profile-card">
                     <div class="profile-container">
                         <div class="banner">
