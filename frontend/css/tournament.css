@@ -859,6 +859,7 @@ join-tournament
 	align-items: center;
 	width: 80%;
 	height: 80%;
+	min-height: 200%;
 }
 
 .JOIN_
@@ -883,15 +884,15 @@ join-tournament
 
 .container_tour
 {
-	width: 95%;
-	height: 20%;
+	width: 100%;
+	height: 50%;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	flex-direction: row;
-	background: rgba(30, 6, 36, 0.38);
 	border-radius: 15px;
 	min-height: 80px;
+	margin: 10px;
 }
 
 .container_tour1
@@ -913,7 +914,7 @@ join-tournament
 	align-items: center;
 	justify-content: center;
 	flex-direction: row;
-	gap: 15%;
+	gap: 5%;
 	
 	/* background-color: #655e66; */
 }
@@ -945,14 +946,16 @@ join-tournament
     aspect-ratio: 1/1;
     width: 50%;
     border-radius: 100%;
+	border: 3px solid white;
 }
 .h2_class
 {
+	margin: 0 !important;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	color: white;
-	font-size: 100%;
+	font-size: 130%;
 	font-family: Bungee_Inline;
 }
 .nmb-player-tour
@@ -960,22 +963,30 @@ join-tournament
 	color: white;
 	font-family: Bungee_Inline;
 }
-.style-button
-{
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 30%;
-	border-radius: 10px;
-	height: 50%;
-	font-size: 100%;
+.style-button1, .style-button2{
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
 	font-family: Bungee_Inline;
-	color: white;
-	background: linear-gradient(90deg, #710566 0%, #600f58 100%);
+	border: 3px solid white;
+	border-radius: 10px;
 	cursor: pointer;
+	transition: background-color 0.3s, transform 0.3s;
+	width: 25%;
+	height: 25%;
+}
+
+.style-button1:hover {
+	cursor: pointer;
+	background: rgb(7, 175, 7);
 	transform: scale(1.05);
 }
 
+.style-button2:hover {
+	cursor: pointer;
+	background: red;
+	transform: scale(1.05);
+}
 
 /* //////////////////////////////////// */
 /* //////////////////////////////////// */
