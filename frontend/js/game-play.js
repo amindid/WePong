@@ -137,6 +137,14 @@ class gamePlay {
                 </div>
             </div>
             <canvas id="myCanvas"></canvas>
+            <audio autoplay loop id="bg-music">
+                <source src="../images/music/game.mp3" type="audio/mp3">
+                Your browser does not support the audio tag.
+             </audio>
+            <audio  id="win-music">
+                <source src="../images/music/win.mp3" type="audio/mp3">
+                Your browser does not support the audio tag.
+            </audio>
             <div class="buttons" id="two-btns">
                 <button id="toggleBallMovement">START</button>
                 <button id="leave-game-btn" class="leave-btn">Leave Game</button>
@@ -260,6 +268,7 @@ class gamePlay {
                     }
                 }, 1000);
             }
+
             function resetRound() {
                 if (!(window.innerWidth <= 600 )) {
 
@@ -364,13 +373,17 @@ class gamePlay {
                 console.error("Error saving match history:", error);
             }
         }        
+            const winSound = document.getElementById('win-music');
+            function playWinSound() {
+                winSound.play();
+            }
             function showWinScreen(playerName, img_winner, player1Score, player2Score) {
                 
                 gameOver = true;
                 resrtTimer();
                 clearInterval(timerInterval);
-                
-                saveMatchHistory(player1Name, player2Name, player1Score, player2Score, playerName);
+                if (localStorage.getItem("local-game") === "1")
+                    saveMatchHistory(player1Name, player2Name, player1Score, player2Score, playerName);
                 const winScreen = document.createElement('div');
                 winScreen.className = 'win-screen';
             
@@ -402,7 +415,7 @@ class gamePlay {
                         
                     </div>
                 `;
-				
+
                 
                 document.body.appendChild(winScreen);
 				if (localStorage.getItem('tournement8') === "1")
@@ -565,6 +578,8 @@ class gamePlay {
                     player2ScoreElement.innerText = player2Score;
                     if (player2Score == this.scoreToWin) {
                         showWinScreen(player2Name, player2img, player1Score, player2Score);
+				        playWinSound();
+
                     } else {
                         resetRound();
                     }
@@ -573,6 +588,8 @@ class gamePlay {
                     player1ScoreElement.innerText = player1Score;
                     if (player1Score == this.scoreToWin) {
                         showWinScreen(player1Name, player1img, player1Score, player2Score);
+        				playWinSound();
+
                     } else {
                         resetRound();
                     }
