@@ -1,6 +1,7 @@
 import { renderRightBar } from './right-bar.js';
 import { renderLeftBar } from './left-bar.js';
 import { navigate } from './router.js';
+import { cleanupUserSockets } from './router.js';
 import { showAlert } from './message-box.js';
 import { renderPlayerPhoto } from './playerPhoto.js'
 
@@ -318,6 +319,7 @@ class SettingComponent
 					.then(response => {
 						if (response.status === 205) {
 							navigate("/login");
+							cleanupUserSockets();
 						} else {
 							alert("Error while logging out");
 						}

@@ -149,7 +149,6 @@ class ChatApp extends HTMLElement {
         this.chatContainer.addEventListener('invite-play', () => {
             console.log('Invite to play clicked');
         });
-	
     }
 
     async callIsBlockedUserApi() {
