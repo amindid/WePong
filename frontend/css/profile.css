@@ -295,7 +295,7 @@
     align-items: center;
     gap: 20px;
     width: 100%;
-    max-height: 500px;
+    max-height: 400px;
     overflow-y: scroll;
 }
 
@@ -310,7 +310,8 @@
 }
 
 .match-history::-webkit-scrollbar-thumb:hover {
-    background-color: #ffffff;
+    background-color: #fc0be4;
+    cursor: pointer;
 }
 
 .match-history::-webkit-scrollbar-track {

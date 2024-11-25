@@ -49,6 +49,7 @@ class ChatBadge extends HTMLElement {
             --button-hover-bg: rgba(255, 255, 255, 0.2);
             --profile-border-color: #8A2BE2;
             --badge-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
+            --neon-color: #F941FF;
         }
         @font-face {
             font-family: 'Bungee';
@@ -60,7 +61,6 @@ class ChatBadge extends HTMLElement {
         .chat-badge {
             display: flex;
             align-items: center;
-            background: var(--primary-color);
             color: var(--text-color);
             border-radius: 16px;
             padding: 10px 20px;
@@ -68,24 +68,30 @@ class ChatBadge extends HTMLElement {
             position: relative;
             box-shadow: var(--badge-shadow);
             transition: transform 0.2s, box-shadow 0.2s;
+            justify-content: center;
+            border: 1px solid var(--neon-color);
+
         }
     
         .chat-badge:hover {
             transform: translateY(-2px);
             box-shadow: 0px 6px 16px rgba(0, 0, 0, 0.3);
+
         }
     
         .profile-pic {
-            width: 60px;
-            height: 60px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             margin-right: 15px;
-            border: 4px solid var(--secondary-color);
+            border: 2px solid var(--neon-color);
             transition: transform 0.2s;
         }
     
         .profile-pic:hover {
             transform: scale(1.1);
+            cursor: pointer;
+
         }
     
         .username {
@@ -151,6 +157,27 @@ class ChatBadge extends HTMLElement {
     
         .menu.show {
             display: block;
+        }
+
+        @media (max-width: 768px) {
+            .chat-badge {
+                height: 20px;
+            }
+    
+            .profile-pic {
+                width: 30px;
+                height: 30px;
+                margin-right: 10px;
+            }
+    
+            .username {
+                font-size: 1rem;
+            }
+    
+            .menu-button {
+                width: 50px;
+                height: 50px;
+            }
         }
     `;
     

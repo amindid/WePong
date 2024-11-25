@@ -28,10 +28,10 @@ export class Notification
 				</div>
 			</div>
 			<div class="container_tour2">
-				<button class="style-button" id="accept_id">
+				<button class="style-button1" id="accept_id">
 					<img src="../images/accept.png"  width="80%" height="80%">
 					</button>
-				<button class="style-button" id="denyreq_id">
+				<button class="style-button2" id="denyreq_id">
 					<img src="../images/maki_cross.svg"  width="80%" height="80%">	
 				</button>
 			</div>

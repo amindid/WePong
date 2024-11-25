@@ -1,0 +1,7 @@
+server {
+	location / {
+		index /html/base.html;
+		root /home;
+		try_files $uri /html/base.html;
+	}
+}
