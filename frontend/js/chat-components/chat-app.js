@@ -7,7 +7,6 @@ class ChatApp extends HTMLElement {
         this.attachShadow({ mode: 'open' });
 
         this.selectedFriend = null;
-        console.log('Logged User:', logedUser);
         this.selectedFriendIsBlocked = false;
         this.isBlokcedByFriend = false;
         this.socket = null;
@@ -150,6 +149,7 @@ class ChatApp extends HTMLElement {
         this.chatContainer.addEventListener('invite-play', () => {
             console.log('Invite to play clicked');
         });
+	
     }
 
     async callIsBlockedUserApi() {
