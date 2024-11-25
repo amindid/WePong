@@ -174,7 +174,9 @@ class Toper {
 					else
 					{
 						console.log(" friendsRequests length >> ", data.friendsRequests.length)
-						fetch_by_id(data.friendsRequests[0]);
+						data.friendsRequests.forEach((element) => {
+							fetch_by_id(element);
+						});
 					}
 				}
 				else

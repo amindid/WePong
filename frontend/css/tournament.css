@@ -890,9 +890,14 @@ join-tournament
 	align-items: center;
 	justify-content: center;
 	flex-direction: row;
-	border-radius: 15px;
 	min-height: 80px;
-	margin: 10px;
+	padding: 10px;
+	border-bottom: 5px solid black;
+	border-radius: 10px;
+}
+.container_tour:hover {
+	background-color: rgba(143, 6, 168, 0.29);
+	cursor: pointer;
 }
 
 .container_tour1
