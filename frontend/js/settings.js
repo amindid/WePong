@@ -317,7 +317,7 @@ class SettingComponent
 					},
 				})
 					.then(response => {
-						if (response.status === 205) {
+						if (response.ok) {
 							navigate("/login");
 							cleanupUserSockets();
 						} else {
