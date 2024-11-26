@@ -7,17 +7,18 @@ services:
     container_name: nginx_service
     ports:
       - "80:80"
-
-# services:
-#   web:
-#     build: .
-#     command: python manage.py runserver 0.0.0.0:8000
-#     volumes:
-#       - .:/app
-#     ports:
-#       - "8000:8000"
-#     networks:
-#       - elk
+      - "443:443"
+    networks:
+      - elk
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    networks:
+      - elk
 
 networks:
   elk:
