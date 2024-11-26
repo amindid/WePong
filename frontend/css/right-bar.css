@@ -122,7 +122,8 @@
 }
 
 .user:hover , .online-friends:hover {
-	transform: scale(2);
+	transform: scale(1.7);
+	cursor: pointer;
 }
 
 .in-game {

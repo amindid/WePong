@@ -402,16 +402,6 @@ class gamePlay {
                         <span class="hyphen">-</span>
                         <span class="player2-score">${player2Score}</span>
                     </div>
-                    <div class="rewards">
-                        <div class="reward">
-                            <img src="images/xp.svg" alt="XP">
-                            <span>+999</span>
-                        </div>
-                        <div class="reward">
-                            <img src="images/diamond1.svg" alt="Gems">
-                            <span>+1337</span>
-                        </div>
-                    </div>
                     <div class="buttons">
                         <div class="Exit">
                             <button class="exit-btn">EXIT</button>
