@@ -145,6 +145,10 @@ class gamePlay {
                 <source src="../images/music/win.mp3" type="audio/mp3">
                 Your browser does not support the audio tag.
             </audio>
+            <audio id="ball-music">
+                <source src="../images/music/pew.mp3" type="audio/mp3">
+                Your browser does not support the audio tag.
+            </audio>
             <div class="buttons" id="two-btns">
                 <button id="toggleBallMovement">START</button>
                 <button id="leave-game-btn" class="leave-btn">Leave Game</button>
@@ -398,16 +402,6 @@ class gamePlay {
                         <span class="hyphen">-</span>
                         <span class="player2-score">${player2Score}</span>
                     </div>
-                    <div class="rewards">
-                        <div class="reward">
-                            <img src="images/xp.svg" alt="XP">
-                            <span>+999</span>
-                        </div>
-                        <div class="reward">
-                            <img src="images/diamond1.svg" alt="Gems">
-                            <span>+1337</span>
-                        </div>
-                    </div>
                     <div class="buttons">
                         <div class="Exit">
                             <button class="exit-btn">EXIT</button>
@@ -598,22 +592,26 @@ class gamePlay {
                 this.checkCollisionWithPaddle(paddle1);
                 this.checkCollisionWithPaddle(paddle2);
             }
-    
             checkCollisionWithPaddle(paddle) {
                 if (
                     this.x + this.width >= paddle.x &&
                     this.x <= paddle.x + paddle.width &&
                     this.y + this.height >= paddle.y &&
                     this.y <= paddle.y + paddle.height
-                ) {
-                    this.dx *= -1;
+                    ) {
+                        playBallSound();
+                        this.dx *= -1;
                     let paddleCenterY = paddle.y + paddle.height / 2;
                     let ballCenterY = this.y + this.height / 2;
                     this.dy = (ballCenterY - paddleCenterY) / (paddle.height / 2);
                 }
             }
         }
-    
+
+        const ballMusic = document.getElementById('ball-music');
+        function playBallSound() {
+            ballMusic.play();
+        }
         let paddle1 = new Paddle(30, canvas.height / 2 - 50, player1PaddleSrc);
         let paddle2 = new Paddle(canvas.width - 80, canvas.height / 2 - 50, player2PaddleSrc);
     

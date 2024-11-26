@@ -85,56 +85,70 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'timestamp': timestamp
         }))
 
-
 class UserStatusConsumer(AsyncWebsocketConsumer):
-    # Class-level dictionary to track authenticated users and their WebSocket connections
     active_users = {}
 
     async def connect(self):
-        self.user = self.scope["user"]
-        if self.user.is_authenticated:
-            # Add user to the active_users dictionary
-            UserStatusConsumer.active_users[self.user.username] = self.channel_name
+        print("=====> WebSocket connected")
+        access_token = self.scope["cookies"].get("access_token")
+        
+        try:
+            validated_token = await sync_to_async(JWTAuthentication().get_validated_token)(access_token)
+            self.user = await sync_to_async(JWTAuthentication().get_user)(validated_token)
+            self.user_id = self.user.id
+            
+            # Store user connection 
+            UserStatusConsumer.active_users[self.user_id] = self.channel_name
+            
             await self.channel_layer.group_add("online_users", self.channel_name)
             await self.accept()
 
-            # Notify all clients that the user is now online
+            # Ensure active users list is sent every time a user connects
+            active_users = UserStatusConsumer.get_active_users()
+            await self.send(text_data=json.dumps({
+                "type": "active_users_list",
+                "active_users": active_users
+            }))
+
+            # Broadcast user online status
             await self.channel_layer.group_send(
                 "online_users",
                 {
                     "type": "user_status",
-                    "user": self.user.username,
-                    "status": "online",
-                },
+                    "user_id": self.user_id,
+                    "status": "online"
+                }
             )
-        else:
-            # Reject the connection for unauthenticated users
+        except AuthenticationFailed:
+            print("Authentication failed. Closing WebSocket connection.")
             await self.close()
 
+
     async def disconnect(self, close_code):
-        if self.user.is_authenticated:
-            # Remove user from the active_users dictionary
-            UserStatusConsumer.active_users.pop(self.user.username, None)
+        print(f"WebSocket disconnected with code: {close_code}")
+        if hasattr(self, 'user_id'):
+            UserStatusConsumer.active_users.pop(self.user_id, None)
+
             await self.channel_layer.group_discard("online_users", self.channel_name)
 
-            # Notify all clients that the user is now offline
+            # Broadcast user offline status
             await self.channel_layer.group_send(
                 "online_users",
                 {
                     "type": "user_status",
-                    "user": self.user.username,
-                    "status": "offline",
-                },
+                    "user_id": self.user_id,
+                    "status": "offline"
+                }
             )
 
     async def user_status(self, event):
-        # Send user status updates to the client
+        # Send status update to client using user_id instead of user
         await self.send(text_data=json.dumps({
-            "user": event["user"],
+            "user_id": event["user_id"],
             "status": event["status"],
+            'type': 'user_status'
         }))
 
     @classmethod
     def get_active_users(cls):
-        """Helper method to get all active authenticated users."""
         return list(cls.active_users.keys())

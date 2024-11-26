@@ -195,7 +195,32 @@ export const logedUser = {
     email: null,
     avatar: null,
     notificationSocket: null,
-    wallet: null
+    wallet: null,
+    statusSocket: null, // Add this
+    activeUsers : null,
+}
+
+// Add connection setup function
+async function setupUserStatusSocket() {
+    if (logedUser.id && !logedUser.statusSocket) {
+        console.log('Setting up user status socket');
+        logedUser.statusSocket = new WebSocket(`ws://localhost:8000/ws/status/`);
+
+        logedUser.statusSocket.onopen = () => {
+            console.log("==============>Status connection established");
+        };
+
+        logedUser.statusSocket.onclose = () => {
+            console.log("==============>Status connection closed");
+            logedUser.statusSocket = null;
+        };
+
+        logedUser.statusSocket.onmessage = async (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === 'active_users_list')
+                logedUser.activeUsers = new Set(data.active_users);
+        };
+    }
 }
 
 function renderPage(page) {
@@ -254,7 +279,6 @@ async function loadPage(route) {
                             // '/game-play' : renderGamePlay
                             };
 
-
     const secretRoutes = {  '/dashboard': renderDashboard,
                             '/shop' : renderShop,
                             '/chat': renderChat,
@@ -287,6 +311,8 @@ async function loadPage(route) {
         if (response.ok) {
             isAuthenticated = true;
             await fetchLoggedUser();
+            await setupUserStatusSocket();
+            console.log("active users list: ", logedUser.activeUsers);
         } else {
             const data = await response.json();
             if (data.error === 'token expired')
@@ -335,11 +361,26 @@ async function fetchLoggedUser() {
             logedUser.avatar = data.avatar;
             logedUser.wallet = data.wallet;
         } else {
-            console.log('Error fetching logged user:',response.statusText);
+            console.log('Error fetching logged user:', response.statusText);
         }
     } catch (error) {
-        console.error('Error fetching logged user:',error);
+        console.error('Error fetching logged user:', error);
     }
+}
+
+// Add cleanup function for logout
+export function cleanupUserSockets() {
+    if (logedUser.statusSocket) {
+        logedUser.statusSocket.close();
+        logedUser.statusSocket = null;
+    }
+    // Clear user data
+    logedUser.id = null;
+    logedUser.username = null;
+    logedUser.email = null;
+    logedUser.avatar = null;
+    logedUser.wallet = null;
+    logedUser.activeUsers = null;
 }
 
 window.onpopstate = async () => {

@@ -45,6 +45,7 @@ export class Card extends HTMLElement {
 		}
 		this.render();
     }
+
 	// min-height: 200px;
 	// min-width: 150px;
 	render()
@@ -53,8 +54,8 @@ export class Card extends HTMLElement {
 		message.id = 'alert-box';
 		message.className = 'alert-box';
 		this.appendChild(message);
-		this.innerHTML = `
-		<style>
+		this.innerHTML = /*css*/ ` 
+		<style> 
 			.card {
 				display: flex;
 				justify-content: center;
@@ -67,12 +68,20 @@ export class Card extends HTMLElement {
 				border-radius: 20px;
 				gap:5%;
 			}
+			.card:hover {
+				.img_class img {
+					transition: all 0.8s ease-in-out;
+					transform: scale(1.2) rotate(360deg);
+					
+				}
+			}
 			.img_class {
 				width: 100%;
 				height: 40%;
 				display: flex;
 				justify-content: center;
 				align-items: center;
+
 			}
 			.h_class {
 				width: 100%;
@@ -83,8 +92,14 @@ export class Card extends HTMLElement {
 				align-items: center;
 			}
 			.color {
-				color: white;
+				font-size: 110%;
+				font-weight: bold;
+				
+			}
+			.price {
 				font-size: 100%;
+				font-weight: bold;
+				color : white;
 			}
 			.style_button
 			{
@@ -95,11 +110,14 @@ export class Card extends HTMLElement {
 				height: 100%;
 				border-radius: 20px;
 				color: white;
+				border: none;
 				front-size:100%;
+				font-weight: bold;
 			}
 			.style_button:hover {
 				transition: all 0.8 ease-in-out;
 				transform: scale(1.2);
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 			}
 			
 			.color1
@@ -119,6 +137,7 @@ export class Card extends HTMLElement {
 			{
 				background:${this.color4};
 			}
+
 		</style>
 		<div class="card">
 			<div class="img_class">
@@ -129,14 +148,30 @@ export class Card extends HTMLElement {
 			</div>
 			
 			<div class="h_class">
-				<h3 class="color price">${this.price}</h3>
+				<h3 class="price">${this.price}</h3>
 			</div>
 			<div class="h_class ">
-				<button class="style_button ${this.color22}" id="button_price">buy</button>
+				<button class="style_button ${this.color22}" id="button_price">Buy</button>
 			</div>
 		</div>
-	`;
+		
+		`;
+		const nameColor = this.querySelector('.color');
+		if (this.name.trim() === 'NEON') {
+			nameColor.style.color = this.color2;
+		}
+		else if (this.name.trim() === 'FIRE') {
+			nameColor.style.color = this.color1;
+			name
+		}
+		else if (this.name.trim() === 'Water') {
+			nameColor.style.color = this.color3;
+		}
+		else if (this.name.trim() === 'EARTH') {
+			nameColor.style.color = this.color4;
+		}
 
-	}
+
+}
 }
 customElements.define("card-element", Card);
