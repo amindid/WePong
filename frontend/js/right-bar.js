@@ -1,4 +1,5 @@
 import { showAlert } from "./message-box.js";
+import { navigate } from "./router.js";
 
 class RightBar {
 	constructor() {}
@@ -49,8 +50,14 @@ class RightBar {
 						const friendDiv = document.createElement('div');
 						friendDiv.className = 'online-friends';	
 						friendDiv.innerHTML = `<img class="profile-image" src="${avatar}" alt="${username}">
-						<div class="statu-online"></div>`;
+						<div class="statu-online"></div>
+						<span class="friend-name">${username}</span>`;
 						upBar.appendChild(friendDiv);
+						// hna rah zdt hadi dyal click event for profile redirection
+						friendDiv.addEventListener('click', () => {
+							navigate('/profile',  username );
+						}
+						);
 					});
 				}
 			}
@@ -91,6 +98,8 @@ class RightBar {
 		};
 		setPlayerImage();
 		setOnlineFriends();
+	
+		
 	return content;
 	}
 }

@@ -106,6 +106,7 @@
 	align-items: center;
 	justify-content: center;
 	position: relative;
+	flex-direction: column;
 	margin-bottom: 15%;
 	margin-top: 15%;
 	transition: transform 0.3s;
