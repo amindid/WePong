@@ -45,6 +45,7 @@ export class Card extends HTMLElement {
 		}
 		this.render();
     }
+
 	// min-height: 200px;
 	// min-width: 150px;
 	render()
@@ -91,8 +92,14 @@ export class Card extends HTMLElement {
 				align-items: center;
 			}
 			.color {
-				color: white;
+				font-size: 110%;
+				font-weight: bold;
+				
+			}
+			.price {
 				font-size: 100%;
+				font-weight: bold;
+				color : white;
 			}
 			.style_button
 			{
@@ -105,6 +112,7 @@ export class Card extends HTMLElement {
 				color: white;
 				border: none;
 				front-size:100%;
+				font-weight: bold;
 			}
 			.style_button:hover {
 				transition: all 0.8 ease-in-out;
@@ -140,14 +148,30 @@ export class Card extends HTMLElement {
 			</div>
 			
 			<div class="h_class">
-				<h3 class="color price">${this.price}</h3>
+				<h3 class="price">${this.price}</h3>
 			</div>
 			<div class="h_class ">
-				<button class="style_button ${this.color22}" id="button_price">buy</button>
+				<button class="style_button ${this.color22}" id="button_price">Buy</button>
 			</div>
 		</div>
-	`;
+		
+		`;
+		const nameColor = this.querySelector('.color');
+		if (this.name.trim() === 'NEON') {
+			nameColor.style.color = this.color2;
+		}
+		else if (this.name.trim() === 'FIRE') {
+			nameColor.style.color = this.color1;
+			name
+		}
+		else if (this.name.trim() === 'Water') {
+			nameColor.style.color = this.color3;
+		}
+		else if (this.name.trim() === 'EARTH') {
+			nameColor.style.color = this.color4;
+		}
 
-	}
+
+}
 }
 customElements.define("card-element", Card);
