@@ -88,7 +88,7 @@ class Toper {
 						credentials: 'include',
 						headers: {
 							'Content-Type': 'application/json',
-						},
+						},	
 						body: JSON.stringify(data),
 					});
 					const searchImage = document.querySelector('#searchImage');

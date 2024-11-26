@@ -118,10 +118,10 @@ export class BallCardsComponent extends HTMLElement
 				console.log("price",data.price);
 				fetch_data().then(walletData=>{
 					if (walletData.wallet < data.price)
-						showAlert("ssiirr t9awedd tal3ebbb HHHHHHH");
+						showAlert("You have bought a " + data.name + "ball");
 					else
 					{
-						showAlert("safi rak chrity 9aweeddd HHHHHHH");
+						showAlert("You have bought a " + data.name + "ball");
 						updateWallet(-data.price);
 					}
 				}).catch(err=>console.log(err))
