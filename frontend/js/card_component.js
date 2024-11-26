@@ -53,8 +53,8 @@ export class Card extends HTMLElement {
 		message.id = 'alert-box';
 		message.className = 'alert-box';
 		this.appendChild(message);
-		this.innerHTML = `
-		<style>
+		this.innerHTML = /*css*/ ` 
+		<style> 
 			.card {
 				display: flex;
 				justify-content: center;
@@ -67,12 +67,20 @@ export class Card extends HTMLElement {
 				border-radius: 20px;
 				gap:5%;
 			}
+			.card:hover {
+				.img_class img {
+					transition: all 0.8s ease-in-out;
+					transform: scale(1.2) rotate(360deg);
+					
+				}
+			}
 			.img_class {
 				width: 100%;
 				height: 40%;
 				display: flex;
 				justify-content: center;
 				align-items: center;
+
 			}
 			.h_class {
 				width: 100%;
@@ -95,11 +103,13 @@ export class Card extends HTMLElement {
 				height: 100%;
 				border-radius: 20px;
 				color: white;
+				border: none;
 				front-size:100%;
 			}
 			.style_button:hover {
 				transition: all 0.8 ease-in-out;
 				transform: scale(1.2);
+				box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 			}
 			
 			.color1
@@ -119,6 +129,7 @@ export class Card extends HTMLElement {
 			{
 				background:${this.color4};
 			}
+
 		</style>
 		<div class="card">
 			<div class="img_class">
