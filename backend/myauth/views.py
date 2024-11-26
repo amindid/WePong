@@ -207,7 +207,7 @@ class GoogleCallback(APIView):
 			httponly=True,
 			secure=False,
 			samesite='lax',
-			max_age=60*60*24*7
+			# max_age=60*60*24*7
 		)
 		# log_to_elasticsearch("google auth success", event_type="google auth")
 		return response
@@ -291,7 +291,7 @@ class Callback42(APIView):
 			httponly=True,
 			secure=False,
 			samesite='lax',
-			max_age=60*60*24*7
+			# max_age=60*60*24*7
 		)
 		# log_to_elasticsearch("42 auth success", event_type="42 auth")
 		return response
@@ -377,7 +377,7 @@ class FacebookCallback(APIView):
 			httponly=True,
 			secure=False,
 			samesite='lax',
-			max_age=60*60*24*7
+			# max_age=60*60*24*7
 		)
 		# log_to_elasticsearch("google auth success", event_type="facbook auth")
 		return response
@@ -478,8 +478,8 @@ class loginUser(APIView):
 				value=refresh.get_access_token(),
 				httponly=True,
 				secure=False,
-				samesite='none',
-				max_age=60*60*24*7
+				samesite='lax',
+				# max_age=60*60*24*7
 			)
 			# log_to_elasticsearch("login success", event_type="login")
 			return response
@@ -534,7 +534,7 @@ class registerUser(APIView):
 						httponly=True,
 						secure=False,
 						samesite='lax',
-						max_age=60*60*24*7
+						# max_age=60*60*24*7
 					)
 					# log_to_elasticsearch(f"new user registred named {user.username}", event_type="regitration")
 					return response
@@ -589,7 +589,7 @@ class confirm_email_2fa(APIView):
 				httponly=True,
 				secure=False,
 				samesite='lax',
-				max_age=60*60*24*7
+				# max_age=60*60*24*7
 			)
 			# log_to_elasticsearch("2fa confirmation", event_type="2fa")
 			return response
