@@ -19,21 +19,21 @@ services:
     container_name: nginx_service
     ports:
       - "80:80"
+      - "443:443"
     networks:
       - network
-    depends_on:
-      - db
 
-# services:
-#   web:
-#     build: .
-#     command: python manage.py runserver 0.0.0.0:8000
-#     volumes:
-#       - .:/app
-#     ports:
-#       - "8000:8000"
-    # networks:
-    #   - elk
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    networks:
+      - network
+    volumes:
+       - db_data:/var/lib/postgresql/data
 
 networks:
   network:

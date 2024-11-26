@@ -1,7 +1,32 @@
 server {
-	location / {
-		index /html/base.html;
-		root /home;
-		try_files $uri /html/base.html;
-	}
+    listen 80;
+    server_name localhost;
+
+    # Redirect HTTP to HTTPS
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    server_name localhost;
+
+    # SSL configuration
+    ssl_certificate /etc/nginx/ssl/server.crt;
+    ssl_certificate_key /etc/nginx/ssl/server.key;
+
+	root /home;
+	index /html/base.html;
+	
+    location / {
+        try_files $uri /html/base.html;
+    }
+	# Reverse proxy to Django backend
+    location /api/ {
+        proxy_pass http://localhost:8000/; # Adjust port/container name
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    }
+	error_log /var/log/nginx/error.log;
+    access_log /var/log/nginx/access.log;
 }
