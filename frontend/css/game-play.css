@@ -461,6 +461,103 @@
        display: none;
     }
 
+    .buttons{
+        flex-direction: column;
+    }
+
+    #toggleBallMovement, #leave-game-btn{
+        font-size: 15px !important;
+        padding: 10px;
+        width: fit-content;
+        }
+
+    .player1-container img,
+    .player2-container img,
+    .paddle img,
+    .ball img {
+        width: 30px;
+        height: 30px;
+    }
+    .rank-div-1, .rank-div-2 {
+        display: none;
+    }
+
+    .time-block {
+        margin: 10px 0;
+    }
+
+    canvas {
+        width: 100% !important;
+        height: 40% !important;
+        margin: 50px !important;
+    }
+    #toggleBallMovement {
+        font-size: 10px;
+    }
+
+    .win-screen {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 80%;
+        height: 80%;
+    }
+
+    .win-screen .player-name {
+        font-size: 20px;
+    }
+
+    .win-screen h1 {
+        font-size: 50px;
+        font-family: 'Bungee';
+    }
+
+    .win-screen .stars img {
+        display: none;
+    }
+
+    .win-screen .score-players {
+        font-size: 50px;
+        font-family: 'Bungee';
+    }
+
+    .win-screen .rewards {
+        display: none;
+    }
+    
+    .win-screen .buttons {
+        gap: 1.5rem;
+        flex-direction: column;
+    }
+
+    /* Make paddles smaller */
+    .paddle img{
+        width: 20px !important;
+        height: 90px    !important;
+    }
+
+    /* Make the ball smaller */
+    .ball img{
+        width: 50px !important;
+        height: 50px !important;
+    }
+
+    /* Make the map smaller */
+    .gameBackground {
+        width: 100% !important;
+        height: auto !important;
+    }
+    #countdown {
+        font-size: 20px !important;
+    }
+}
+
+@media only screen and (max-width: 1200px) {    
+    .score {
+       display: none;
+    }
+
     .player1-container img,
     .player2-container img,
     .paddle img,

@@ -120,10 +120,10 @@ export class PadlleCardsComponent extends HTMLElement
 				event.preventDefault();
 				fetch_data().then(walletData=>{
 					if (walletData.wallet < data.price)
-						showAlert("ssiirr t9awedd tal3ebbb HHHHHHH");
+						showAlert("You have bought a " + data.name + "paddle");
 					else
 					{
-						showAlert("safi rak chrity 9aweeddd HHHHHHH");
+						showAlert("You have bought a " + data.name + "paddle");
 						updateWallet(-data.price);
 					}
 				}).catch(err=>console.log(err))
