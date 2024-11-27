@@ -406,7 +406,7 @@ class SettingComponent
 				}
 				const formData = new FormData();
 				formData.append('avatar', file);
-				const response = await fetch('http://localhost:8000/api/users/updateAvatar/', {
+				const response = await fetch('http://localhost:8000/api/users/UploadAvarar/', {
 					method : 'PUT',
 					credentials: 'include',
 					body: formData,

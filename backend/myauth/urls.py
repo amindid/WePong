@@ -6,6 +6,7 @@ from .views import removeFriend
 from .views import DenyRequest
 from .views import UpdateMatchHistory
 from .views import UserMatchHistory
+from .views import AvatarUploadView
 urlpatterns = [
 	path('users/checkAuthentication/', CheckAuthentication.as_view(), name='CheckAuthentication'),
 	path('users/login/', loginUser.as_view(), name='loginUser'),
@@ -49,4 +50,5 @@ urlpatterns = [
 	path('users/removeFriend/', removeFriend.as_view(), name='removeFriend'),
 	path('users/UpdateMatchHistory/', UpdateMatchHistory.as_view(), name='UpdateMatchHistory'),
 	path('users/UserMatchHistory/', UserMatchHistory.as_view(), name='UserMatchHistory'),
+	path('users/UploadAvarar/', AvatarUploadView.as_view(), name='AvatarUploadView'),
 ]

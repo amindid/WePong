@@ -17,6 +17,8 @@ from django.contrib.auth.models import AbstractUser
 # 		return f"{self.userId.username}'s Stats"
 
 
+
+
 	
 class ResetPasswordModel(models.Model):
 	email = models.EmailField()
@@ -31,7 +33,9 @@ class User (AbstractUser):
 	wallet = models.IntegerField(default=400)
 	username = models.CharField(max_length=255, unique=True)
 	password = models.CharField(max_length=255, null=True)
-	avatar = models.CharField(max_length=255, blank=True, null=True, default="../images/player1.png")
+	# avatar = models.CharField(max_length=255, blank=True, null=True, default="../images/player1.png")
+	avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
+	external_avatar = models.URLField(max_length=500, blank=True, null=True)
 	isTwoFA = models.BooleanField(default=False)
 	isAuth = models.BooleanField(default=False)
 	authProvider = models.CharField(max_length=255,null=True)
@@ -51,6 +55,13 @@ class User (AbstractUser):
 
 	def __str__(self):
 		return self.username
+	
+	def absolute_photo_url(self, request=None):
+		if request and self.avatar:
+			return request.build_absolute_uri(self.avatar.url)  # Absolute URL
+		if self.external_avatar:
+			return self.external_avatar
+		return request.build_absolute_uri('/media/avatars/player1.png')
 	
 	def update_feilds(self, **kwargs):
 		for field, value in kwargs.items():

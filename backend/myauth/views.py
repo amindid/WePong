@@ -33,7 +33,7 @@ from datetime import timedelta
 import json
 from random import randint
 from django.contrib.auth.tokens import default_token_generator
-
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 def log_to_elasticsearch(message, event_type="generic"):
@@ -73,6 +73,22 @@ class CookieJWTAuthentication(BaseAuthentication):
 		except User.DoesNotExist:
 			raise AuthenticationFailed('User not found')
 		return (user, None)
+
+
+
+class AvatarUploadView(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	parser_classes = [MultiPartParser, FormParser]
+	def put(self, request):
+		user = request.user
+		avatar_file = request.FILES.get('avatar')
+		if not avatar_file:
+			return Response({"error": "No file provided"}, status=status.HTTP_400_BAD_REQUEST)
+		user.avatar = avatar_file
+		user.external_avatar = None  # Reset external avatar if a new one is uploaded
+		user.save()
+		return Response({"message": "Avatar uploaded successfully"}, status=status.HTTP_200_OK)
 
 
 
@@ -155,7 +171,7 @@ class GoogleCallback(APIView):
 		user_data = {
 			'email': user_info.get('email'),
 			'username' : user_info.get('name'),
-			'avatar': user_info.get('picture'),
+			'external_avatar': user_info.get('picture'),
 		}
 		user = User.objects.filter(email=user_data['email']).first()
 		if not user is None:
@@ -238,7 +254,7 @@ class Callback42(APIView):
 		user_data = {
 			'email': user_info.get('email'),
 			'username' : user_info.get('login'),
-			'avatar': user_info.get('image', {}).get('link'),
+			'external_avatar': user_info.get('image', {}).get('link'),
 		}
 		
 		user = User.objects.filter(email=user_data['email']).first()
@@ -325,7 +341,7 @@ class FacebookCallback(APIView):
 		user_data = {
 			'email': user_info.get('email'),
 			'username' : user_info.get('name'),
-			'avatar': user_info.get('picture', {}).get('data', {}).get('url'),
+			'external_avatar': user_info.get('picture', {}).get('data', {}).get('url'),
 		}
 		user = User.objects.filter(email=user_data['email']).first()
 		if not user is None:
@@ -689,7 +705,7 @@ class ProfileById(APIView):
 			return Response({'error': 'user not found'})
 		data = {
 			'user_name': user.username,
-			'avatar' : user.avatar,
+			'avatar' : user.absolute_photo_url(request),
 			'email' : user.email,
 		}
 		return Response(data, status=status.HTTP_200_OK)
@@ -711,7 +727,7 @@ class ProfileByUsername(APIView):
 		# 	return Response({'error': 'you are looking for your self'},status=status.HTTP_400_BAD_REQUEST)
 		data = {
 			'username': user.username,
-			'avatar' : user.avatar,
+			'avatar' : user.absolute_photo_url(request),
 			'email' : user.email,
 			'wins'  : user.wins,
 			'loses' : user.loses
@@ -732,7 +748,7 @@ class userProfile(APIView):
 			return Response({'error': 'user not found.'}, status=status.HTTP_404_NOT_FOUND)
 		data = {
 			'username' : user.username,
-			'avatar' : user.avatar,
+			'avatar' : user.absolute_photo_url(request),
 			'email' : user.email,
 			'id' : user.id,
 			'wallet' : user.wallet
@@ -751,7 +767,7 @@ class friendList(APIView):
 		friend_list = {}
 		for friend in user.friends:
 			user = User.objects.get(id=friend)
-			friend_list[user.id] = [user.username, user.avatar]
+			friend_list[user.id] = [user.username, user.absolute_photo_url(request)]
 
 		data = {
 			'friends' : friend_list,
