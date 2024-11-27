@@ -86,6 +86,7 @@ class ChatBadge extends HTMLElement {
             margin-right: 15px;
             border: 2px solid var(--neon-color);
             transition: transform 0.2s;
+            object-fit: cover;
         }
     
         .profile-pic:hover {

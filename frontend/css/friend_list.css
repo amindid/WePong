@@ -171,6 +171,7 @@
 .friend-avatar {
     width: 30px;
     height: 30px;
+    object-fit: cover;
     border-radius: 50%;
     border: 2px solid #f4f4f4;
     box-shadow: 0px 2px 2px 0px #00000040;

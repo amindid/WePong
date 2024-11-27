@@ -261,6 +261,7 @@ input.searchInput.show {
 .searchResult img.show {
 	aspect-ratio: 1/1;
 	display: block;
+	object-fit: cover;
 }
 
 .searchButton:hover {
