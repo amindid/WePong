@@ -428,20 +428,20 @@ card-element
 	/* margin-top: 10%; */
 	/* padding-top: 50px; */
 		overflow: scroll;
-		scrollbar-color: black #2C0041;
+		/* scrollbar-color: black #2C0041; */
 	}
-	/* .shop-ball::-webkit-scrollbar-track {
-		background: #f1f1f1;
+	.shop-ball::-webkit-scrollbar {
+		background: transparent;
 	}
 
 	.shop-ball::-webkit-scrollbar-thumb {
 		background-color: black;
 		border-radius: 6px;
-	} */
+	}
 
 	.section2-2-2
 	{
-		width: 70%;
+		width: 80%;
 		height: 100%;
 		min-height: 0px;
 	}

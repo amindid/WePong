@@ -27,7 +27,7 @@ class SettingComponent
 	constructor()
 	{
 		this.content.className = 'settings';
-		this.content.innerHTML = `
+		this.content.innerHTML = /*html*/`
 			<div class="settings1 container1" id="container1">
 				<div class="img_">
 					
@@ -48,6 +48,13 @@ class SettingComponent
 								</div>
 								<div class="edit_username ">
 									<button class="submit_btn" id="submit_change_username">submit</button>
+								</div>
+								<div class="edit_username">
+									<h1 class="display_change_username"> - change picture -  </h1>
+									<input type="file" id="input_picture" accept="image/*">
+								</div>
+								<div class="edit_username ">
+									<button class="submit_btn" id="submit_change_picture">submit</button>
 								</div>
 								</div>
 								</div>
@@ -317,7 +324,7 @@ class SettingComponent
 					},
 				})
 					.then(response => {
-						if (response.status === 205) {
+						if (response.ok) {
 							navigate("/login");
 							cleanupUserSockets();
 						} else {
@@ -389,6 +396,31 @@ class SettingComponent
 					showAlert(Resdata.message || Resdata.error);
 				}
 			});
+			this.content.querySelector('#submit_change_picture').addEventListener('click', async function (event) {
+				event.preventDefault();
+				const input = document.querySelector("#input_picture");
+				const file = input.files[0];
+				if (!file) {
+					showAlert('Please select a file');
+					return;
+				}
+				const formData = new FormData();
+				formData.append('avatar', file);
+				const response = await fetch('http://localhost:8000/api/users/updateAvatar/', {
+					method : 'PUT',
+					credentials: 'include',
+					body: formData,
+				});
+				const data = await response.json();
+				if (response.ok) {
+					showAlert('avatar changed successfully');
+					navigate('/settings');
+				}
+				else {
+					showAlert(data.message || data.error);
+				}
+			}
+			);
 			return page;
 	}
 }
