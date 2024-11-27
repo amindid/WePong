@@ -50,7 +50,7 @@ class ChatFriendList extends HTMLElement {
         this.friendList.addEventListener('friendCardClick', (event) => {
             this.handleFriendCardClick(event.detail.card);
         });
-
+        
         this.addEventListener('deselectFriend', this.deselectAllFriends.bind(this));
 
         logedUser.statusSocket.onmessage = async (event) => {
@@ -84,9 +84,6 @@ class ChatFriendList extends HTMLElement {
             this.displayedFriends = data.friends;
             this.updateFriendList(this.displayedFriends);
 
-            // Now update the status after the friend list is fetched
-            // this.updateFriendStatusById('8', true);
-
         } catch (error) {
             console.error('Error fetching friend list:', error);
         }
@@ -97,7 +94,7 @@ class ChatFriendList extends HTMLElement {
         this.friendList.innerHTML = ''; // Clear the list    
         for (const [key, value] of Object.entries(newFriends)) {
             const friendCard = document.createElement('chat-friend-card');
-            friendCard.setAttribute('id', `friend-${key}`);  // Prefix 'friend-' to the ID    
+            friendCard.setAttribute('id', key);    
             friendCard.setAttribute('photo', value[1]);
             friendCard.setAttribute('username', value[0]);
             friendCard.setAttribute('status', logedUser.activeUsers ? logedUser.activeUsers.has(Number(key)) : false);
@@ -138,7 +135,7 @@ class ChatFriendList extends HTMLElement {
     }
 
     updateFriendStatusById(friendId, status) {
-        const friendCard = this.friendList.querySelector(`#friend-${friendId}`);
+        const friendCard = this.friendList.querySelector(`#${friendId.toString()}`);
         if (friendCard)
             friendCard.setStatus(status);
     }
