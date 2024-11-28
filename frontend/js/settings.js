@@ -2,7 +2,7 @@ import { renderRightBar } from './right-bar.js';
 import { renderLeftBar } from './left-bar.js';
 import { navigate } from './router.js';
 import { cleanupUserSockets } from './router.js';
-import { showAlert } from './message-box.js';
+import { sendEmailConfirmation, showAlert } from './message-box.js';
 import { renderPlayerPhoto } from './playerPhoto.js'
 
 
@@ -227,6 +227,7 @@ class SettingComponent
 						method : 'POST',
 						credentials: 'include',
 					});
+					sendEmailConfirmation('Send Email to confirm');
 					const data = await response.json();
 					if (response.ok) {
 						showAlert(data.message || 'check check');
