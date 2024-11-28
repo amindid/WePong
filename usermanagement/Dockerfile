@@ -1,21 +1,21 @@
 FROM python:3.10-slim
 
-WORKDIR /chatservice
+WORKDIR /backend
 
 RUN python -m venv /opt/venv
 
 RUN /opt/venv/bin/pip install --upgrade pip
 
-COPY ../requirements.txt .
+COPY requirements.txt .
 
-COPY ../.env /chatservice/.env
+COPY .env .env
 
 RUN /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
 
-COPY ./chatservice .
+COPY * .
 
 ENV PATH="/opt/venv/bin:$PATH"
 
-EXPOSE 8001
+EXPOSE 8000
 
-CMD ["python", "manage.py", "runserver", "localhost:8001"]
+CMD ["python", "manage.py", "runserver", "localhost:8000"]
