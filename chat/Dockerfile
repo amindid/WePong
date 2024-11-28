@@ -18,4 +18,4 @@ ENV PATH="/opt/venv/bin:$PATH"
 
 EXPOSE 8001
 
-CMD ["python", "manage.py", "runserver", "localhost:8001"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8001"]
