@@ -50,14 +50,20 @@ class ChatFriendList extends HTMLElement {
         this.friendList.addEventListener('friendCardClick', (event) => {
             this.handleFriendCardClick(event.detail.card);
         });
-
+        
         this.addEventListener('deselectFriend', this.deselectAllFriends.bind(this));
 
         logedUser.statusSocket.onmessage = async (event) => {
             const data = JSON.parse(event.data);
-            console.log('message from server:', data);
+            // console.log('inside chat component message from server:', data);
             if (data.type === 'user_status')
+            {
                 this.updateFriendStatusById(data.user_id, data.status === 'online' ? true : false);  
+                if (data.status === 'online')
+                    logedUser.activeUsers.add(data.user_id);
+                else
+                    logedUser.activeUsers.delete(data.user_id); 
+            }
             else if (data.type === 'active_users_list')
                 logedUser.activeUsers = new Set(data.active_users);
         };
@@ -84,9 +90,6 @@ class ChatFriendList extends HTMLElement {
             this.displayedFriends = data.friends;
             this.updateFriendList(this.displayedFriends);
 
-            // Now update the status after the friend list is fetched
-            // this.updateFriendStatusById('8', true);
-
         } catch (error) {
             console.error('Error fetching friend list:', error);
         }
@@ -97,7 +100,7 @@ class ChatFriendList extends HTMLElement {
         this.friendList.innerHTML = ''; // Clear the list    
         for (const [key, value] of Object.entries(newFriends)) {
             const friendCard = document.createElement('chat-friend-card');
-            friendCard.setAttribute('id', `friend-${key}`);  // Prefix 'friend-' to the ID    
+            friendCard.setAttribute('id', key);    
             friendCard.setAttribute('photo', value[1]);
             friendCard.setAttribute('username', value[0]);
             friendCard.setAttribute('status', logedUser.activeUsers ? logedUser.activeUsers.has(Number(key)) : false);
@@ -138,10 +141,12 @@ class ChatFriendList extends HTMLElement {
     }
 
     updateFriendStatusById(friendId, status) {
-        const friendCard = this.friendList.querySelector(`#friend-${friendId}`);
+        const friendCard = this.friendList.querySelector(`chat-friend-card[id="${friendId}"]`);
         if (friendCard)
             friendCard.setStatus(status);
     }
+
+
 }
 
 customElements.define('chat-friend-list', ChatFriendList);

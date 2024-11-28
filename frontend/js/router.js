@@ -223,6 +223,7 @@ async function setupUserStatusSocket() {
     }
 }
 
+
 function renderPage(page) {
     document.body.innerHTML = '';
     document.body.appendChild(page);

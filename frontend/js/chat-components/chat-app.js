@@ -114,7 +114,7 @@ class ChatApp extends HTMLElement {
             await this.callIsBlockedUserApi();
             await this.isBlokcedByFriendApi();
             await this.updateChatContainer(this.selectedFriend);
-            await this.connectWebSocket(this.selectedFriend.id, logedUser.id);
+            await this.connectWebSocket(this.selectedFriend.id);
         });
 
         this.chatContainer.addEventListener('close-chat', () => {
@@ -136,8 +136,8 @@ class ChatApp extends HTMLElement {
         this.chatContainer.addEventListener('block-unblock-user', async () => {
             if (this.selectedFriend) {
                 await this.blockUnblockUser(this.selectedFriend.id);
-                await this.updateChatContainer(this.selectedFriend, logedUser);
-                await this.connectWebSocket(this.selectedFriend.id, logedUser.id);
+                await this.updateChatContainer(this.selectedFriend);
+                await this.connectWebSocket(this.selectedFriend.id);
             }
         });
 
@@ -153,6 +153,8 @@ class ChatApp extends HTMLElement {
 
     async callIsBlockedUserApi() {
         try {
+            console.log('Sending friend_id:', this.selectedFriend.id);
+
             const response = await fetch('http://localhost:8000/api/friends/is_blocked/', {
                 method: 'POST',
                 credentials: 'include',
@@ -281,7 +283,7 @@ class ChatApp extends HTMLElement {
             input.addEventListener('message-sent', (e) => {
                 const userMessage = e.detail.message;
                 this.sendMessage(userMessage); // Send message via WebSocket
-                messageList.addMessage(userMessage, 'me');
+                messageList.addMessage(userMessage, 'me', logedUser.avatar, new Date());
             });
         }
         await this.fetchChatMessages(friend, messageList);
@@ -350,8 +352,8 @@ class ChatApp extends HTMLElement {
     }
 
     // WebSocket connection to server
-    async connectWebSocket(friendId, logedUserId) {
-        const [firstId, secondId] = [logedUserId, friendId].sort((a, b) => a - b);
+    async connectWebSocket(friendId) {
+        const [firstId, secondId] = [logedUser.id, friendId].sort((a, b) => a - b);
         const roomName = `${firstId}_${secondId}`;
         
         if (this.socket) {
@@ -372,7 +374,7 @@ class ChatApp extends HTMLElement {
 
         this.socket.addEventListener('message', (event) => {
             const data = JSON.parse(event.data);
-            if (data.user_id != logedUserId)
+            if (data.user_id != logedUser.id)
                 this.handleIncomingMessage(data);
         });
 

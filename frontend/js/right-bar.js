@@ -81,7 +81,6 @@ class RightBar {
 						'Content-Type': 'application/json',
 					}
 				});
-				console.log('after fetch');
 				const data = await response.json();
 				if (response.ok) {
 					console.log('after await');
