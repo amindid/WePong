@@ -10,16 +10,50 @@ services:
       - "443:443"
     networks:
       - elk
-  web:
-    build: .
+
+  auth_service:
+    build: ./backend
     command: python manage.py runserver 0.0.0.0:8000
+    container_name: auth_service
     volumes:
       - .:/app
+      - shared_data:/shared_data  # Shared volume
     ports:
       - "8000:8000"
     networks:
       - elk
 
+  chat_service:
+    build: ./chatservice
+    command: python manage.py runserver 0.0.0.0:8001
+    container_name: chat_service
+    volumes:
+      - .:/app
+      - shared_data:/shared_data  # Shared volume
+    ports:
+      - "8001:8001"
+    networks:
+      - elk
+
+  db:
+    image: postgres:13
+    container_name: postgres_service
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    networks:
+      - elk
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - shared_data:/shared_data  # Shared volume for auth and chat services
+
 networks:
   elk:
     driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  shared_data:  # New shared volume
+    driver: local
