@@ -55,9 +55,15 @@ class ChatFriendList extends HTMLElement {
 
         logedUser.statusSocket.onmessage = async (event) => {
             const data = JSON.parse(event.data);
-            console.log('message from server:', data);
+            // console.log('inside chat component message from server:', data);
             if (data.type === 'user_status')
+            {
                 this.updateFriendStatusById(data.user_id, data.status === 'online' ? true : false);  
+                if (data.status === 'online')
+                    logedUser.activeUsers.add(data.user_id);
+                else
+                    logedUser.activeUsers.delete(data.user_id); 
+            }
             else if (data.type === 'active_users_list')
                 logedUser.activeUsers = new Set(data.active_users);
         };
@@ -135,10 +141,12 @@ class ChatFriendList extends HTMLElement {
     }
 
     updateFriendStatusById(friendId, status) {
-        const friendCard = this.friendList.querySelector(`#${friendId.toString()}`);
+        const friendCard = this.friendList.querySelector(`chat-friend-card[id="${friendId}"]`);
         if (friendCard)
             friendCard.setStatus(status);
     }
+
+
 }
 
 customElements.define('chat-friend-list', ChatFriendList);

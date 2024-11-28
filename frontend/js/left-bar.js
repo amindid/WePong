@@ -97,7 +97,6 @@ class LeftBare
 		let imageleft = content.querySelector("#leftBar-userImage");
 		const setPlayerImage = async () => {
 			try {
-				console.log('befor fetch');
 				const response = await fetch('http://localhost:8000/api/users/userProfile/', {
 					method: 'GET',
 					credentials: 'include',
@@ -105,7 +104,6 @@ class LeftBare
 						'Content-Type': 'application/json',
 					}
 				});
-				console.log('after fetch');
 				const data = await response.json();
 				if (response.ok) {
 					console.log('after await');

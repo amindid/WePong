@@ -208,9 +208,9 @@ class ChatFriendCard extends HTMLElement {
         this.img.alt = this.getAttribute('username') || 'Friend';
 
         // Friend message count
-        this.msgCount = document.createElement('div');
-        this.msgCount.classList.add('friend-msg-count');
-        this.msgCount.textContent = this.getAttribute('msgCount') || '10';
+        // this.msgCount = document.createElement('div');
+        // this.msgCount.classList.add('friend-msg-count');
+        // this.msgCount.textContent = this.getAttribute('msgCount') || '10';
 
         // Friend status
         this.status = document.createElement('div');
@@ -231,7 +231,7 @@ class ChatFriendCard extends HTMLElement {
         // Append children to wrapper
         wrapper.appendChild(this.img);
         wrapper.appendChild(content);
-        wrapper.appendChild(this.msgCount);
+        // wrapper.appendChild(this.msgCount);
 
         // Add click event
         wrapper.addEventListener('click', () => {
@@ -293,21 +293,21 @@ class ChatFriendCard extends HTMLElement {
                 }
             }
 
-            .friend-msg-count {
-                margin-left: auto;
-                font-size: 14px;
-                font-weight: bold;
-                color: white;
-                background-color: var(--msg-bg-color-green);
-                padding: 8px;
-                border-radius: 50%;
-                margin-right: 10px;
-                width: 15px;
-                height: 15px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-            }
+            // .friend-msg-count {
+            //     margin-left: auto;
+            //     font-size: 14px;
+            //     font-weight: bold;
+            //     color: white;
+            //     background-color: var(--msg-bg-color-green);
+            //     padding: 8px;
+            //     border-radius: 50%;
+            //     margin-right: 10px;
+            //     width: 15px;
+            //     height: 15px;
+            //     display: flex;
+            //     justify-content: center;
+            //     align-items: center;
+            // }
 
             .friend-photo {
                 width: 50px;

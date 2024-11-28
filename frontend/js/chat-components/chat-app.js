@@ -153,6 +153,8 @@ class ChatApp extends HTMLElement {
 
     async callIsBlockedUserApi() {
         try {
+            console.log('Sending friend_id:', this.selectedFriend.id);
+
             const response = await fetch('http://localhost:8000/api/friends/is_blocked/', {
                 method: 'POST',
                 credentials: 'include',
@@ -281,7 +283,7 @@ class ChatApp extends HTMLElement {
             input.addEventListener('message-sent', (e) => {
                 const userMessage = e.detail.message;
                 this.sendMessage(userMessage); // Send message via WebSocket
-                messageList.addMessage(userMessage, 'me');
+                messageList.addMessage(userMessage, 'me', logedUser.avatar, new Date());
             });
         }
         await this.fetchChatMessages(friend, messageList);
