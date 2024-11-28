@@ -7,3 +7,14 @@ export function showAlert(message) {
         alertBox.classList.remove('show');
     }, 3000);
 }
+
+
+export function sendEmailConfirmation(message) {
+   
+    const send = document.createElement('div');
+    send.classList.add('send-email');
+    send.textContent = message;
+    send.innerHTML += '<button id="send-email-btn">Send Email</button>';
+        const sendEmailBtn = document.getElementById('send-email-btn');
+    document.body.appendChild(send);
+}
