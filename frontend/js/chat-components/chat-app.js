@@ -294,7 +294,8 @@ class ChatApp extends HTMLElement {
         const roomName = `${firstId}_${secondId}`;
 
         // create a room between the two users if it doesn't exist
-        await fetch(`http://localhost:8000/api/chat/rooms/`, {
+        // await fetch(`http://localhost:8000/api/chat/rooms/`, {
+        await fetch(`http://localhost:8001/api/chat/rooms/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -316,7 +317,8 @@ class ChatApp extends HTMLElement {
         })
 
         // fetch messages from the room
-        await fetch(`http://localhost:8000/api/chat/rooms/${roomName}/messages/`, {
+        // await fetch(`http://localhost:8000/api/chat/rooms/${roomName}/messages/`, {
+        await fetch(`http://localhost:8001/api/chat/rooms/${roomName}/messages/`, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -359,7 +361,8 @@ class ChatApp extends HTMLElement {
         if (this.socket) {
             this.socket.close();
         }        
-        const socketUrl = `ws://localhost:8000/ws/chat/${roomName}/`;
+        const socketUrl = `ws://localhost:8001/ws/chat/${roomName}/`;
+        // const socketUrl = `ws://localhost:8000/ws/chat/${roomName}/`;
         // Create WebSocket with credentials
         this.socket = new WebSocket(socketUrl);
         

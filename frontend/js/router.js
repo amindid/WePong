@@ -204,7 +204,8 @@ export const logedUser = {
 async function setupUserStatusSocket() {
     if (logedUser.id && !logedUser.statusSocket) {
         console.log('Setting up user status socket');
-        logedUser.statusSocket = new WebSocket(`ws://localhost:8000/ws/status/`);
+        // logedUser.statusSocket = new WebSocket(`ws://localhost:8000/ws/status/`);
+        logedUser.statusSocket = new WebSocket(`ws://localhost:8001/ws/status/`);
 
         logedUser.statusSocket.onopen = () => {
             console.log("==============>Status connection established");
