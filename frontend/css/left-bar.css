@@ -2,7 +2,7 @@
 	background: linear-gradient(180deg, #840087 0%, #17002C 100%);
 	backdrop-filter: blur(23px);
 	gap: 15%;
-	padding-top: 10px;
+	padding-top: 25px;
 	margin-top: 15px;
 	padding-bottom: 20px;
 	display: flex;
@@ -39,7 +39,6 @@
 
 @media (max-width: 800px) {
 	.left-bar {
-		gap: 20%;
 		border-radius: 15px;
 		height: 90%;
 	}
@@ -62,4 +61,5 @@
 	max-width: 50px;
 	border-radius: 50%;
 	border: 1px solid black;
+	object-fit: cover;
 }

@@ -1,5 +1,6 @@
 import { renderRightBar } from './right-bar.js';
 import { renderLeftBar } from './left-bar.js';
+import { navigate } from './router.js';
 
 class Profile
 {
@@ -309,6 +310,7 @@ class Profile
 					case 'accept':
 						this.acceptReq(profileId)
 						.then(() => reqCard.remove())
+						.then(navigate('/friendList'));
 						break;
 					case 'decline':
 						this.denyReq(profileId)

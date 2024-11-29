@@ -191,6 +191,7 @@
 	align-items: center;
 	flex-direction: column;	
 	color: white;
+	gap : 2%;
 }
 
 
@@ -471,7 +472,24 @@
 	transform: scale(1.1);
 }
 
+#input_picture {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: var(--primary-color);
+    cursor: pointer;
+    width: 50%; /* Full width */
+    text-align: center;
+    font-size: 1em;
+    color: #ffffff; /* Dark grey text */
+}
 
+#input_picture:hover {
+	border: 2px solid black;
+	border-color: #000000;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+	cursor: pointer;
+	
+}
 .display_secur > h1{
 	font-size: 150%;
 	color: white;

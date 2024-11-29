@@ -50,8 +50,7 @@ class RightBar {
 						const friendDiv = document.createElement('div');
 						friendDiv.className = 'online-friends';	
 						friendDiv.innerHTML = `<img class="profile-image" src="${avatar}" alt="${username}">
-						<div class="statu-online"></div>
-						<span class="friend-name">${username}</span>`;
+						`;
 						upBar.appendChild(friendDiv);
 						// hna rah zdt hadi dyal click event for profile redirection
 						friendDiv.addEventListener('click', () => {
@@ -81,7 +80,6 @@ class RightBar {
 						'Content-Type': 'application/json',
 					}
 				});
-				console.log('after fetch');
 				const data = await response.json();
 				if (response.ok) {
 					console.log('after await');

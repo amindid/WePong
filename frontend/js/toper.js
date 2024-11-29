@@ -79,45 +79,47 @@ class Toper {
 			  });
 			searchButton.addEventListener('click', async function (event) {
 				const searchTerm = document.querySelector("#searchInput").value;
-				const data = {
-					username: searchTerm,  
-				};
-				try {
-					const response = await fetch ('http://localhost:8000/api/users/ProfileByUsername/', {
-						method: 'POST',
-						credentials: 'include',
-						headers: {
-							'Content-Type': 'application/json',
-						},	
-						body: JSON.stringify(data),
-					});
-					const searchImage = document.querySelector('#searchImage');
-					const searchUsername = document.querySelector('#searchUsername');
-					if (response.ok) {
-						const userdata = await response.json();
-						if (userdata.avatar && userdata.username) {
-							searchImage.src = userdata.avatar;
-							searchImage.classList.add('show');
-							console.log(searchImage.src);
-							searchUsername.textContent = userdata.username;
-							const searchResultButton = document.querySelector('#searchResultButton');
-							if (searchResultButton) {
-								searchResultButton.addEventListener('click', (event) => {
-									event.preventDefault();
-									navigate('/profile', userdata.username);
-								});
+				if (searchTerm.length !== 0) {
+					const data = {
+						username: searchTerm,  
+					};
+					try {
+						const response = await fetch ('http://localhost:8000/api/users/ProfileByUsername/', {
+							method: 'POST',
+							credentials: 'include',
+							headers: {
+								'Content-Type': 'application/json',
+							},	
+							body: JSON.stringify(data),
+						});
+						const searchImage = document.querySelector('#searchImage');
+						const searchUsername = document.querySelector('#searchUsername');
+						if (response.ok) {
+							const userdata = await response.json();
+							if (userdata.avatar && userdata.username) {
+								searchImage.src = userdata.avatar;
+								searchImage.classList.add('show');
+								console.log(searchImage.src);
+								searchUsername.textContent = userdata.username;
+								const searchResultButton = document.querySelector('#searchResultButton');
+								if (searchResultButton) {
+									searchResultButton.addEventListener('click', (event) => {
+										event.preventDefault();
+										navigate('/profile', userdata.username);
+									});
+								}
+							} else {
+								searchImage.classList.remove('show');
+								searchUsername.textContent = 'no result'
 							}
 						} else {
-							searchImage.classList.remove('show');
-							searchUsername.textContent = 'no result'
+							showAlert('you are looking for your own username');
 						}
-					} else {
-						showAlert('you are looking for your own username');
+						
+					} catch (error) {
+						showAlert('somthing went wrong please try again later.');
+						console.log('SOMTHING WENT WRONG', error);
 					}
-					
-				} catch (error) {
-					showAlert('somthing went wrong please try again later.');
-					console.log('SOMTHING WENT WRONG', error);
 				}
 			});
 			

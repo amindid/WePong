@@ -2,7 +2,8 @@ FROM debian:bookworm
 
 RUN apt-get update && apt-get install -y nginx
 COPY . /home
-COPY ./default /etc/nginx/sites-available
+COPY ./default.conf /etc/nginx/sites-available/default
+COPY ./ssl /etc/nginx/ssl
 
 EXPOSE 80
 

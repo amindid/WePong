@@ -52,14 +52,14 @@
     font-style: normal;
 }
 
-dashboard-component {
+/* dashboard-component {
 	width: 100%;
 	height: 100%;
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
-}
+} */
 
 
 .secondere {
@@ -261,6 +261,7 @@ input.searchInput.show {
 .searchResult img.show {
 	aspect-ratio: 1/1;
 	display: block;
+	object-fit: cover;
 }
 
 .searchButton:hover {

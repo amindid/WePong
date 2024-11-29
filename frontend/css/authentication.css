@@ -17,6 +17,45 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.send-email {
+	display:  flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	position: fixed; /* Positioned relative to the viewport */
+	top: 50%; /* Position it at the top */
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background-color: #e6e6fa;
+	color: #4b0082;
+	padding: 50px;
+	border-radius: 10px;
+	z-index: 9999; /* Make sure it appears above all other content */
+	width:fit-content	;
+	height: 15%;
+	text-align: center;
+	font-size: 1.5rem;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#send-email-btn {
+	background-color:#840087;
+	border: none;
+	color: white;
+	padding: 10px 20px;
+	text-align: center;
+	text-decoration: none;
+	display: inline-block;
+	font-size: 16px;
+	margin: 8px 2px;
+	cursor: pointer;
+	border-radius: 5px;
+	transition: all 0.3s ease;
+}
+#send-email-btn:hover {
+	background-color: #E1319A;
+	transform: scale(1.1);
+}	
 .alert-box.show {
     display: block; /* Show the alert when needed */
 }
