@@ -404,7 +404,9 @@ class localGame {
                 notification.classList.remove('show');
                 
                 setTimeout(() => {
-                    document.body.removeChild(notification);
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
                 }, 500);
             }, 3000);
         }
