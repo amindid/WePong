@@ -116,7 +116,7 @@ services:
 
 networks:
   elk:
-    name: elk
+    name  : elk
     driver: bridge
 
 volumes:
