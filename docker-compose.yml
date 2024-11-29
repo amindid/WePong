@@ -3,23 +3,128 @@ version: '3.8'
 services:
   nginx:
     build:
-      context: ./frontend
+      context: frontend/
     container_name: nginx_service
     ports:
       - "80:80"
       - "443:443"
     networks:
       - elk
-  web:
-    build: .
-    command: python manage.py runserver 0.0.0.0:8000
+
+  auth_service:
+    build: usermanagement/
+    # command: python manage.py runserver 0.0.0.0:8000
+    container_name: auth_service
     volumes:
       - .:/app
+      - shared_data:/shared_data  # Shared volume
     ports:
       - "8000:8000"
     networks:
       - elk
 
+  chat_service:
+    build: chat/
+    # command: python manage.py runserver 0.0.0.0:8001
+    container_name: chat_service
+    volumes:
+      - .:/app
+      - shared_data:/shared_data  # Shared volume
+    ports:
+      - "8001:8001"
+    networks:
+      - elk
+
+  db:
+    image: postgres:13
+    container_name: postgres_service
+    env_file:
+      - .env
+    ports:
+      - "5432:5432"
+    networks:
+      - elk
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - shared_data:/shared_data  # Shared volume for auth and chat services
+
+  elasticsearch:
+    image: localbuild/elasticsearch:7.14.1
+    build:
+      context: elk-stack/elasticsearch/
+      args:
+         elk_version: 7.14.1
+    volumes:
+      - type: bind
+        source: ./elk-stack/elasticsearch/config/elasticsearch.yml
+        target: /usr/share/elasticsearch/config/elasticsearch.yml
+        read_only: true
+      - type: volume
+        source: elasticsearch
+        target: /usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xmx1024m -Xms1024m"
+      ELASTIC_PASSWORD: aouchaadtest
+      discovery.type: single-node
+    networks:
+      - elk
+
+  logstash:
+    image: localbuild/logstash:7.14.1
+    build:
+      context: elk-stack/logstash/
+      args:
+         elk_version: 7.14.1
+    volumes:
+      - type: bind
+        source: ./elk-stack/logstash/config/logstash.yml
+        target: /usr/share/logstash/config/logstash.yml
+        read_only: true
+      - type: bind
+        source: ./elk-stack/logstash/pipeline
+        target: /usr/share/logstash/pipeline
+        read_only: true
+    ports:
+      - "5000:5000"
+    environment:
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+
+  kibana:
+    image: localbuild/kibana:7.14.1
+    build:
+      context: elk-stack/kibana/
+      args:
+         elk_version: 7.14.1
+    volumes:
+      - type: bind
+        source: ./elk-stack/kibana/config/kibana.yml
+        target: /usr/share/kibana/config/kibana.yml
+        read_only: true
+    ports:
+      - "5601:5601"
+    networks:
+      - elk
+    depends_on:
+      - elasticsearch
+
 networks:
   elk:
+    name: elk
     driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  shared_data:  # New shared volume
+    driver: local
+  esdata:
+    driver: local
+  elasticsearch:
+    driver: local

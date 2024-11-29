@@ -4,4 +4,3 @@ node_modules
 venv
 env
 backend/db.sqlite3
-chatservice

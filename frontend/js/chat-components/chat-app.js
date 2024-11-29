@@ -222,6 +222,14 @@ class ChatApp extends HTMLElement {
             }
             
             this.selectedFriendIsBlocked = !this.selectedFriendIsBlocked;
+
+            if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+                const messageData = {
+                    type: 'block',
+                    user_id: friendId,
+                };
+                this.socket.send(JSON.stringify(messageData));
+            }
         } catch (error) {
             console.error(`Error ${action}ing user:`, error);
         }
@@ -294,7 +302,8 @@ class ChatApp extends HTMLElement {
         const roomName = `${firstId}_${secondId}`;
 
         // create a room between the two users if it doesn't exist
-        await fetch(`http://localhost:8000/api/chat/rooms/`, {
+        // await fetch(`http://localhost:8000/chat-api/chat/rooms/`, {
+        await fetch(`http://localhost:8001/chat-api/chat/rooms/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -316,7 +325,8 @@ class ChatApp extends HTMLElement {
         })
 
         // fetch messages from the room
-        await fetch(`http://localhost:8000/api/chat/rooms/${roomName}/messages/`, {
+        // await fetch(`http://localhost:8000/chat-api/chat/rooms/${roomName}/messages/`, {
+        await fetch(`http://localhost:8001/chat-api/chat/rooms/${roomName}/messages/`, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -359,7 +369,8 @@ class ChatApp extends HTMLElement {
         if (this.socket) {
             this.socket.close();
         }        
-        const socketUrl = `ws://localhost:8000/ws/chat/${roomName}/`;
+        const socketUrl = `ws://localhost:8001/ws/chat/${roomName}/`;
+        // const socketUrl = `ws://localhost:8000/ws/chat/${roomName}/`;
         // Create WebSocket with credentials
         this.socket = new WebSocket(socketUrl);
         
@@ -372,10 +383,23 @@ class ChatApp extends HTMLElement {
             console.log('WebSocket connection established');
         });
 
-        this.socket.addEventListener('message', (event) => {
+        this.socket.addEventListener('message', async (event) => {
             const data = JSON.parse(event.data);
-            if (data.user_id != logedUser.id)
+            console.log('Received message:', data);
+            // if (data.type === 'chat_message' && data.user_id != logedUser.id)
+            //     this.handleIncomingMessage(data);
+            // else if (data.type === 'block') {
+            //     this.selectedFriendIsBlocked = !this.selectedFriendIsBlocked;
+            //     this.updateChatContainer(this.selectedFriend);
+            // }
+
+            if (data.type === 'chat_message' && data.user_id != logedUser.id)
                 this.handleIncomingMessage(data);
+            else if (data.type === 'block_user' && data.user_id != logedUser.id) {
+                await this.callIsBlockedUserApi();
+                await this.isBlokcedByFriendApi();
+                await this.updateChatContainer(this.selectedFriend);
+            }
         });
 
         this.socket.addEventListener('close', () => {
@@ -392,6 +416,7 @@ class ChatApp extends HTMLElement {
         console.log('Sending message:', message);
         if (this.socket && this.socket.readyState === WebSocket.OPEN) {
             const messageData = {
+                type: 'message',
                 content: message,
             };
             this.socket.send(JSON.stringify(messageData));

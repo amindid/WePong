@@ -50,7 +50,6 @@ class RightBar {
 						const friendDiv = document.createElement('div');
 						friendDiv.className = 'online-friends';	
 						friendDiv.innerHTML = `<img class="profile-image" src="${avatar}" alt="${username}">
-						<div class="statu-online"></div>
 						`;
 						upBar.appendChild(friendDiv);
 						// hna rah zdt hadi dyal click event for profile redirection
