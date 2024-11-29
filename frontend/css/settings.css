@@ -13,7 +13,7 @@
 	align-items: center;
 	justify-content: center;
 	width: 80%;
-	height: 80%;
+	height: 90%;
 	flex-direction: column;
 }
 
@@ -29,7 +29,7 @@
 	background-color: rgba(80, 0, 93, 1);
 	border-top-right-radius: 15px;
 	border-top-left-radius: 15px;
-	min-height: 800px;
+	min-height: 700px;
 }
 
 .img_
@@ -203,7 +203,7 @@
 	flex-direction: column;
 	width: 100%;
 	height: 20%;
-	gap: 20%;
+	gap: 10%;
 }
 
 
@@ -286,7 +286,7 @@
 }
 .submit_btn
 {
-	width: 10%;
+	width: 15%;
 	height: 40%;
 	font-size: 100%;
 	background-color: rgba(80, 0, 93, 1);
@@ -479,7 +479,7 @@
     cursor: pointer;
     width: 50%; /* Full width */
     text-align: center;
-    font-size: 1em;
+    font-size: 100%;
     color: #ffffff; /* Dark grey text */
 }
 
@@ -593,6 +593,14 @@
 	.input_username{
 		height: 40%;
 	}
+	.display_change_username
+	{
+		font-size: 80%;
+	}
+	#input_picture {
+		font-size: 50%;
+		padding: 8px;
+	}
 	.submit_btn
 	{
 		height: 50%;
@@ -605,7 +613,7 @@
 	}
 	.display_change_username 
 	{
-		font-size: 80%;
+		font-size: 70%;
 	}
 	#plyername , #print-account-details
 	{

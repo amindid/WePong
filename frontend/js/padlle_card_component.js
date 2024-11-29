@@ -70,22 +70,14 @@ export class PadlleCardsComponent extends HTMLElement
 				});
 				const data = await response.json();
 				if (response.ok) {
-					// console.log('case 3')
 					wallet = data.wallet;
-					// console.log('case 4')
-					// imageleft.src = data.avatar;
-					console.log("###############");
-					console.log("wallet:" , wallet);
-					console.log("###############");
 					return data;
 				}
 				else {
 					showAlert(data.error || 'failed to load user image');
-					console.log(data.error || 'failed to load user image');
 				}
 			} catch (error) {
 				showAlert(error || 'failed to fetch user profile ==> error: ');
-				console.log('failed to fetch user profile ==> error: ',error);
 			}
 		};
 
@@ -103,7 +95,6 @@ export class PadlleCardsComponent extends HTMLElement
 			
 			if (response.ok) {
 				// wallet += amount;
-				console.log('Wallet updated:', data);
 			} else {
 				console.error('Error updating wallet:', data);
 			}
@@ -127,9 +118,6 @@ export class PadlleCardsComponent extends HTMLElement
 						updateWallet(-data.price);
 					}
 				}).catch(err=>console.log(err))
-				// console.log("end fetch");
-				// console.log("wallet:" , wallet);
-				// console.log("data.price:" , data.price);
 			});
 			
 

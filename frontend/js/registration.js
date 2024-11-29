@@ -102,7 +102,6 @@ class RegistrationPage {
 			};
 
 			try {
-				console.log("befor fetch");
 				const response = await fetch(url, {
 					method: 'POST',
 					credentials: 'include',
@@ -113,8 +112,6 @@ class RegistrationPage {
 				});
 				const data = await response.json();
 				if (response.status == 201) {
-					console.log("befor await");
-					console.log("Registration successful:",data);
 					navigate('/dashboard');	
 				} else {
 					console.error("Error:", errorData);
@@ -129,7 +126,6 @@ class RegistrationPage {
 			const password = document.getElementById('password').value;
 			const confirmPassword = document.getElementById('passwordConfirmation').value;
 			const error_message = document.getElementById('error-message');
-			console.log(password, confirmPassword)
 			if (password !== confirmPassword) {
 				event.preventDefault();
 				error_message.style.display = 'block';

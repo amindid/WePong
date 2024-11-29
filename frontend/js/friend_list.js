@@ -8,17 +8,8 @@ class Profile
 	constructor()
 	{
 	}
-	// post http://localhost:8000/api/friends/sendRequest/ to send a friend req
-	// {
-	// 	"reciever_id": 6
-	// }
-	// get http://localhost:8000/api/users/friendRequestList to get the requests list
-	// returns {"friendsRequests":[5]} // 5 is the id of the sender
-	// to accept the req
-	// sender_id
 
 	async fetchDataById(id){
-		console.log(id);
 		try{
 			const response = await fetch (`http://localhost:8000/api/users/ProfileById/?friend=${id}`, {
 				method: 'GET',
@@ -80,7 +71,6 @@ class Profile
 
 	async acceptReq(profileId){
 		try{
-			console.log(profileId);
 			const response = await fetch('http://localhost:8000/api/friends/AccebtRequest/', {
 				method: 'POST',
 				credentials: 'include',
@@ -93,7 +83,6 @@ class Profile
 				throw new Error('Network response was not ok: ' + response.statusText);
 			}
 			const responseData = await response.json();
-        	console.log('Success:', responseData);
 		} catch (error){
 			console.error('There was a problem with the fetch operation:', error);
 			return;
@@ -114,7 +103,6 @@ class Profile
 				throw new Error('Network response was not ok: ' + response.statusText);
 			}
 			const responseData = await response.json();
-        	console.log('Success:', responseData);
 		} catch (error){
 			console.error('There was a problem with the fetch operation:', error);
 			return;
@@ -123,7 +111,6 @@ class Profile
 
 	async removeFriend(profileId){
 		try{
-			console.log("profile to be removed is " + profileId);
 			const response = await fetch('http://localhost:8000/api/users/removeFriend/', {
 				method: 'POST',
 				credentials: 'include',
@@ -136,7 +123,6 @@ class Profile
 				throw new Error('Network response was not ok: ' + response.statusText);
 			}
 			const responseData = await response.json();
-        	console.log('Success:', responseData);
 		} catch (error){
 			console.error('There was a problem with the fetch operation:', error);
 			return;
@@ -215,20 +201,16 @@ class Profile
                 alert(error.message || 'An error occurred.');
             }
         });
-		// now fitching the friend request list
 		this.fetchFriendRequests().then(friendRequestList => {
 			const reqList = friendRequestList.friendsRequests; // list of the requests
 			for (let i = 0; i < reqList.length; i++){
-				// console.log(reqList[i]);
 				this.fetchDataById(reqList[i]).then(profileData => {
 					if (profileData){
-						// console.log(profileData);
 						const friendRequestsContainer = this.content.querySelector('.friend-requests');
 						if (!friendRequestsContainer) {
 							console.error('Friend requests container not found.');
 							return;
 						}
-						// console.log(friendRequestsContainer);
 						const reqCard = document.createElement('div');
 						reqCard.className = 'req-card';
 						reqCard.innerHTML = `

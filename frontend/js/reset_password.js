@@ -83,10 +83,8 @@ class resetPasswordPage {
 				});
 				if (response.ok) {
 					const data = await response.json();
-					console.log("login successful:",data);
 					navigate('/dashboard');
 				} else {
-					console.log("test test");
 					const errorData = await response.json();
 					console.error("Error:", errorData);
 					showAlert(errorData.error || "wrong email");

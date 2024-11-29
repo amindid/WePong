@@ -39,6 +39,5 @@ class Chat {
 
 export function renderChat() {
     const page = new Chat();
-    console.log("Chat page rendered");
     return page.render();
 }

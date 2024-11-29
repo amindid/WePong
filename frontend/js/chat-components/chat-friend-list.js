@@ -1,4 +1,5 @@
 import { logedUser } from '../router.js';
+import { showAlert } from '../message-box.js';
 
 class ChatFriendList extends HTMLElement {
     friendList = document.createElement('div');
@@ -10,7 +11,6 @@ class ChatFriendList extends HTMLElement {
         this.originalFriends = {};
         this.displayedFriends = {};
 
-        // console.log('friend list constructor');
         const wrapper = document.createElement('div');
         wrapper.classList.add('friend-list-wrapper');
 
@@ -55,6 +55,7 @@ class ChatFriendList extends HTMLElement {
 
         logedUser.statusSocket.onmessage = async (event) => {
             const data = JSON.parse(event.data);
+
             // console.log('inside chat component message from server:', data);
             if (data.type === 'user_status')
             {
@@ -66,6 +67,8 @@ class ChatFriendList extends HTMLElement {
             }
             else if (data.type === 'active_users_list')
                 logedUser.activeUsers = new Set(data.active_users);
+            else if (data.type === 'invite_to_game' && data.user_id === logedUser.id)
+                showAlert(data.username + ' invited you to a game');
         };
     }
 
@@ -127,16 +130,16 @@ class ChatFriendList extends HTMLElement {
         // Deselect all cards
         const allCards = this.shadowRoot.querySelectorAll('chat-friend-card');
         allCards.forEach(card => {
-            card.shadowRoot.querySelector('.friend-card').classList.remove('selected');
+            card.shadowRoot.querySelector('.friend-card-component').classList.remove('selected');
         });
         // Select the clicked card
-        clickedCard.shadowRoot.querySelector('.friend-card').classList.add('selected');
+        clickedCard.shadowRoot.querySelector('.friend-card-component').classList.add('selected');
     }
 
     deselectAllFriends() {
         const allCards = this.shadowRoot.querySelectorAll('chat-friend-card');
         allCards.forEach(card => {
-            card.shadowRoot.querySelector('.friend-card').classList.remove('selected');
+            card.shadowRoot.querySelector('.friend-card-component').classList.remove('selected');
         });
     }
 

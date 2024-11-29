@@ -85,7 +85,6 @@ MIDDLEWARE = [
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'chatservice.urls'
 
@@ -162,6 +161,25 @@ USE_I18N = True
 
 USE_TZ = True
 
+
+CORS_ALLOW_CREDENTIALS = True
+
+# CORS_ALLOWED_ORIGINS = [
+#     "https://localhost",
+# ]
+
+# CSRF_TRUSTED_ORIGINS = [
+#     "https://localhost",
+# ]
+
+
+# CSRF_COOKIE_HTTPONLY = True  # Optional: Adds HttpOnly flag to CSRF cookies
+# CSRF_COOKIE_SAMESITE = 'Lax'
+
+
+# SESSION_COOKIE_HTTPONLY = True  # Ensure session cookies are HTTPOnly
+# SESSION_COOKIE_SAMESITE = 'Lax'  # SameSite attribute for session cookies (helps with cross-origin requests)
+# SESSION_COOKIE_SECURE = False 
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/

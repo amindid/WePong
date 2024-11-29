@@ -246,10 +246,8 @@ class gamePlay {
                     if (timer % 10 == 0) {
                         paddle1.speed++;
                         paddle2.speed++;
-                        console.log("this is the paddle speed", paddle1.speed, paddle2.speed);
                     } else if (timer % 5 == 0) {
                         ball.speed++;
-                        console.log("this is the ball speed", ball.speed);
                     }
                 }, 1000);
             }
@@ -337,7 +335,6 @@ class gamePlay {
             }
             
             const data = await response.json();
-            console.log("Match history data:", data);
 
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
@@ -369,8 +366,6 @@ class gamePlay {
                 });
 
                 if (response.ok) {
-                    console.log("Match history saved!");
-                    // visualizeData();
                 } else {
                     const data = await response.json();  
                     console.error("Error saving match history:", data);
@@ -418,42 +413,36 @@ class gamePlay {
 			{
 				if(localStorage.getItem('quarterfinal1') === "0")
 				{
-					console.log("quarterfinal1");
 					localStorage.setItem('quarterfinal1', "1");
 					localStorage.setItem('img_player_semifinale1', img_winner);
 					localStorage.setItem('player_semifinale1', playerName);
 				}
 				else if (localStorage.getItem('quarterfinal2') === "0" && localStorage.getItem('quarterfinal1') === "1")
 				{
-					console.log("quarterfinal2");
 					localStorage.setItem('quarterfinal2', "1");
 					localStorage.setItem('img_player_semifinale2', img_winner);
 					localStorage.setItem('player_semifinale2', playerName);
 				}
 				else if (localStorage.getItem('quarterfinal3') === "0" && localStorage.getItem('quarterfinal2') === "1")
 				{
-					console.log("quarterfinal3");
 					localStorage.setItem('quarterfinal3', "1");
 					localStorage.setItem('img_player_semifinale3', img_winner);
 					localStorage.setItem('player_semifinale3', playerName);
 				}
 				else if (localStorage.getItem('quarterfinal4') === "0" && localStorage.getItem('quarterfinal3') === "1")
 				{
-					console.log("quarterfinal4");
 					localStorage.setItem('quarterfinal4', "1");
 					localStorage.setItem('img_player_semifinale4', img_winner);
 					localStorage.setItem('player_semifinale4', playerName);
 				}
 				else if (localStorage.getItem('semifinal1') === "0" && localStorage.getItem('quarterfinal4') === "1")
 				{
-					console.log("semifinal1");
 					localStorage.setItem('semifinal1', "1");
 					localStorage.setItem('img_final_1', img_winner);
 					localStorage.setItem('Player_final_1', playerName);
 				}
 				else if (localStorage.getItem('semifinal2') === "0" && localStorage.getItem('semifinal1') === "1")
 				{
-					console.log("semifinal2");
 					localStorage.setItem('semifinal2', "1");
 					localStorage.setItem('img_final_2', img_winner);
 					localStorage.setItem('Player_final_2', playerName);
@@ -476,7 +465,6 @@ class gamePlay {
 					}
 					else if (localStorage.getItem('semifinal2') === "0" && localStorage.getItem('semifinal1') === "1")
 					{
-						console.log("semifinal2");
 						localStorage.setItem('semifinal2', "1");
 						localStorage.setItem('img_final_2', img_winner);
 						localStorage.setItem('Player_final_2', playerName);
@@ -725,7 +713,6 @@ class gamePlay {
 
 
 export function renderGamePlay() {
-    console.log('renderGamePlay');
     const page = new gamePlay();
     return page.render();
 }

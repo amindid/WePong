@@ -69,7 +69,6 @@ class Profile {
             }
 
             const data = await response.json();
-            console.log("Match History: ", data);
             return data || []; 
         } catch (error) {
             console.error('There was a problem with the fetch operation:', error);
@@ -95,12 +94,10 @@ class Profile {
 		}
 		else {
 			UserName = await this.fetchUserName();
-			console.log('fetch for authenticated user')
 		}
         const level = 13;
 		const userData = await this.fetchUserData(UserName);
         if (Object.keys(userData).length === 0) {
-            console.log('catch the error');
             navigate('/user-dose-not-exist');
             return;
         }
@@ -226,7 +223,6 @@ class Profile {
 }
 
 export function renderProfile() {
-    console.log('render Profile page');
     const page = new Profile();
     return page.render();
 }

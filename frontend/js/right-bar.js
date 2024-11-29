@@ -46,13 +46,11 @@ class RightBar {
 				if (friends) {
 					const upBar = bar.querySelector("#up-bar");
 					Object.entries(friends).forEach(([key, [username, avatar]]) => {
-						console.log("Key: ", key, "username: ", username, "avatar: ", avatar);
 						const friendDiv = document.createElement('div');
 						friendDiv.className = 'online-friends';	
 						friendDiv.innerHTML = `<img class="profile-image" src="${avatar}" alt="${username}">
 						`;
 						upBar.appendChild(friendDiv);
-						// hna rah zdt hadi dyal click event for profile redirection
 						friendDiv.addEventListener('click', () => {
 							navigate('/profile',  username );
 						}
@@ -62,17 +60,14 @@ class RightBar {
 			}
 			else {
 				showAlert(data.error || 'failed to fetsh user friends list');
-				console.log('failed to fetsh user friends list: ',data.error);
 			}
 		} catch (error) {
 			showAlert(error || 'error accured: ');
-			console.log('error accured: ',error);
 		}
 	};
 	let imageright = content.querySelector("#rightBar-userImage");
 		const setPlayerImage = async () => {
 			try {
-				console.log('befor fetch');
 				const response = await fetch('http://localhost:8000/api/users/userProfile/', {
 					method: 'GET',
 					credentials: 'include',
@@ -82,16 +77,13 @@ class RightBar {
 				});
 				const data = await response.json();
 				if (response.ok) {
-					console.log('after await');
 					imageright.src = data.avatar;
 				}
 				else {
 					showAlert(data.error || 'failed to load user image');
-					console.log(data.error || 'failed to load user image');
 				}
 			} catch (error) {
 				showAlert(error || 'failed to fetch user profile ==> error: ');
-				console.log('failed to fetch user profile ==> error: ',error);
 			}
 		};
 		setPlayerImage();

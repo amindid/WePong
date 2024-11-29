@@ -84,16 +84,6 @@ class LeftBare
 		event.preventDefault();
 		navigate('/chat');
 	});
-	// const profile = content.querySelector("#profile");
-	// profile.addEventListener('click', event => {
-	// 	event.preventDefault();
-	// 	navigate('/profile');
-	// });
-	// const friends = content.querySelector("#friends");
-	// friends.addEventListener('click', event => {
-	// 	event.preventDefault();
-	// 	navigate('/friends');
-	// });
 		let imageleft = content.querySelector("#leftBar-userImage");
 		const setPlayerImage = async () => {
 			try {
@@ -106,16 +96,13 @@ class LeftBare
 				});
 				const data = await response.json();
 				if (response.ok) {
-					console.log('after await');
 					imageleft.src = data.avatar;
 				}
 				else {
 					showAlert(data.error || 'failed to load user image');
-					console.log(data.error || 'failed to load user image');
 				}
 			} catch (error) {
 				showAlert(error || 'failed to fetch user profile ==> error: ');
-				console.log('failed to fetch user profile ==> error: ',error);
 			}
 		};
 		setPlayerImage();

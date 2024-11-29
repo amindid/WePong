@@ -67,12 +67,9 @@ class TwoFaConfirmationPage {
 				});
 				const data = await response.json();
 				if (response.ok) {
-					console.log("login successful:",data);
 					showAlert(data.message)
 					navigate('/dashboard');
 				} else {
-					console.log("test test");
-					console.error("Error:", data);
 					showAlert(data.detail || "wrong em");
 				}
 			} catch (error) {

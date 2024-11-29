@@ -252,9 +252,25 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-CORS_ALLOW_ALL_ORIGINS  = True
 CORS_ALLOW_CREDENTIALS = True
+
+# CORS_ALLOWED_ORIGINS = [
+#     "https://localhost",
+# ]
+
+# CSRF_TRUSTED_ORIGINS = [
+#     "https://localhost",
+# ]
+
+
+# CSRF_COOKIE_HTTPONLY = True  # Optional: Adds HttpOnly flag to CSRF cookies
+# CSRF_COOKIE_SAMESITE = 'Lax'
+
+
+# SESSION_COOKIE_HTTPONLY = True  # Ensure session cookies are HTTPOnly
+# SESSION_COOKIE_SAMESITE = 'Lax'  # SameSite attribute for session cookies (helps with cross-origin requests)
+# SESSION_COOKIE_SECURE = False 
+
 
 SOCIAL_AUTH_FACEBOOK_OAUTH2_KEY = config('SOCIAL_AUTH_FACEBOOK_OAUTH2_KEY')
 SOCIAL_AUTH_FACEBOOK_OAUTH2_SECRET = config('SOCIAL_AUTH_FACEBOOK_OAUTH2_SECRET')

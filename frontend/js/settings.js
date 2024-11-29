@@ -6,23 +6,11 @@ import { sendEmailConfirmation, showAlert } from './message-box.js';
 import { renderPlayerPhoto } from './playerPhoto.js'
 
 
-{/* <div class="div1_">
-						<div class="div2_">
-							<div class="div3_" id="player-image-sett">
-
-							</div>
-						</div>
-					</div> 
-					<div class="change_profile">
-						<img src="../images/Camera.svg" alt="profile" width="70%" height="70%">
-					</div>*/}
 
 class SettingComponent
 {
 
 	content = document.createElement('span');
-	// content1 = document.createElement('span');
-	// content2 = document.createElement('span');
 
 	constructor()
 	{
@@ -120,10 +108,6 @@ class SettingComponent
 		
 		const page = document.createDocumentFragment();
 		page.appendChild(renderLeftBar());
-		const message = document.createElement('div');
-		message.id = 'alert-box';
-		message.className = 'alert-box';
-		page.appendChild(message);
 		const button = document.createElement('div');
 		button.className = "dispaly_2factory2";
 
@@ -142,14 +126,10 @@ class SettingComponent
 		page.appendChild(renderRightBar());
 		const body = document.body
 		body.style.alignItems = 'center';
-			
-			// if (this.content == this.content1)
-			// {
 				
 			const switc = this.content.querySelector("#switch_button_id");
 			switc.addEventListener('click', event => {
 			event.preventDefault();
-			// console.log("ttttttttt");
 				const container1 = this.content.querySelector("#container1");
 				const container2 = this.content.querySelector("#container2");
 				if (container1.style.display == 'none')
@@ -168,7 +148,6 @@ class SettingComponent
 		let username = page.querySelector("#user-name-sett");
 		const setPlayerImage = async () => {
 			try {
-				console.log('befor fetch');
 				const response = await fetch('http://localhost:8000/api/users/userProfile/', {
 					method: 'GET',
 					credentials: 'include',
@@ -176,23 +155,16 @@ class SettingComponent
 						'Content-Type': 'application/json',
 					}
 				});
-				console.log('after fetch');
 				const data = await response.json();
 				if (response.ok) {
-					console.log('after await');
 					image.src = data.avatar;
-					// imageleft.src = data.avatar;
-					// imageright.src = data.avatar;
 					username.textContent = data.username;
-					// console.log(image.src);
 				}
 				else {
 					showAlert(data.error || 'failed to load user image');
-					console.log(data.error || 'failed to load user image');
 				}
 			} catch (error) {
 				showAlert(error || 'failed to fetch user profile ==> error: ');
-				console.log('failed to fetch user profile ==> error: ',error);
 			}
 		};
 		setPlayerImage();
@@ -243,42 +215,7 @@ class SettingComponent
 			}
 		}
 		changebutton();
-			// const enable2fa = twoFA.querySelector("#flexS");
-			// if (enable2fa) {
-			// 	enable2fa.addEventListener('click', async function (event) {
-			// 		const response = await fetch('http://localhost:8000/api/setup_2fa/', {
-			// 			method : 'POST',
-			// 			credentials: 'include',
-			// 		});
-			// 		const data = await response.json();
-			// 		if (response.ok) {
-			// 			showAlert(data.message || 'check check');
-			// 		}
-			// 		else {
-			// 			showAlert(data.error);
-			// 		}
-			// 	});
-			// }
-			// async function updateusername(username) {
-			// 	const response = await fetch('http://localhost:8000/api/users/update/', {
-			// 		method: 'PUT',
-			// 		headers: {
-			// 			'Content-Type': 'application/json'
-			// 		},
-			// 		credentials: 'include',
-			// 		body: JSON.stringify({ username: username })
-			// 	});
 			
-			// 	const data = await response.json();
-			// 	if (response.ok) {
-			// 		console.log('username updated:', data);
-			// 	} else {
-			// 		console.error('Error updating username:', data);
-			// 	}
-			// }
-			
-
-
 			this.content.querySelector('#deleteButton').addEventListener('click', function () {
 				confirmAction('Are you sure you want to delete your account?', deleteUser);
 			});
@@ -390,7 +327,6 @@ class SettingComponent
 				});
 				const Resdata = await response.json();
 				if (response.ok) {
-					// showAlert('username changed successfully');
 					navigate('/settings');
 				}
 				else {
@@ -431,17 +367,3 @@ export function renderSettings() {
 	const page = new SettingComponent();
 	return page.render();
 }
-
-
-// function to_settings2()
-// {	
-// 	const bodyContent = document.querySelector("setting-component");
-// 	fetch('../html/settings2.html')
-// 	.then(response => response.text())
-// 	.then(data => {
-// 		bodyContent.innerHTML = data;
-// 	})
-// 	.catch(error => {
-// 		console.error('Error fetching the HTML file:', error);
-// 	});
-// }

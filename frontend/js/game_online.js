@@ -18,17 +18,14 @@ class GameOnline {
 			const data = await response.json();
 			if (response.ok) {
 				
-				console.log("current id >>", data.id);
 				// username = data.username;
 				return data;
 			} else {
 				showAlert(data.error || 'failed to load user image');
-				console.log(data.error || 'failed to load user image');
 				return null;
 			}
 		} catch (error) {
 			showAlert(error || 'failed to fetch user profile ==> error: ');
-			console.log('failed to fetch user profile ==> error: ', error);
 			return null;
 		}
 	};
@@ -38,8 +35,6 @@ class GameOnline {
 
 
         this.socket.addEventListener('open', () => {
-            console.log('WebSocket is connected.');
-            // console.log(user_idd);
 			
             const message = {
                 'type': 'play_online',
@@ -50,9 +45,7 @@ class GameOnline {
 
         this.socket.addEventListener('message', async (event) => {
             const data = JSON.parse(event.data);
-			console.log("message from server >> " , data);
    			showAlert('Message from server: ' + data.message);
-			console.log("userid to fetch =====>>>> ", data.user_id);
 			   if (data.user_id != null) {
 				try {
 					const response = await fetch(`http://localhost:8000/api/users/ProfileById/?friend=${data.user_id}`, {
@@ -67,23 +60,18 @@ class GameOnline {
 		
 					if (response.ok) {
 						let imgage = this.content.querySelector('#player-imag-2');
-						console.log("imageeee2 >" , userData.avatar);
-						console.log("name2 >" , userData);
 						imgage.src = userData.avatar;
 						
 					} else {
 						showAlert(userData.error || 'Failed to load second user data');
-						console.log(userData.error || 'Failed to load second user data');
 					}
 				} catch (error) {
 					showAlert(error || 'Failed to fetch second user profile ==> error: ');
-					console.log('Failed to fetch second user profile ==> error: ', error);
 				}
 			}
         });
 
         this.socket.addEventListener('close', () => {
-            console.log('WebSocket is closed.');
         });
 
         this.socket.addEventListener('error', (error) => {
