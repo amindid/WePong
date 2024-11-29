@@ -193,7 +193,7 @@ class GoogleCallback(APIView):
 					error_text = refresh.errors.get('ErrorDetail')
 					error_text = urlencode({'message': str(error_text)})
 					# log_to_elasticsearch("google auth failed", event_type="error")
-					return redirect('https://localhost:80/login?{error_text}')
+					return redirect('https://localhost/login?{error_text}')
 			else:
 				for field, error_list in serializer.errors.items():
 					for error in error_list:
@@ -202,7 +202,7 @@ class GoogleCallback(APIView):
 					error = 'somthing went wrong'
 				error_text = urlencode({'message': str(error)})
 				# log_to_elasticsearch("google auth failed", event_type="error")
-				return redirect(f'https://localhost:80/login?{error_text}')
+				return redirect(f'https://localhost/login?{error_text}')
 		if user.isTwoFA:
 			code = str(randint(100000, 999999))
 			user.TwoFACode = code
@@ -215,8 +215,8 @@ class GoogleCallback(APIView):
             	[user.email],
             	fail_silently=False,
         	)
-			return redirect('https://localhost:80/2fa_confirmation')
-		response = redirect('https://localhost:80/dashboard')
+			return redirect('https://localhost/2fa_confirmation')
+		response = redirect('https://localhost/dashboard')
 		response.set_cookie (
 			key='access_token',
 			value=token,
@@ -239,7 +239,7 @@ class Callback42(APIView):
     	        'code': code,
     	        'client_id': settings.SOCIAL_AUTH_42_OAUTH2_KEY,
     	        'client_secret': settings.SOCIAL_AUTH_42_OAUTH2_SECRET,
-    	        'redirect_uri': "https://localhost:80/api/42_callback/",
+    	        'redirect_uri': "http://localhost:8000/api/42_callback/",
     	        'grant_type': 'authorization_code',
 		}
 		token_response = requests.post(token_url, data=token_data)
@@ -277,7 +277,7 @@ class Callback42(APIView):
 					error_text = refresh.errors.get('ErrorDetail')
 					error_text = urlencode({'message': str(error_text)})
 					# log_to_elasticsearch("42 auth failed", event_type="error")
-					return redirect('https://localhost:80/login?{error_text}')
+					return redirect('https://localhost/login?{error_text}')
 			else:
 				for field, error_list in serializer.errors.items():
 					for error in error_list:
@@ -286,7 +286,7 @@ class Callback42(APIView):
 					error = 'somthing went wrong'
 				error_text = urlencode({'message': str(error)})
 				# log_to_elasticsearch("42 auth failed", event_type="error")
-				return redirect(f'https://localhost:80/login?{error_text}')
+				return redirect(f'https://localhost/login?{error_text}')
 		if user.isTwoFA:
 			code = str(randint(100000, 999999))
 			user.TwoFACode = code
@@ -299,8 +299,8 @@ class Callback42(APIView):
             	[user.email],
             	fail_silently=False,
         	)
-			return redirect('https://localhost:80/2fa_confirmation')
-		response = redirect('https://localhost:80/dashboard')
+			return redirect('https://localhost/2fa_confirmation')
+		response = redirect('https://localhost/dashboard')
 		response.set_cookie (
 			key='access_token',
 			value=token,
@@ -321,7 +321,7 @@ class FacebookCallback(APIView):
 		token_url = "https://graph.facebook.com/v17.0/oauth/access_token"
 		token_data = {
     	        'client_id': settings.SOCIAL_AUTH_FACEBOOK_OAUTH2_KEY,
-    	        'redirect_uri': "https://localhost:80/api/facebook_callback/",
+    	        'redirect_uri': "http://localhost:8000/api/facebook_callback/",
     	        'client_secret': settings.SOCIAL_AUTH_FACEBOOK_OAUTH2_SECRET,
     	        'code': code,
 		}
@@ -363,7 +363,7 @@ class FacebookCallback(APIView):
 					error_text = refresh.errors.get('ErrorDetail')
 					error_text = urlencode({'message': str(error_text)})
 					# log_to_elasticsearch("facebook auth failed", event_type="error")
-					return redirect('https://localhost:80/login?{error_text}')
+					return redirect('https://localhost/login?{error_text}')
 			else:
 				for field, error_list in serializer.errors.items():
 					for error in error_list:
@@ -372,7 +372,7 @@ class FacebookCallback(APIView):
 					error = 'somthing went wrong'
 				error_text = urlencode({'message': str(error)})
 				# log_to_elasticsearch("facebook auth failed", event_type="error")
-				return redirect(f'https://localhost:80/login?{error_text}')
+				return redirect(f'https://localhost/login?{error_text}')
 		if user.isTwoFA:
 			code = str(randint(100000, 999999))
 			user.TwoFACode = code
@@ -385,8 +385,8 @@ class FacebookCallback(APIView):
             	[user.email],
             	fail_silently=False,
         	)
-			return redirect('https://localhost:80/2fa_confirmation')
-		response = redirect('https://localhost:80/dashboard')
+			return redirect('https://localhost/2fa_confirmation')
+		response = redirect('https://localhost/dashboard')
 		response.set_cookie (
 			key='access_token',
 			value=token,
@@ -1054,7 +1054,7 @@ def PasswordResetConfirmView(request, uid, token):
         )
 		message_text = "Password Reset successful"
 		message_text = urlencode({'message': str(message_text)})
-		return redirect(f'https://localhost:80/login?{message_text}')
+		return redirect(f'https://localhost/login?{message_text}')
 	else:
 		send_mail(
             'Password Reset',
@@ -1065,7 +1065,7 @@ def PasswordResetConfirmView(request, uid, token):
         )
 		message_text = "Problem accured while trying to confirm password reset\nplease try again later."
 		message_text = urlencode({'message': str(message_text)})
-		return redirect(f'https://localhost:80/login?{message_text}')
+		return redirect(f'https://localhost/login?{message_text}')
 
 class UpdateWalletView(APIView):
 	authentication_classes = [CookieJWTAuthentication]
