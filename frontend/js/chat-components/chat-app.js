@@ -295,7 +295,7 @@ class ChatApp extends HTMLElement {
 
         // create a room between the two users if it doesn't exist
         // await fetch(`http://localhost:8000/chat-api/chat/rooms/`, {
-        await fetch(`http://localhost:8001/api/chat/rooms/`, {
+        await fetch(`http://localhost:8001/chat-api/chat/rooms/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -317,8 +317,8 @@ class ChatApp extends HTMLElement {
         })
 
         // fetch messages from the room
-        // await fetch(`http://localhost:8000/api/chat/rooms/${roomName}/messages/`, {
-        await fetch(`http://localhost:8001/api/chat/rooms/${roomName}/messages/`, {
+        // await fetch(`http://localhost:8000/chat-api/chat/rooms/${roomName}/messages/`, {
+        await fetch(`http://localhost:8001/chat-api/chat/rooms/${roomName}/messages/`, {
             method: 'GET',
             credentials: 'include',
             headers: {
