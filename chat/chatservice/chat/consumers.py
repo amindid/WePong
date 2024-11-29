@@ -166,12 +166,41 @@ class UserStatusConsumer(AsyncWebsocketConsumer):
                 }
             )
 
+    async def receive(self, text_data):
+        try:
+            data = json.loads(text_data)
+            print(f"========>Received message: {data}")
+            
+
+            if data['type'] == 'invite_to_game' and data['user_id'] in UserStatusConsumer.active_users:
+                user_id = data['user_id']
+                username = data['username']
+                await self.channel_layer.group_send(
+                    "online_users",
+                    {
+                        'type': 'invite_to_game',
+                        'user_id': user_id,
+                        'username': username
+                    }
+                )
+        except Exception as e:
+            print(f"An error occurred: {e}")
+
     async def user_status(self, event):
         # Send status update to client using user_id instead of user
         await self.send(text_data=json.dumps({
             "user_id": event["user_id"],
             "status": event["status"],
             'type': 'user_status'
+        }))
+
+    async def invite_to_game(self, event):
+        user_id = event['user_id']
+        username = event['username']
+        await self.send(text_data=json.dumps({
+            'type': 'invite_to_game',
+            'user_id': user_id,
+            'username': username
         }))
 
     @classmethod

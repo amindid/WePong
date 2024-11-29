@@ -1,3 +1,4 @@
+import { showAlert } from '../message-box.js';
 import { navigate } from '../router.js';
 import { logedUser } from '../router.js';
 
@@ -13,6 +14,7 @@ class ChatApp extends HTMLElement {
 
         const wrapper = document.createElement('div');
         wrapper.classList.add('chat-app');
+
 
         // Append child components 
         const friendList = document.createElement('chat-friend-list');
@@ -147,7 +149,16 @@ class ChatApp extends HTMLElement {
 
         // invite-play
         this.chatContainer.addEventListener('invite-play', () => {
-            console.log('Invite to play clicked');
+            if (logedUser.statusSocket && logedUser.statusSocket.readyState === WebSocket.OPEN) {
+                const messageData = {
+                    type: 'invite_to_game',
+                    user_id: this.selectedFriend.id,
+                    username: this.selectedFriend.username,
+                };
+                logedUser.statusSocket.send(JSON.stringify(messageData));
+            }
+            
+            showAlert('You have invited ' + this.selectedFriend.username + ' to play a game.');
         });
     }
 
@@ -392,7 +403,6 @@ class ChatApp extends HTMLElement {
             //     this.selectedFriendIsBlocked = !this.selectedFriendIsBlocked;
             //     this.updateChatContainer(this.selectedFriend);
             // }
-
             if (data.type === 'chat_message' && data.user_id != logedUser.id)
                 this.handleIncomingMessage(data);
             else if (data.type === 'block_user' && data.user_id != logedUser.id) {
@@ -401,6 +411,8 @@ class ChatApp extends HTMLElement {
                 await this.updateChatContainer(this.selectedFriend);
             }
         });
+
+        // Handle WebSocket on 
 
         this.socket.addEventListener('close', () => {
             console.log('WebSocket connection closed');

@@ -9,10 +9,7 @@ class Dashboard {
 	render() {
 		this.changebackground()
 		const page = document.createDocumentFragment();
-		const message = document.createElement('div');
-		message.id = 'alert-box';
-		message.className = 'alert-box';
-		page.appendChild(message);
+
 		page.appendChild(renderLeftBar());
 		page.appendChild(renderBodyCenter());
 		page.appendChild(renderRightBar());

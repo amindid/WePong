@@ -208,24 +208,26 @@ class gamePlay {
                 setTimeout(() => {
                     ask.classList.add('show');
                 }, 10);
+            
                 document.getElementById('yes').addEventListener('click', () => {
                     localStorage.clear();
                     navigate('/');
                 });
+            
                 document.getElementById('no').addEventListener('click', () => {
                     ask.classList.remove('show');
                     setTimeout(() => {
-                        document.body.removeChild(ask);
+                        if (document.body.contains(ask)) {
+                            document.body.removeChild(ask);
+                        }
                     }, 300);
                 });
             }
-            
             
             document.getElementById('leave-game-btn').addEventListener('click', () => {
                 AreYouSure();
             });
             
-    
             canvas.width = window.innerWidth * coefficient;
             canvas.height = window.innerHeight * coefficient;
             img.src = selectedMapSrc;
@@ -495,8 +497,8 @@ class gamePlay {
             
                 
                 winScreen.querySelector('.exit-btn').addEventListener('click', () => {
-
-                    document.body.removeChild(winScreen);
+                    if (document.body.contains(winScreen))
+                        document.body.removeChild(winScreen);
                     if(localStorage.getItem('tournement8') === "1")
 						navigate('/tournement/Eightplayers');
 					else if(localStorage.getItem('tournement4') === "1")
