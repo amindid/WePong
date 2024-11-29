@@ -220,14 +220,24 @@ async function setupUserStatusSocket() {
             const data = JSON.parse(event.data);
             if (data.type === 'active_users_list')
                 logedUser.activeUsers = new Set(data.active_users);
+            else if (data.type === 'invite_to_game' && data.user_id === logedUser.id)
+                showAlert(data.username + ' invited you to a game');
         };
+
     }
 }
 
 
 function renderPage(page) {
     document.body.innerHTML = '';
+
+    const alertBox = document.createElement('div');
+    alertBox.id = 'alert-box';
+    alertBox.className = 'alert-box';
+    document.body.appendChild(alertBox);    
+
     document.body.appendChild(page);
+
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('message')) {
         const message_text = urlParams.get('message');

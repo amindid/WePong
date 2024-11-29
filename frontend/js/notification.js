@@ -21,7 +21,7 @@ export class Notification
 		this.content.innerHTML = `
 			<div class="container_tour1">
 				<div class="tour_name">
-					<img src="${this.img}" ">
+					<img src="${this.img}">
 				</div>
 				<div class="tour_name1">
 					<h2 class="h2_class"> ${this.name} </h2>

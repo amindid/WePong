@@ -120,10 +120,6 @@ class SettingComponent
 		
 		const page = document.createDocumentFragment();
 		page.appendChild(renderLeftBar());
-		const message = document.createElement('div');
-		message.id = 'alert-box';
-		message.className = 'alert-box';
-		page.appendChild(message);
 		const button = document.createElement('div');
 		button.className = "dispaly_2factory2";
 
