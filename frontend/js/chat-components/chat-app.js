@@ -222,6 +222,14 @@ class ChatApp extends HTMLElement {
             }
             
             this.selectedFriendIsBlocked = !this.selectedFriendIsBlocked;
+
+            if (this.socket && this.socket.readyState === WebSocket.OPEN) {
+                const messageData = {
+                    type: 'block',
+                    user_id: friendId,
+                };
+                this.socket.send(JSON.stringify(messageData));
+            }
         } catch (error) {
             console.error(`Error ${action}ing user:`, error);
         }
@@ -375,10 +383,23 @@ class ChatApp extends HTMLElement {
             console.log('WebSocket connection established');
         });
 
-        this.socket.addEventListener('message', (event) => {
+        this.socket.addEventListener('message', async (event) => {
             const data = JSON.parse(event.data);
-            if (data.user_id != logedUser.id)
+            console.log('Received message:', data);
+            // if (data.type === 'chat_message' && data.user_id != logedUser.id)
+            //     this.handleIncomingMessage(data);
+            // else if (data.type === 'block') {
+            //     this.selectedFriendIsBlocked = !this.selectedFriendIsBlocked;
+            //     this.updateChatContainer(this.selectedFriend);
+            // }
+
+            if (data.type === 'chat_message' && data.user_id != logedUser.id)
                 this.handleIncomingMessage(data);
+            else if (data.type === 'block_user' && data.user_id != logedUser.id) {
+                await this.callIsBlockedUserApi();
+                await this.isBlokcedByFriendApi();
+                await this.updateChatContainer(this.selectedFriend);
+            }
         });
 
         this.socket.addEventListener('close', () => {
@@ -395,6 +416,7 @@ class ChatApp extends HTMLElement {
         console.log('Sending message:', message);
         if (this.socket && this.socket.readyState === WebSocket.OPEN) {
             const messageData = {
+                type: 'message',
                 content: message,
             };
             this.socket.send(JSON.stringify(messageData));

@@ -45,32 +45,45 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
         try:
-            print(f"Received message: {text_data}")
             data = json.loads(text_data)
-            message = data['content']
+            print(f"Received message: {data}")
 
             # Fetch the User object using the user ID from query params
             user = await sync_to_async(get_user_model().objects.get)(id=self.user_id)
             # username = user.username
             
-            timestamp = datetime.now().isoformat()  # You can format this as needed
 
-            # Save message to the database
-            room = await sync_to_async(Room.objects.get)(name=self.room_name)
-            # await sync_to_async(Message.objects.create)(user=user, room=room, content=message)
-            await sync_to_async(Message.objects.create)(user=user, room=room, content=message, timestamp=timestamp)
+            # if data contains type message then save it to the database
+            if data['type'] == 'message':
+                # Save message to the database
+                message = data['content']
 
-            # Send message to room group
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'chat_message',
-                    'message': message,
-                    # 'username': username
-                    'user_id': self.user_id,  # Include the user ID
-                    'timestamp': timestamp
-                }
-            )
+                timestamp = datetime.now().isoformat()  # You can format this as needed
+
+                room = await sync_to_async(Room.objects.get)(name=self.room_name)
+                # await sync_to_async(Message.objects.create)(user=user, room=room, content=message)
+                await sync_to_async(Message.objects.create)(user=user, room=room, content=message, timestamp=timestamp)
+
+                # Send message to room group
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'chat_message',
+                        'message': message,
+                        'user_id': self.user_id,
+                        'timestamp': timestamp
+                    }
+                )
+            elif data['type'] == 'block':
+                print(f"Blocking user {data['user_id']}")
+                await self.channel_layer.group_send(
+                    self.room_group_name,
+                    {
+                        'type': 'block_user',
+                        'user_id': self.user_id,
+                    }
+                )
+
         except Exception as e:
             print(f"An error occurred: {e}")
 
@@ -83,9 +96,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # Send message to WebSocket
         await self.send(text_data=json.dumps({
             # 'username': username,
+            'type': 'chat_message',
             'message': message,
             'user_id': user_id,
             'timestamp': timestamp
+        }))
+    
+    async def block_user(self, event):
+        user_id = event['user_id']
+        await self.send(text_data=json.dumps({
+            'type': 'block_user',
+            'user_id': user_id
         }))
 
 class UserStatusConsumer(AsyncWebsocketConsumer):
