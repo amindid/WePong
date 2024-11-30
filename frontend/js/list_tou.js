@@ -8,7 +8,6 @@ class ListTournament
 	content = document.createElement('span');
 	constructor()
 	{
-		// setTimeout(() => this.fetchTournaments(), 0);
 	}
 	
 	render()
@@ -34,30 +33,9 @@ class ListTournament
 		page.appendChild(renderRightBar());
 		const body = document.body
 		body.style.alignItems = 'center';
-		// setTimeout(() => this.fetchTournaments(), 0);
 		return page;
 	}
 
-
-	// async fetchTournaments() {
-	// 	const response = await fetch('http://localhost:8000/chat/tournemnent/');
-	// 	const tournaments = await response.json();
-		
-	// 	const tournamentList = document.getElementById('container-tour');
-	// 	// const tournamentList = this.querySelector('#container-tour');
-	// 	console.log(tournamentList);
-	// 	// tournamentList.innerHTML = '';
-
-	// 	if (tournaments.length === 0) {
-	// 		alert("No tournaments available.");
-	// 	} else {
-	// 		tournaments.forEach(tournament => {
-	// 			const joinTournamentElement = new JoinTournament();
-    //             joinTournamentElement.setAttribute('name', tournament.name);
-    //             tournamentList.appendChild(joinTournamentElement);
-	// 		});
-	// 	}
-	// };
 }
 
 export function renderJoinTournament() {

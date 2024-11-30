@@ -1,4 +1,4 @@
-// import { BodyComponent } from './component.js';
+
 import { renderRightBar } from './right-bar.js';
 import { renderLeftBar } from './left-bar.js';
 import { BallCardsComponent } from './balls_card_component.js';

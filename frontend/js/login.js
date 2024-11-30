@@ -104,7 +104,6 @@ class LoginPage {
 			navigate('/password_reset');
 		});
 		content.querySelector('#oauth_google').addEventListener('click', async function (event) {
-			console.log('befor fetch');
 			try {
 
 				const response = await fetch('http://localhost:8000/api/google_login/',{
@@ -113,11 +112,9 @@ class LoginPage {
 				const data = await response.json();
 				if (response.ok) {
 					const url = data.url;
-					console.log(url);
 					window.location.href = url;
 				} else {
 					showAlert(data.error || 'Failed to fetch Google login URL');
-					console.log(data.error || 'Failed to fetch Google login URL');
 				}
 			} catch (error) {
 				showAlert(error || 'somthing went wrong')
@@ -126,7 +123,6 @@ class LoginPage {
            
 		});
 		content.querySelector('#oauth_facebook').addEventListener('click', async function (event) {
-			console.log('befor fetch');
 			try {
 
 				const response = await fetch('http://localhost:8000/api/facebook_login/',{
@@ -135,11 +131,9 @@ class LoginPage {
 				const data = await response.json();
 				if (response.ok) {
 					const url = data.url;
-					console.log(url);
 					window.location.href = url;
 				} else {
 					showAlert(data.error || 'Failed to fetch Facebook login URL');
-					console.log(data.error || 'Failed to fetch Facebook login URL');
 				}
 			} catch (error) {
 				showAlert(error || 'somthing went wrong')
@@ -148,7 +142,6 @@ class LoginPage {
            
 		});
 		content.querySelector('#oauth_42').addEventListener('click', async function (event) {
-			console.log('befor fetch');
 			try {
 
 				const response = await fetch('http://localhost:8000/api/42_login/',{
@@ -157,11 +150,9 @@ class LoginPage {
 				const data = await response.json();
 				if (response.ok) {
 					const url = data.url;
-					console.log(url);
 					window.location.href = url;
 				} else {
 					showAlert( data.error || 'Failed to fetch 42 login URL');
-					console.log(data.error || 'Failed to fetch 42 login URL');
 				}
 			} catch (error) {
 				showAlert(error || 'somthing went wrong')
@@ -199,10 +190,8 @@ class LoginPage {
 				});
 				if (response.ok) {
 					const data = await response.json();
-					console.log("login successful:",data);
 					navigate('/dashboard');
 				} else {
-					console.log("test test");
 					const errorData = await response.json();
 					console.error("Error:", errorData);
 					showAlert(errorData.error || "login failed");

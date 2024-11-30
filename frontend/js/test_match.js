@@ -89,15 +89,6 @@ export class Match
 				this.player2 = localStorage.getItem('Player_final_2');
 			}
 		}
-		console.log("Player 1 >>>>>>>>>>>>>", this.player1);
-		console.log("Player 1 >>>>>>>>>>>>>",this.player2);
-		// else if (localStorage.getItem('finale') === "0")
-		// {
-		// 	this.img1;
-		// 	this.img2;
-		// 	this.player1;
-		// 	this.player2;
-		// }
 	}
 	
 	render()
@@ -131,42 +122,36 @@ export class Match
 			{
 				if(localStorage.getItem('quarterfinal1') === "0")
 				{
-					console.log("quarterfinal1");
 					localStorage.setItem('quarterfinal1', "1");
 					localStorage.setItem('img_player_semifinale1', this.img1);
 					localStorage.setItem('player_semifinale1', this.player1);
 				}
 				else if (localStorage.getItem('quarterfinal2') === "0" && localStorage.getItem('quarterfinal1') === "1")
 				{
-					console.log("quarterfinal2");
 					localStorage.setItem('quarterfinal2', "1");
 					localStorage.setItem('img_player_semifinale2', this.img1);
 					localStorage.setItem('player_semifinale2', this.player1);
 				}
 				else if (localStorage.getItem('quarterfinal3') === "0" && localStorage.getItem('quarterfinal2') === "1")
 				{
-					console.log("quarterfinal3");
 					localStorage.setItem('quarterfinal3', "1");
 					localStorage.setItem('img_player_semifinale3', this.img1);
 					localStorage.setItem('player_semifinale3', this.player1);
 				}
 				else if (localStorage.getItem('quarterfinal4') === "0" && localStorage.getItem('quarterfinal3') === "1")
 				{
-					console.log("quarterfinal4");
 					localStorage.setItem('quarterfinal4', "1");
 					localStorage.setItem('img_player_semifinale4', this.img1);
 					localStorage.setItem('player_semifinale4', this.player1);
 				}
 				else if (localStorage.getItem('semifinal1') === "0" && localStorage.getItem('quarterfinal4') === "1")
 				{
-					console.log("semifinal1");
 					localStorage.setItem('semifinal1', "1");
 					localStorage.setItem('img_final_1', this.img1);
 					localStorage.setItem('Player_final_1', this.player1);
 				}
 				else if (localStorage.getItem('semifinal2') === "0" && localStorage.getItem('semifinal1') === "1")
 				{
-					console.log("semifinal2");
 					localStorage.setItem('semifinal2', "1");
 					localStorage.setItem('img_final_2', this.img1);
 					localStorage.setItem('Player_final_2', this.player1);
@@ -183,14 +168,12 @@ export class Match
 			{
 				if (localStorage.getItem('semifinal1') === "0")
 				{
-					console.log("semifinal1");
 					localStorage.setItem('semifinal1', "1");
 					localStorage.setItem('img_final_1', this.img1);
 					localStorage.setItem('Player_final_1', this.player1);
 				}
 				else if (localStorage.getItem('semifinal2') === "0" && localStorage.getItem('semifinal1') === "1")
 				{
-					console.log("semifinal2");
 					localStorage.setItem('semifinal2', "1");
 					localStorage.setItem('img_final_2', this.img1);
 					localStorage.setItem('Player_final_2', this.player1);
@@ -219,42 +202,36 @@ export class Match
 			{
 				if(localStorage.getItem('quarterfinal1') === "0")
 				{
-					console.log("quarterfinal1");
 					localStorage.setItem('quarterfinal1', "1");
 					localStorage.setItem('img_player_semifinale1', this.img2);
 					localStorage.setItem('player_semifinale1', this.player2);
 				}
 				else if (localStorage.getItem('quarterfinal2') === "0" && localStorage.getItem('quarterfinal1') === "1")
 				{
-					console.log("quarterfinal2");
 					localStorage.setItem('quarterfinal2', "1");
 					localStorage.setItem('img_player_semifinale2', this.img2);
 					localStorage.setItem('player_semifinale2', this.player2);
 				}
 				else if (localStorage.getItem('quarterfinal3') === "0" && localStorage.getItem('quarterfinal2') === "1")
 				{
-					console.log("quarterfinal3");
 					localStorage.setItem('quarterfinal3', "1");
 					localStorage.setItem('img_player_semifinale3', this.img2);
 					localStorage.setItem('player_semifinale3', this.player2);
 				}
 				else if (localStorage.getItem('quarterfinal4') === "0" && localStorage.getItem('quarterfinal3') === "1")
 				{
-					console.log("quarterfinal4");
 					localStorage.setItem('quarterfinal4', "1");
 					localStorage.setItem('img_player_semifinale4', this.img2);
 					localStorage.setItem('player_semifinale4', this.player2);
 				}
 				else if (localStorage.getItem('semifinal1') === "0" && localStorage.getItem('quarterfinal4') === "1")
 				{
-					console.log("semifinal1");
 					localStorage.setItem('semifinal1', "1");
 					localStorage.setItem('img_final_1', this.img2);
 					localStorage.setItem('Player_final_1', this.player2);
 				}
 				else if (localStorage.getItem('semifinal2') === "0" && localStorage.getItem('semifinal1') === "1")
 				{
-					console.log("semifinal2");
 					localStorage.setItem('semifinal2', "1");
 					localStorage.setItem('img_final_2', this.img2);
 					localStorage.setItem('Player_final_2', this.player2);
@@ -271,14 +248,12 @@ export class Match
 			{
 				if (localStorage.getItem('semifinal1') === "0")
 				{
-					console.log("semifinal1");
 					localStorage.setItem('semifinal1', "1");
 					localStorage.setItem('img_final_1', this.img2);
 					localStorage.setItem('Player_final_1', this.player2);
 				}
 				else if (localStorage.getItem('semifinal2') === "0" && localStorage.getItem('semifinal1') === "1")
 				{
-					console.log("semifinal2");
 					localStorage.setItem('semifinal2', "1");
 					localStorage.setItem('img_final_2', this.img2);
 					localStorage.setItem('Player_final_2', this.player2);
@@ -292,28 +267,6 @@ export class Match
 				}
 
 			}
-
-
-
-
-			// if (localStorage.getItem('semifinal1') === "1" && localStorage.getItem('semifinal2') === "0")
-			// {
-			// 	localStorage.setItem('img_final_1', this.img2);
-			// 	localStorage.setItem('Player_final_1', this.player2);
-			// }
-			// if (localStorage.getItem('semifinal2') === "1"  && localStorage.getItem('final') === "0")
-			// {
-			// 	console.log("################");
-			// 	localStorage.setItem('img_final_2', this.img2);
-			// 	localStorage.setItem('Player_final_2', this.player2);
-			// }
-			// if (localStorage.getItem('semifinal2') === "1" && localStorage.getItem('semifinal1') === "1")
-			// {
-			// 	localStorage.setItem('img_final', this.img2);
-			// 	localStorage.setItem('Player_final', this.player2);
-			// }
-			// localStorage.setItem('img_final_2', this.img2);
-			// localStorage.setItem('Player_final_2', this.player2);
 			if(localStorage.getItem('tournement8') === "1")
 				navigate('/tournement/Eightplayers');
 			else
@@ -325,9 +278,6 @@ export class Match
 }
 
 export function rendertestmatch() {
-	console.log("render Fourplayers");
 	const page = new Match();
 	return page.render();
 }
-
-// /tournement/test_match

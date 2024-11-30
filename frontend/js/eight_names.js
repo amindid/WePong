@@ -128,7 +128,6 @@ class EightName
 		{
 			event.preventDefault();
 			
-			console.log(">>>>>>" , this.content.querySelector('#input1_player_local'));
 
 			const input1 = this.content.querySelector('#input1_player_local').value;
 			const input2 = this.content.querySelector('#input2_player_local').value;

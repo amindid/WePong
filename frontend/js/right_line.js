@@ -8,12 +8,10 @@ export class RightLine
 		if (this.var1 === null)
 		{
 			this.var1 = "../images/test.jpg"
-			// console.log("this.var1", this.var1);
 		}
 		if (this.var2=== null)
 		{
 			this.var2 = "../images/test.jpg"
-			// console.log("this.var2", this.var2);
 		}
 		this.render()
 	}

@@ -6,23 +6,11 @@ import { sendEmailConfirmation, showAlert } from './message-box.js';
 import { renderPlayerPhoto } from './playerPhoto.js'
 
 
-{/* <div class="div1_">
-						<div class="div2_">
-							<div class="div3_" id="player-image-sett">
-
-							</div>
-						</div>
-					</div> 
-					<div class="change_profile">
-						<img src="../images/Camera.svg" alt="profile" width="70%" height="70%">
-					</div>*/}
 
 class SettingComponent
 {
 
 	content = document.createElement('span');
-	// content1 = document.createElement('span');
-	// content2 = document.createElement('span');
 
 	constructor()
 	{
@@ -62,9 +50,6 @@ class SettingComponent
 								<div id="settings-btns">
 									<div class="logout" >
 										<button class="logout_button" id="logoutButton">LOG OUT</button>
-									</div>
-									<div class="delete">
-										<button class="logout_button" id="deleteButton">DELETE ACCOUNT</button>
 									</div>
 								</div>
 				</div>
@@ -120,10 +105,6 @@ class SettingComponent
 		
 		const page = document.createDocumentFragment();
 		page.appendChild(renderLeftBar());
-		const message = document.createElement('div');
-		message.id = 'alert-box';
-		message.className = 'alert-box';
-		page.appendChild(message);
 		const button = document.createElement('div');
 		button.className = "dispaly_2factory2";
 
@@ -142,14 +123,10 @@ class SettingComponent
 		page.appendChild(renderRightBar());
 		const body = document.body
 		body.style.alignItems = 'center';
-			
-			// if (this.content == this.content1)
-			// {
 				
 			const switc = this.content.querySelector("#switch_button_id");
 			switc.addEventListener('click', event => {
 			event.preventDefault();
-			// console.log("ttttttttt");
 				const container1 = this.content.querySelector("#container1");
 				const container2 = this.content.querySelector("#container2");
 				if (container1.style.display == 'none')
@@ -168,7 +145,6 @@ class SettingComponent
 		let username = page.querySelector("#user-name-sett");
 		const setPlayerImage = async () => {
 			try {
-				console.log('befor fetch');
 				const response = await fetch('http://localhost:8000/api/users/userProfile/', {
 					method: 'GET',
 					credentials: 'include',
@@ -176,23 +152,16 @@ class SettingComponent
 						'Content-Type': 'application/json',
 					}
 				});
-				console.log('after fetch');
 				const data = await response.json();
 				if (response.ok) {
-					console.log('after await');
 					image.src = data.avatar;
-					// imageleft.src = data.avatar;
-					// imageright.src = data.avatar;
 					username.textContent = data.username;
-					// console.log(image.src);
 				}
 				else {
 					showAlert(data.error || 'failed to load user image');
-					console.log(data.error || 'failed to load user image');
 				}
 			} catch (error) {
 				showAlert(error || 'failed to fetch user profile ==> error: ');
-				console.log('failed to fetch user profile ==> error: ',error);
 			}
 		};
 		setPlayerImage();
@@ -223,17 +192,58 @@ class SettingComponent
 				const enable2fa = button_twofa.querySelector("#flexS");
 				if (enable2fa) {
 				enable2fa.addEventListener('click', async function (event) {
-					const response = await fetch('http://localhost:8000/api/setup_2fa/', {
-						method : 'POST',
-						credentials: 'include',
+					const res = await fetch ('http://localhost:8000/api/users/is_email_confirmed/', {
+						method : 'GET',
+						credentials : 'include',
 					});
-					sendEmailConfirmation('Send Email to confirm');
-					const data = await response.json();
-					if (response.ok) {
-						showAlert(data.message || 'check check');
+					const resData = await res.json();
+					if (resData.confirmed){
+						console.log('inside condition');
+						const response = await fetch('http://localhost:8000/api/setup_2fa/', {
+							method : 'POST',
+							credentials: 'include',
+						});
+						const data = await response.json();
+						if (response.ok) {
+							showAlert(data.message || 'check check');
+						}
+						else {
+							showAlert(data.error);
+						}
 					}
 					else {
-						showAlert(data.error);
+						
+						sendEmailConfirmation('Send Email to confirm');
+					    const sendEmailBtn = document.getElementById('send-email-btn');
+    					if (sendEmailBtn) {
+    					    console.log('inside sendEmailBtn');
+    					    sendEmailBtn.addEventListener('click' , async function (event) {
+    					        const response = await fetch ('http://localhost:8000/api/users/confirmEmail/', {
+    					            method : 'GET',
+    					            credentials : 'include',
+    					        });
+    					        const data = response.json();
+    					        if (!data.ok) {
+    					            showAlert(data.error || 'cant send email to your inbox');
+    					        }
+								const sendMainElement = document.querySelector(".send-email");
+								if (sendMainElement){
+									sendMainElement.parentNode.removeChild(sendMainElement);								}
+    					    });
+    					}
+						const response = await fetch('http://localhost:8000/api/setup_2fa/', {
+							method : 'POST',
+							credentials: 'include',
+						});
+						const data = await response.json();
+						if (response.ok) {
+							showAlert(data.message || 'check check');
+						}
+						else {
+							showAlert(data.error);
+						}
+
+
 					}
 				});
 			}
@@ -243,45 +253,7 @@ class SettingComponent
 			}
 		}
 		changebutton();
-			// const enable2fa = twoFA.querySelector("#flexS");
-			// if (enable2fa) {
-			// 	enable2fa.addEventListener('click', async function (event) {
-			// 		const response = await fetch('http://localhost:8000/api/setup_2fa/', {
-			// 			method : 'POST',
-			// 			credentials: 'include',
-			// 		});
-			// 		const data = await response.json();
-			// 		if (response.ok) {
-			// 			showAlert(data.message || 'check check');
-			// 		}
-			// 		else {
-			// 			showAlert(data.error);
-			// 		}
-			// 	});
-			// }
-			// async function updateusername(username) {
-			// 	const response = await fetch('http://localhost:8000/api/users/update/', {
-			// 		method: 'PUT',
-			// 		headers: {
-			// 			'Content-Type': 'application/json'
-			// 		},
-			// 		credentials: 'include',
-			// 		body: JSON.stringify({ username: username })
-			// 	});
-			
-			// 	const data = await response.json();
-			// 	if (response.ok) {
-			// 		console.log('username updated:', data);
-			// 	} else {
-			// 		console.error('Error updating username:', data);
-			// 	}
-			// }
-			
 
-
-			this.content.querySelector('#deleteButton').addEventListener('click', function () {
-				confirmAction('Are you sure you want to delete your account?', deleteUser);
-			});
 			
 			this.content.querySelector('#logoutButton').addEventListener('click', function () {
 				confirmAction('Are you sure you want to log out?', logoutUser);
@@ -293,28 +265,7 @@ class SettingComponent
 					callback(); 
 				}
 			}
-			
-			function deleteUser() {
-				fetch('http://localhost:8000/api/users/delete', {
-					method: 'DELETE',
-					credentials: 'include',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-				})
-					.then(response => {
-						if (response.status === 204) {
-							showAlert('User deleted successfully');
-							navigate("/");
-						} else {
-							throw new Error('User deletion failed');
-						}
-					})
-					.catch(error => {
-						console.error('Error:', error);
-						alert('Error deleting user');
-					});
-			}
+		
 			
 			function logoutUser() {
 				fetch('http://localhost:8000/api/users/logout/', {
@@ -390,7 +341,6 @@ class SettingComponent
 				});
 				const Resdata = await response.json();
 				if (response.ok) {
-					// showAlert('username changed successfully');
 					navigate('/settings');
 				}
 				else {
@@ -431,17 +381,3 @@ export function renderSettings() {
 	const page = new SettingComponent();
 	return page.render();
 }
-
-
-// function to_settings2()
-// {	
-// 	const bodyContent = document.querySelector("setting-component");
-// 	fetch('../html/settings2.html')
-// 	.then(response => response.text())
-// 	.then(data => {
-// 		bodyContent.innerHTML = data;
-// 	})
-// 	.catch(error => {
-// 		console.error('Error fetching the HTML file:', error);
-// 	});
-// }

@@ -251,9 +251,25 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-CORS_ALLOW_ALL_ORIGINS  = True
 CORS_ALLOW_CREDENTIALS = True
+
+# CORS_ALLOWED_ORIGINS = [
+#     "https://localhost",
+# ]
+
+# CSRF_TRUSTED_ORIGINS = [
+#     "https://localhost",
+# ]
+
+
+# CSRF_COOKIE_HTTPONLY = True  # Optional: Adds HttpOnly flag to CSRF cookies
+# CSRF_COOKIE_SAMESITE = 'Lax'
+
+
+# SESSION_COOKIE_HTTPONLY = True  # Ensure session cookies are HTTPOnly
+# SESSION_COOKIE_SAMESITE = 'Lax'  # SameSite attribute for session cookies (helps with cross-origin requests)
+# SESSION_COOKIE_SECURE = False 
+
 
 SOCIAL_AUTH_FACEBOOK_OAUTH2_KEY = config('SOCIAL_AUTH_FACEBOOK_OAUTH2_KEY')
 SOCIAL_AUTH_FACEBOOK_OAUTH2_SECRET = config('SOCIAL_AUTH_FACEBOOK_OAUTH2_SECRET')
@@ -268,8 +284,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'wepong10auth@gmail.com'
-EMAIL_HOST_PASSWORD = 'vxhqismlzdvudgji'
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 os.environ['SSL_CERT_FILE'] = certifi.where()
 
@@ -284,3 +300,6 @@ AUTHENTICATION_BACKENDS = (
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['profile', 'email']
 
 LOGIN_REDIRECT_URL = '/dashboard/'
+
+ELK_USER=config('ELK_USER')
+ELK_USER_PASS=config('ELK_USER_PASS')

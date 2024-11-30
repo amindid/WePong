@@ -419,26 +419,28 @@ card-element
 
 @media (max-width: 1200px) {
 	.shop-ball {
-		/* gap: 7px; */
-		/* flex-direction: column; */
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Automatically fills available space */
-		justify-items: center;
-		gap: 30px;
-	/* margin-top: 10%; */
-	/* padding-top: 50px; */
-		overflow: scroll;
-		/* scrollbar-color: black #2C0041; */
-	}
-	.shop-ball::-webkit-scrollbar {
-		background: transparent;
-	}
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        justify-items: center;
+        gap: 30px;
+        overflow: scroll;
+        scrollbar-color: black #2C0041;
+    }
+    
 
-	.shop-ball::-webkit-scrollbar-thumb {
-		background-color: black;
-		border-radius: 6px;
-	}
-
+    .shop-ball::-webkit-scrollbar {
+        width: 12px; 
+    }
+    
+    .shop-ball::-webkit-scrollbar-track {
+        background: #2C0041; 
+    }
+    
+    .shop-ball::-webkit-scrollbar-thumb {
+        background-color: black;
+        border-radius: 10px; 
+        border: 3px solid #2C0041; 
+    }
 	.section2-2-2
 	{
 		width: 80%;

@@ -3,7 +3,6 @@ class ChatInput extends HTMLElement {
         super();
         this.attachShadow({ mode: 'open' });
 
-        // Create a new wrapper for the input container
         const outerWrapper = document.createElement('div');
         outerWrapper.classList.add('outer-container');
 
@@ -16,7 +15,6 @@ class ChatInput extends HTMLElement {
 
         const button = document.createElement('button');
         button.className = 'chat-input-button';
-        // set a class name for the button
 
         wrapper.append(input, button);
         outerWrapper.append(wrapper); // Append input container to outer wrapper
@@ -111,7 +109,7 @@ class ChatInput extends HTMLElement {
             }
         `;
 
-        this.shadowRoot.append(style, outerWrapper); // Append outerWrapper to shadow root
+        this.shadowRoot.append(style, outerWrapper);
 
         // Event listeners
         button.addEventListener('click', () => this.sendMessage());

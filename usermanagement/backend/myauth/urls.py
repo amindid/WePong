@@ -7,6 +7,7 @@ from .views import DenyRequest
 from .views import UpdateMatchHistory
 from .views import UserMatchHistory
 from .views import AvatarUploadView
+from .views import is_email_confirmed
 urlpatterns = [
 	path('users/checkAuthentication/', CheckAuthentication.as_view(), name='CheckAuthentication'),
 	path('users/login/', loginUser.as_view(), name='loginUser'),
@@ -51,4 +52,5 @@ urlpatterns = [
 	path('users/UpdateMatchHistory/', UpdateMatchHistory.as_view(), name='UpdateMatchHistory'),
 	path('users/UserMatchHistory/', UserMatchHistory.as_view(), name='UserMatchHistory'),
 	path('users/UploadAvarar/', AvatarUploadView.as_view(), name='AvatarUploadView'),
+	path('users/is_email_confirmed/', is_email_confirmed.as_view(), name='is_email_confirmed'),
 ]

@@ -13,7 +13,6 @@ class ChatMessage extends HTMLElement {
         this.senderElement = document.createElement('div');
         this.senderElement.classList.add('sender');
 
-        // Create a new div to hold the image and content (with time vertically aligned)
         this.contentWrapper = document.createElement('div');
         this.contentWrapper.classList.add('content-wrapper');
 
@@ -23,7 +22,6 @@ class ChatMessage extends HTMLElement {
         this.imageElement.width = 40;
         this.imageElement.height = 40;
 
-        // Create a container to wrap message content and time vertically
         this.messageContainer = document.createElement('div');
         this.messageContainer.classList.add('message-container');
 
@@ -33,13 +31,10 @@ class ChatMessage extends HTMLElement {
         this.timeElement = document.createElement('div');
         this.timeElement.classList.add('time');
 
-        // Append the content and time to the message container
         this.messageContainer.append(this.contentElement, this.timeElement);
 
-        // Append the message container and image to the content wrapper
         this.contentWrapper.append(this.messageContainer, this.imageElement);
 
-        // Append contentWrapper to the wrapper
         wrapper.append(this.contentWrapper);
 
         const style = document.createElement('style');
@@ -128,7 +123,6 @@ class ChatMessage extends HTMLElement {
         const timestamp = this.getAttribute('timestamp');
         this.timeElement.textContent = timestamp || new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
 
-        // Position the image based on sender
         if (this.getAttribute('sender') === 'me') {
             this.contentWrapper.append(this.imageElement);
         } else {

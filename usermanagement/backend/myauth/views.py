@@ -42,12 +42,12 @@ def log_to_elasticsearch(message, event_type="generic"):
         "Content-Type": "application/json"
     }
     payload = {
-        "@timestamp": datetime.utcnow().isoformat(),
+        "@timestamp": datetime.now(timezone.utc).isoformat(),
         "message": message,
         "event": event_type
     }
     try:
-        response = requests.post(url, headers=headers, data=json.dumps(payload), auth=('elastic', 'aouchaadtest'))
+        response = requests.post(url, headers=headers, data=json.dumps(payload), auth=(settings.ELK_USER, settings.ELK_USER_PASS))
         if response.status_code == 201:
             print("Log event sent successfully!")
         else:
@@ -192,7 +192,7 @@ class GoogleCallback(APIView):
 				else:
 					error_text = refresh.errors.get('ErrorDetail')
 					error_text = urlencode({'message': str(error_text)})
-					# log_to_elasticsearch("google auth failed", event_type="error")
+					log_to_elasticsearch("google auth failed", event_type="error")
 					return redirect('https://localhost/login?{error_text}')
 			else:
 				for field, error_list in serializer.errors.items():
@@ -201,7 +201,7 @@ class GoogleCallback(APIView):
 				if error is None:
 					error = 'somthing went wrong'
 				error_text = urlencode({'message': str(error)})
-				# log_to_elasticsearch("google auth failed", event_type="error")
+				log_to_elasticsearch("google auth failed", event_type="error")
 				return redirect(f'https://localhost/login?{error_text}')
 		if user.isTwoFA:
 			code = str(randint(100000, 999999))
@@ -221,11 +221,11 @@ class GoogleCallback(APIView):
 			key='access_token',
 			value=token,
 			httponly=True,
-			secure=False,
-			samesite='lax',
+			secure=True,
+			samesite='None',
 			# max_age=60*60*24*7
 		)
-		# log_to_elasticsearch("google auth success", event_type="google auth")
+		log_to_elasticsearch("google auth success", event_type="google auth")
 		return response
 
 
@@ -276,7 +276,7 @@ class Callback42(APIView):
 				else:
 					error_text = refresh.errors.get('ErrorDetail')
 					error_text = urlencode({'message': str(error_text)})
-					# log_to_elasticsearch("42 auth failed", event_type="error")
+					log_to_elasticsearch("42 auth failed", event_type="error")
 					return redirect('https://localhost/login?{error_text}')
 			else:
 				for field, error_list in serializer.errors.items():
@@ -285,7 +285,7 @@ class Callback42(APIView):
 				if error is None:
 					error = 'somthing went wrong'
 				error_text = urlencode({'message': str(error)})
-				# log_to_elasticsearch("42 auth failed", event_type="error")
+				log_to_elasticsearch("42 auth failed", event_type="error")
 				return redirect(f'https://localhost/login?{error_text}')
 		if user.isTwoFA:
 			code = str(randint(100000, 999999))
@@ -305,11 +305,11 @@ class Callback42(APIView):
 			key='access_token',
 			value=token,
 			httponly=True,
-			secure=False,
-			samesite='lax',
+			secure=True,
+			samesite='None',
 			# max_age=60*60*24*7
 		)
-		# log_to_elasticsearch("42 auth success", event_type="42 auth")
+		log_to_elasticsearch("42 auth success", event_type="42 auth")
 		return response
 	
 
@@ -362,7 +362,7 @@ class FacebookCallback(APIView):
 				else:
 					error_text = refresh.errors.get('ErrorDetail')
 					error_text = urlencode({'message': str(error_text)})
-					# log_to_elasticsearch("facebook auth failed", event_type="error")
+					log_to_elasticsearch("facebook auth failed", event_type="error")
 					return redirect('https://localhost/login?{error_text}')
 			else:
 				for field, error_list in serializer.errors.items():
@@ -371,7 +371,7 @@ class FacebookCallback(APIView):
 				if error is None:
 					error = 'somthing went wrong'
 				error_text = urlencode({'message': str(error)})
-				# log_to_elasticsearch("facebook auth failed", event_type="error")
+				log_to_elasticsearch("facebook auth failed", event_type="error")
 				return redirect(f'https://localhost/login?{error_text}')
 		if user.isTwoFA:
 			code = str(randint(100000, 999999))
@@ -391,11 +391,11 @@ class FacebookCallback(APIView):
 			key='access_token',
 			value=token,
 			httponly=True,
-			secure=False,
-			samesite='lax',
+			secure=True,
+			samesite='None',
 			# max_age=60*60*24*7
 		)
-		# log_to_elasticsearch("google auth success", event_type="facbook auth")
+		log_to_elasticsearch("google auth success", event_type="facbook auth")
 		return response
 
 
@@ -406,22 +406,26 @@ class CheckAuthentication(APIView):
 	def get(self, request):
 		return Response({'authenticated': True}, status=status.HTTP_200_OK)
 
-
+from django.http import JsonResponse
 
 def activate(request, uidb64,token):
 	try:
 		uid = force_str(urlsafe_base64_decode(uidb64))
 		user = User.objects.get(pk=uid)
+		print('inside try')
 	except (TypeError, ValueError, OverflowError, User.DoesNotExist):
 		user = None
+		print('first exept')
 	if user is not None and email_confirmation_token.check_token(user, token):
 		user.is_email_confirmed = True
 		user.save()
-		# log_to_elasticsearch("email confirmation success", event_type="email confirmation")
-		return Response({'messages' : 'email confirmed successfuly'}, status=status.HTTP_200_OK)
+		print('inside first condition')
+		log_to_elasticsearch("email confirmation success", event_type="email confirmation")
+		return JsonResponse({'messages' : 'email confirmed successfuly'}, status=status.HTTP_200_OK)
 	else:
-		# log_to_elasticsearch("email confirmation failed", event_type="error")
-		return Response({'error' : 'email activation is invalid'}, status=status.HTTP_400_BAD_REQUEST)
+		print('inside else condition')
+		log_to_elasticsearch("email confirmation failed", event_type="error")
+		return JsonResponse({'error' : 'email activation is invalid'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -452,6 +456,16 @@ class refreshAccessToken(APIView):
 			return Response({'error': 'invalide refresh token'}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class is_email_confirmed(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def get(self, request):
+		user : User = request.user
+		if user.is_email_confirmed:
+			return Response({"confirmed" : True},status=status.HTTP_200_OK)
+		return Response({"confirmed" : False},status=status.HTTP_200_OK)
+
+
 
 class loginUser(APIView):
 	def post(self, request):
@@ -460,13 +474,13 @@ class loginUser(APIView):
 			password = request.data['password']
 			user = User.objects.filter(username=username).first()
 		except User.DoesNotExist:
-			# log_to_elasticsearch("login fail", event_type="error")
+			log_to_elasticsearch("login fail", event_type="error")
 			return Response({'error': 'user not found'}, status=status.HTTP_404_NOT_FOUND)
 		except Exception as e:
-			# log_to_elasticsearch("login fail", event_type="error")
+			log_to_elasticsearch("login fail", event_type="error")
 			return Response({'error': 'username and password fields are required'}, status=status.HTTP_400_BAD_REQUEST)
 		if not user:
-			# log_to_elasticsearch("login fail", event_type="error")
+			log_to_elasticsearch("login fail", event_type="error")
 			return Response({'error': 'invalide username.'}, status=status.HTTP_401_UNAUTHORIZED)
 		if user.check_password(hash_password(password)):
 			if user.isTwoFA:
@@ -493,16 +507,14 @@ class loginUser(APIView):
 				key='access_token',
 				value=refresh.get_access_token(),
 				httponly=True,
-				secure=False,
-				samesite='lax',
+				secure=True,
+				samesite='None',
 				# max_age=60*60*24*7
 			)
-			# log_to_elasticsearch("login success", event_type="login")
+			log_to_elasticsearch("login success", event_type="login")
 			return response
-		# log_to_elasticsearch("login fail", event_type="error")
+		log_to_elasticsearch("login fail", event_type="error")
 		return Response({'error': 'incorrect password.'}, status=status.HTTP_401_UNAUTHORIZED)
-
-
 
 class logoutUser(APIView):
 	authentication_classes = [CookieJWTAuthentication]
@@ -514,9 +526,18 @@ class logoutUser(APIView):
 			# token = RefreshToken(refresh_token.token)
 			# token.blacklist()
 			# refresh_token.delete()
-			# log_to_elasticsearch("logout success", event_type="logout")
+			log_to_elasticsearch("logout success", event_type="logout")
 			response = Response ({'message': 'logout successful.'} , status=status.HTTP_200_OK)
-			response.delete_cookie('access_token')
+			response.set_cookie (
+				key='access_token',
+				value='',
+				expires=timezone.now() - timedelta(days=1),
+				httponly=True,
+				secure=True,
+				samesite='None',
+						# max_age=60*60*24*7
+			)
+			# response.delete_cookie('access_token')
 			return response
 		except Exception as e:
 			return Response ({'error':'invalide request'},status=status.HTTP_400_BAD_REQUEST)
@@ -529,10 +550,10 @@ class registerUser(APIView):
 		if serializer.is_valid():
 			if serializer.validated_data['password'] == request.data['passwordConfirmation']:
 				if User.objects.filter(username=serializer.validated_data['username']).exists():
-					# log_to_elasticsearch("register fail", event_type="error")
+					log_to_elasticsearch("register fail", event_type="error")
 					return Response({'error': 'username is already in use.'}, status=status.HTTP_400_BAD_REQUEST)
 				if User.objects.filter(username=serializer.validated_data['email']).exists():
-					# log_to_elasticsearch("register fail", event_type="error")
+					log_to_elasticsearch("register fail", event_type="error")
 					return Response({'error': 'email is already in use.'}, status=status.HTTP_400_BAD_REQUEST)
 				user = serializer.save()
 				user.password = hash_password(serializer.validated_data['password'])
@@ -548,19 +569,19 @@ class registerUser(APIView):
 						key='access_token',
 						value=refresh_token.get_access_token(),
 						httponly=True,
-						secure=False,
-						samesite='lax',
+						secure=True,
+						samesite='None',
 						# max_age=60*60*24*7
 					)
-					# log_to_elasticsearch(f"new user registred named {user.username}", event_type="regitration")
+					log_to_elasticsearch(f"new user registred named {user.username}", event_type="regitration")
 					return response
 				else:
-					# log_to_elasticsearch("register fail", event_type="error")
+					log_to_elasticsearch("register fail", event_type="error")
 					return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 			else:
-				# log_to_elasticsearch("register fail", event_type="error")
+				log_to_elasticsearch("register fail", event_type="error")
 				return Response({'error': 'passwords do not match!'}, status=status.HTTP_400_BAD_REQUEST)
-		# log_to_elasticsearch("register fail", event_type="error")
+		log_to_elasticsearch("register fail", event_type="error")
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -575,7 +596,7 @@ class setup_email_2fa(APIView):
 		# if not user.isTwoFA:
 		user.isTwoFA = not user.isTwoFA
 		user.save()
-		# log_to_elasticsearch("enabling 2fa" if user.isTwoFA else "disabling 2fa", event_type="2fa")
+		log_to_elasticsearch("enabling 2fa" if user.isTwoFA else "disabling 2fa", event_type="2fa")
 		return Response({'message': 'email 2fa enabled successfully.' if user.isTwoFA else 'email 2fa disabled successfully.'}, status=status.HTTP_200_OK)
 
 
@@ -603,13 +624,13 @@ class confirm_email_2fa(APIView):
 				key='access_token',
 				value=token,
 				httponly=True,
-				secure=False,
-				samesite='lax',
+				secure=True,
+				samesite='None',
 				# max_age=60*60*24*7
 			)
-			# log_to_elasticsearch("2fa confirmation", event_type="2fa")
+			log_to_elasticsearch("2fa confirmation", event_type="2fa")
 			return response
-		# log_to_elasticsearch("2fa fail", event_type="error")
+		log_to_elasticsearch("2fa fail", event_type="error")
 		return Response({'error':'invalide or expired code'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
@@ -666,7 +687,7 @@ class deleteUser(APIView):
 			user.delete()
 		except:
 			return Response(status=status.HTTP_404_NOT_FOUND)
-		# log_to_elasticsearch("user deletion", event_type="user deletion")
+		log_to_elasticsearch("user deletion", event_type="user deletion")
 		return Response(status=status.HTTP_204_NO_CONTENT)
 
 
@@ -834,7 +855,7 @@ class sendRequest(APIView):
 				return Response({'error': 'You cannot send a friend request to yourself.'}, status=status.HTTP_400_BAD_REQUEST)
 			sender.sendRequest(reciever_id)
 			reciever.addFriendRequest(sender.id)
-			# log_to_elasticsearch("Friend request sent successfully", event_type="friend request")
+			log_to_elasticsearch("Friend request sent successfully", event_type="friend request")
 			return Response({'message': 'Friend request sent successfully'},status=status.HTTP_200_OK)
 		except User.DoesNotExist:
 			return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
@@ -861,7 +882,7 @@ class AcceptRequest(APIView):
 			sender.addFriend(reciever.id)
 			reciever.DeleteFriendRequest(sender_id)
 			reciever.addFriend(sender_id)
-			# log_to_elasticsearch("Friend request accepted successfully", event_type="accept friend request")
+			log_to_elasticsearch("Friend request accepted successfully", event_type="accept friend request")
 			return Response({'message': 'Friend request accepted successfully'},status=status.HTTP_200_OK)
 		except User.DoesNotExist:
 			return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
@@ -940,7 +961,7 @@ class DeleteRequest(APIView):
 				return Response({'error': 'invalide request'}, status=status.HTTP_400_BAD_REQUEST)
 			reciever.DeleteFriendRequest(sender.id)
 			sender.DeleteRequest(reciever_id)
-			# log_to_elasticsearch("Friend request deleted successfully", event_type="friend request deleted")
+			log_to_elasticsearch("Friend request deleted successfully", event_type="friend request deleted")
 			return Response({'message': 'Friend request deleted successfully'},status=status.HTTP_204_NO_CONTENT)
 		except User.DoesNotExist:
 			return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
@@ -963,7 +984,7 @@ class block(APIView):
 			user.block(toBeBlocked.id)
 			# user.DeleteFriend(toBeBlocked.id)
 			# toBeBlocked.DeleteFriend(user)
-			# log_to_elasticsearch("user blocked successfully", event_type="block")
+			log_to_elasticsearch("user blocked successfully", event_type="block")
 			return Response({'message': 'user blocked successfully'},status=status.HTTP_200_OK)
 		except User.DoesNotExist:
 			return Response({'error':'User not found.'}, status=status.HTTP_404_NOT_FOUND)
@@ -981,7 +1002,7 @@ class unblock(APIView):
 
 			toBeUnblocked = User.objects.get(id=request.data['id'])
 			user.unblock(toBeUnblocked.id)
-			# log_to_elasticsearch("user unblocked successfully", event_type="unblock")
+			log_to_elasticsearch("user unblocked successfully", event_type="unblock")
 			return Response({'message': 'user unblocked successfully'},status=status.HTTP_204_NO_CONTENT)
 		except User.DoesNotExist:
 			return Response({'error': 'User not found.'},status=status.HTTP_404_NOT_FOUND)
@@ -1028,7 +1049,7 @@ class PasswordResetRequestView(APIView):
 		if serializer.is_valid():
 			resetPass = serializer.save()
 			resetPass.save()
-			# log_to_elasticsearch("password reset request", event_type="password reset")
+			log_to_elasticsearch("password reset request", event_type="password reset")
 			return Response({'detail': 'Password reset link sent.'}, status=status.HTTP_200_OK)
 		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 	
@@ -1136,7 +1157,7 @@ class UserMatchHistory(APIView):
 			user = User.objects.get(username=username)
 			matches = MatchHistory.objects.filter(user=user)
 			if not matches.exists():
-				return Response({'error': 'no matches found'}, status=status.HTTP_404_NOT_FOUND)
+				return Response({'error': 'no matches found'}, status=status.HTTP_400_BAD_REQUEST)
 			serializer = MatchHistorySerializer(matches, many=True)
 			return Response(serializer.data, status=status.HTTP_200_OK)
 		except User.DoesNotExist:

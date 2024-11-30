@@ -1,4 +1,5 @@
 import { logedUser } from '../router.js';
+import { showAlert } from '../message-box.js';
 
 class ChatFriendList extends HTMLElement {
     friendList = document.createElement('div');
@@ -10,7 +11,6 @@ class ChatFriendList extends HTMLElement {
         this.originalFriends = {};
         this.displayedFriends = {};
 
-        // console.log('friend list constructor');
         const wrapper = document.createElement('div');
         wrapper.classList.add('friend-list-wrapper');
 
@@ -41,12 +41,10 @@ class ChatFriendList extends HTMLElement {
         wrapper.append(searchSection, this.friendList);
         this.shadowRoot.append(style, wrapper);
 
-        // Event listener for search
         searchSection.addEventListener('searchFriend', (event) => {
             this.filterFriends(event.detail.searchValue);
         });
 
-        // Event listener for friend card click
         this.friendList.addEventListener('friendCardClick', (event) => {
             this.handleFriendCardClick(event.detail.card);
         });
@@ -55,9 +53,8 @@ class ChatFriendList extends HTMLElement {
 
         logedUser.statusSocket.onmessage = async (event) => {
             const data = JSON.parse(event.data);
-            // console.log('inside chat component message from server:', data);
-            if (data.type === 'user_status')
-            {
+
+            if (data.type === 'user_status') {
                 this.updateFriendStatusById(data.user_id, data.status === 'online' ? true : false);  
                 if (data.status === 'online')
                     logedUser.activeUsers.add(data.user_id);
@@ -66,6 +63,8 @@ class ChatFriendList extends HTMLElement {
             }
             else if (data.type === 'active_users_list')
                 logedUser.activeUsers = new Set(data.active_users);
+            else if (data.type === 'invite_to_game' && data.user_id === logedUser.id)
+                showAlert(data.username + ' invited you to a game');
         };
     }
 
@@ -93,7 +92,6 @@ class ChatFriendList extends HTMLElement {
         } catch (error) {
             console.error('Error fetching friend list:', error);
         }
-        console.log('end fetch');
     }
 
     updateFriendList(newFriends) {
@@ -127,16 +125,16 @@ class ChatFriendList extends HTMLElement {
         // Deselect all cards
         const allCards = this.shadowRoot.querySelectorAll('chat-friend-card');
         allCards.forEach(card => {
-            card.shadowRoot.querySelector('.friend-card').classList.remove('selected');
+            card.shadowRoot.querySelector('.friend-card-component').classList.remove('selected');
         });
         // Select the clicked card
-        clickedCard.shadowRoot.querySelector('.friend-card').classList.add('selected');
+        clickedCard.shadowRoot.querySelector('.friend-card-component').classList.add('selected');
     }
 
     deselectAllFriends() {
         const allCards = this.shadowRoot.querySelectorAll('chat-friend-card');
         allCards.forEach(card => {
-            card.shadowRoot.querySelector('.friend-card').classList.remove('selected');
+            card.shadowRoot.querySelector('.friend-card-component').classList.remove('selected');
         });
     }
 
@@ -145,7 +143,6 @@ class ChatFriendList extends HTMLElement {
         if (friendCard)
             friendCard.setStatus(status);
     }
-
 
 }
 

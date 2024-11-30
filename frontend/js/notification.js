@@ -21,7 +21,7 @@ export class Notification
 		this.content.innerHTML = `
 			<div class="container_tour1">
 				<div class="tour_name">
-					<img src="${this.img}" ">
+					<img src="${this.img}">
 				</div>
 				<div class="tour_name1">
 					<h2 class="h2_class"> ${this.name} </h2>
@@ -40,7 +40,6 @@ export class Notification
 	render()
 	{
 		async function denyReq(profileId){
-			console.log("call denyReq from notification");
 			try{
 				const response = await fetch('http://localhost:8000/api/friends/DenyRequest/', {
 					method: 'POST',
@@ -54,16 +53,13 @@ export class Notification
 					throw new Error('Network response was not ok: ' + response.statusText);
 				}
 				const responseData = await response.json();
-				console.log('Success:', responseData);
 			} catch (error){
 				console.error('There was a problem with the fetch operation:', error);
 				return;
 			}
 		}
 		async function acceptReq(profileId){
-			console.log("call accept from notification");
 			try{
-				console.log(profileId);
 				const response = await fetch('http://localhost:8000/api/friends/AccebtRequest/', {
 					method: 'POST',
 					credentials: 'include',
@@ -76,7 +72,6 @@ export class Notification
 					throw new Error('Network response was not ok: ' + response.statusText);
 				}
 				const responseData = await response.json();
-				console.log('Success:', responseData);
 			} catch (error){
 				console.error('There was a problem with the fetch operation:', error);
 				return;

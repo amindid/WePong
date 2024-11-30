@@ -108,7 +108,6 @@ class Tournament
 	}
 }
 export function rendertournamant() {
-	console.log("render tournament");
 	const page = new Tournament();
 	return page.render();
 }
