@@ -24,7 +24,7 @@ class ChatSearchFriendInput extends HTMLElement {
                 bubbles: true,
                 composed: true,
             }));
-        };        
+        };  
 
         searchInput.addEventListener('input', dispatchSearchEvent);
 

@@ -54,7 +54,6 @@ export const logedUser = {
     username: null,
     email: null,
     avatar: null,
-    notificationSocket: null,
     wallet: null,
     statusSocket: null, // Add this
     activeUsers : null,

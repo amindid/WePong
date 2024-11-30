@@ -36,7 +36,7 @@ class ChatMessageList extends HTMLElement {
         `;
 
         this.shadowRoot.append(style, wrapper);
-        this.lastMessageDate = null; // Track the date of the last added message
+        this.lastMessageDate = null;
     }
 
     addMessage(message, sender = 'me', userImage = '', timestamp = null) {
@@ -50,7 +50,6 @@ class ChatMessageList extends HTMLElement {
         const time = currentDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
         msg.setAttribute('timestamp', time);
 
-        // Check if the date is different from the last message's date
         if (!this.lastMessageDate || !this.isSameDay(currentDate, this.lastMessageDate)) {
             const dateSeparator = document.createElement('div');
             dateSeparator.classList.add('date-separator');
@@ -58,7 +57,6 @@ class ChatMessageList extends HTMLElement {
             this.shadowRoot.querySelector('.message-list').appendChild(dateSeparator);
         }
 
-        // Add message to the list
         this.shadowRoot.querySelector('.message-list').appendChild(msg);
         this.lastMessageDate = currentDate; // Update last message date
 

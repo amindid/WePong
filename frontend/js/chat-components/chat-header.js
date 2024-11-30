@@ -1,5 +1,4 @@
 class ChatHeader extends HTMLElement {
-  // Observe changes to attributes and update dynamically
   static get observedAttributes() {
       return ['friend-name', 'friend-image'];
   }
@@ -11,7 +10,6 @@ class ChatHeader extends HTMLElement {
       const header = document.createElement('div');
       header.classList.add('chat-header');
 
-      // Create image element for the friend's profile picture
       this.img = document.createElement('img');
       this.img.classList.add('friend-image');
       this.img.alt = 'Friend Image'; // Set a default alt text
@@ -26,7 +24,6 @@ class ChatHeader extends HTMLElement {
       style.textContent = `
       :host{
         --classic-color: #ffffff;
-        /* --neon-color: #00DCFF; */
         --neon-color: #F941FF;
         --fire-color: #FF774D;
         --water-color: #63CBFF;

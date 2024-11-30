@@ -7,22 +7,14 @@ class ChatFriendCard extends HTMLElement {
         super();
         this.attachShadow({ mode: 'open' });
 
-        // Wrapper element
         const wrapper = document.createElement('div');
         wrapper.classList.add('friend-card-component');
 
-        // Friend photo
         this.img = document.createElement('img');
         this.img.classList.add('friend-photo');
         this.img.src = this.getAttribute('photo') || '../images/me.png';
         this.img.alt = this.getAttribute('username') || 'Friend';
 
-        // Friend message count
-        // this.msgCount = document.createElement('div');
-        // this.msgCount.classList.add('friend-msg-count');
-        // this.msgCount.textContent = this.getAttribute('msgCount') || '10';
-
-        // Friend status
         this.status = document.createElement('div');
         this.status.classList.add('friend-status');
         this.updateStatus(this.getAttribute('status'));
@@ -32,18 +24,14 @@ class ChatFriendCard extends HTMLElement {
         this.username.classList.add('friend-username');
         this.username.textContent = this.getAttribute('username') || 'Unknown';
 
-        // Content container
         const content = document.createElement('div');
         content.classList.add('friend-content');
         content.appendChild(this.username);
         content.appendChild(this.status);
 
-        // Append children to wrapper
         wrapper.appendChild(this.img);
         wrapper.appendChild(content);
-        // wrapper.appendChild(this.msgCount);
 
-        // Add click event
         wrapper.addEventListener('click', () => {
             this.dispatchEvent(new CustomEvent('friendCardClick', {
                 detail: { card: this },
@@ -52,7 +40,6 @@ class ChatFriendCard extends HTMLElement {
             }));
         });
 
-        // Define styles with palette
         const style = document.createElement('style');
         style.textContent = `
             :host {
@@ -102,22 +89,6 @@ class ChatFriendCard extends HTMLElement {
                     color: var(--text-color-light);
                 }
             }
-
-            // .friend-msg-count {
-            //     margin-left: auto;
-            //     font-size: 14px;
-            //     font-weight: bold;
-            //     color: white;
-            //     background-color: var(--msg-bg-color-green);
-            //     padding: 8px;
-            //     border-radius: 50%;
-            //     margin-right: 10px;
-            //     width: 15px;
-            //     height: 15px;
-            //     display: flex;
-            //     justify-content: center;
-            //     align-items: center;
-            // }
 
             .friend-photo {
                 width: 50px;
@@ -190,7 +161,6 @@ class ChatFriendCard extends HTMLElement {
     }
 
     updateStatus(status) {
-        // Update the status dynamically
         if (status === 'true') {
             this.status.textContent = 'Online';
             this.status.classList.remove('offline');
@@ -205,7 +175,6 @@ class ChatFriendCard extends HTMLElement {
         }
     }
 
-    // Method to update status programmatically
     setStatus(status) {
         this.setAttribute('status', status);
     }
