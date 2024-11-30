@@ -41,12 +41,10 @@ class ChatFriendList extends HTMLElement {
         wrapper.append(searchSection, this.friendList);
         this.shadowRoot.append(style, wrapper);
 
-        // Event listener for search
         searchSection.addEventListener('searchFriend', (event) => {
             this.filterFriends(event.detail.searchValue);
         });
 
-        // Event listener for friend card click
         this.friendList.addEventListener('friendCardClick', (event) => {
             this.handleFriendCardClick(event.detail.card);
         });
@@ -56,9 +54,7 @@ class ChatFriendList extends HTMLElement {
         logedUser.statusSocket.onmessage = async (event) => {
             const data = JSON.parse(event.data);
 
-            // console.log('inside chat component message from server:', data);
-            if (data.type === 'user_status')
-            {
+            if (data.type === 'user_status') {
                 this.updateFriendStatusById(data.user_id, data.status === 'online' ? true : false);  
                 if (data.status === 'online')
                     logedUser.activeUsers.add(data.user_id);
@@ -96,7 +92,6 @@ class ChatFriendList extends HTMLElement {
         } catch (error) {
             console.error('Error fetching friend list:', error);
         }
-        console.log('end fetch');
     }
 
     updateFriendList(newFriends) {
@@ -148,7 +143,6 @@ class ChatFriendList extends HTMLElement {
         if (friendCard)
             friendCard.setStatus(status);
     }
-
 
 }
 

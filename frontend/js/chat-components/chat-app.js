@@ -15,15 +15,12 @@ class ChatApp extends HTMLElement {
         const wrapper = document.createElement('div');
         wrapper.classList.add('chat-app');
 
-
-        // Append child components 
         const friendList = document.createElement('chat-friend-list');
         friendList.classList.add('friend-list');
         
         const chatContainer = document.createElement('div');
         chatContainer.classList.add('chat-container');
 
-        // Append friend list and chat container to wrapper
         wrapper.appendChild(friendList);
         wrapper.appendChild(chatContainer);
 
@@ -164,8 +161,6 @@ class ChatApp extends HTMLElement {
 
     async callIsBlockedUserApi() {
         try {
-            console.log('Sending friend_id:', this.selectedFriend.id);
-
             const response = await fetch('http://localhost:8000/api/friends/is_blocked/', {
                 method: 'POST',
                 credentials: 'include',
@@ -188,7 +183,6 @@ class ChatApp extends HTMLElement {
     }
 
     async isBlokcedByFriendApi() {
-        console.log('isBlokcedByFriendApi');
         try {
             const response = await fetch('http://localhost:8000/api/friends/is_blocked_by/', {
                 method: 'POST',
@@ -206,7 +200,6 @@ class ChatApp extends HTMLElement {
         
             const data = await response.json();
             this.isBlokcedByFriend = data.is_blocked;
-            console.log('isBlokcedByFriend:', data.is_blocked);
         } catch (error) {
             console.error('Error fetching isBlockedUser:', error.message);
         }
@@ -250,14 +243,12 @@ class ChatApp extends HTMLElement {
         this.chatContainer.innerHTML = '<p class="no-friend-message">Select a friend to start chatting.</p>';
     }
 
-    // Update chat container with selected friend
     async updateChatContainer(friend) {
         // Clear the chat container by removing all previous components
         while (this.chatContainer.firstChild) {
             this.chatContainer.removeChild(this.chatContainer.firstChild);
         }
     
-        // Create and append new components for the selected friend
         const header = document.createElement('chat-header');
         header.setAttribute('friend-name', friend.username);
         header.setAttribute('friend-image', friend.photo);
@@ -271,7 +262,7 @@ class ChatApp extends HTMLElement {
     
         this.chatContainer.appendChild(chatBadge);
         this.chatContainer.appendChild(messageList);
-        // check if the user is blocked
+
         if (this.selectedFriendIsBlocked) {
             const blockedMessage = document.createElement('div');
             blockedMessage.textContent = "Can't send a message to blocked contact " + friend.username + " .";
@@ -312,8 +303,6 @@ class ChatApp extends HTMLElement {
         const [firstId, secondId] = [logedUser.id, friend.id].sort((a, b) => a - b);
         const roomName = `${firstId}_${secondId}`;
 
-        // create a room between the two users if it doesn't exist
-        // await fetch(`http://localhost:8000/chat-api/chat/rooms/`, {
         await fetch(`http://localhost:8001/chat-api/chat/rooms/`, {
             method: 'POST',
             headers: {
@@ -331,12 +320,7 @@ class ChatApp extends HTMLElement {
             }
             return response.json();
         })
-        .then((data) => {
-            console.log('Room created:', data);
-        })
 
-        // fetch messages from the room
-        // await fetch(`http://localhost:8000/chat-api/chat/rooms/${roomName}/messages/`, {
         await fetch(`http://localhost:8001/chat-api/chat/rooms/${roomName}/messages/`, {
             method: 'GET',
             credentials: 'include',
@@ -381,14 +365,8 @@ class ChatApp extends HTMLElement {
             this.socket.close();
         }        
         const socketUrl = `ws://localhost:8001/ws/chat/${roomName}/`;
-        // const socketUrl = `ws://localhost:8000/ws/chat/${roomName}/`;
-        // Create WebSocket with credentials
-        this.socket = new WebSocket(socketUrl);
-        
-        // Enable credentials
+        this.socket = new WebSocket(socketUrl);        
         this.socket.withCredentials = true;
-        
-        console.log('Connecting to WebSocket:', socketUrl);
     
         this.socket.addEventListener('open', () => {
             console.log('WebSocket connection established');
@@ -396,13 +374,7 @@ class ChatApp extends HTMLElement {
 
         this.socket.addEventListener('message', async (event) => {
             const data = JSON.parse(event.data);
-            console.log('Received message:', data);
-            // if (data.type === 'chat_message' && data.user_id != logedUser.id)
-            //     this.handleIncomingMessage(data);
-            // else if (data.type === 'block') {
-            //     this.selectedFriendIsBlocked = !this.selectedFriendIsBlocked;
-            //     this.updateChatContainer(this.selectedFriend);
-            // }
+
             if (data.type === 'chat_message' && data.user_id != logedUser.id)
                 this.handleIncomingMessage(data);
             else if (data.type === 'block_user' && data.user_id != logedUser.id) {
@@ -411,8 +383,6 @@ class ChatApp extends HTMLElement {
                 await this.updateChatContainer(this.selectedFriend);
             }
         });
-
-        // Handle WebSocket on 
 
         this.socket.addEventListener('close', () => {
             console.log('WebSocket connection closed');
