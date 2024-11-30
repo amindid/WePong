@@ -14,12 +14,9 @@ class Dashboard {
 		page.appendChild(renderBodyCenter());
 		page.appendChild(renderRightBar());
 		let image = page.querySelector("#player-image");
-		// let imageleft = page.querySelector("#leftBar-userImage");
-		// let imageright = page.querySelector("#rightBar-userImage");
 		let username = page.querySelector("#user-name");
 		const setPlayerImage = async () => {
 			try {
-				// console.log('befor fetch');
 				const response = await fetch('http://localhost:8000/api/users/userProfile/', {
 					method: 'GET',
 					credentials: 'include',
@@ -27,23 +24,16 @@ class Dashboard {
 						'Content-Type': 'application/json',
 					}
 				});
-				// console.log('after fetch');
 				const data = await response.json();
 				if (response.ok) {
-					console.log('after await');
 					image.src = data.avatar;
-					// imageleft.src = data.avatar;
-					// imageright.src = data.avatar;
 					username.textContent = data.username;
-					console.log(image.src);
 				}
 				else {
 					showAlert(data.error || 'failed to load user image');
-					console.log(data.error || 'failed to load user image');
 				}
 			} catch (error) {
 				showAlert(error || 'failed to fetch user profile ==> error: ');
-				console.log('failed to fetch user profile ==> error: ',error);
 			}
 		};
 		setPlayerImage();

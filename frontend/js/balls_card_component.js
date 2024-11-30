@@ -69,19 +69,13 @@ export class BallCardsComponent extends HTMLElement
 			const data = await response.json();
 			if (response.ok) {
 				wallet = data.wallet;
-				// console.log("###############");
-				// console.log("wallet:" , data.wallet);
-				// console.log("###############");
-				// wallet += amount
 				return data;
 			}
 			else {
 				showAlert(data.error || 'failed to load user image');
-				console.log(data.error || 'failed to load user image');
 			}
 		} catch (error) {
 			showAlert(error || 'failed to fetch user profile ==> error: ');
-			console.log('failed to fetch user profile ==> error: ',error);
 		}
 	};
 
@@ -97,9 +91,7 @@ export class BallCardsComponent extends HTMLElement
 	
 		const data = await response.json();
 		if (response.ok) {
-			console.log('Wallet updated:', data);
 		} else {
-			console.error('Error updating wallet:', data);
 		}
 	}
 	
@@ -115,7 +107,6 @@ export class BallCardsComponent extends HTMLElement
 		let btn = cardElement.querySelector("#button_price");
 			btn.addEventListener('click', async (event) => {
 				event.preventDefault();
-				console.log("price",data.price);
 				fetch_data().then(walletData=>{
 					if (walletData.wallet < data.price)
 						showAlert("You have bought a " + data.name + "ball");
@@ -125,9 +116,6 @@ export class BallCardsComponent extends HTMLElement
 						updateWallet(-data.price);
 					}
 				}).catch(err=>console.log(err))
-				// console.log("end fetch");
-				// console.log("wallet:" , wallet);
-				// console.log("data.price:" , data.price);
 			});
 	}
 	createCard(fireball);

@@ -75,7 +75,6 @@ class localGame {
 		}
 		else if (localStorage.getItem('tournement4') === "1")
 		{
-			console.log
 			if (localStorage.getItem('semifinal1') === "0")
 			{
 				player1img = localStorage.getItem('img_player_semifinale1');
@@ -103,7 +102,6 @@ class localGame {
     }
     async setPlayer1Data() {
 			try {
-				console.log('before fetch');
 				const response = await fetch('http://localhost:8000/api/users/userProfile/', {
 					method: 'GET',
 					credentials: 'include',
@@ -111,10 +109,8 @@ class localGame {
 						'Content-Type': 'application/json',
 					}
 				});
-				console.log('after fetch');
 				const data = await response.json();
 				if (response.ok) {
-					console.log('after await >>>==== ');
 					if (data.username === null) {
 						player1Name = 'Guest';
 					} else
@@ -129,14 +125,11 @@ class localGame {
 						localStorage.setItem('img_player1', data.avatar);
 						player1img = data.avatar;
 					}
-					// console.log(player1img);
 				} else {
 					showAlert(data.error || 'failed to load user image');
-					console.log(data.error || 'failed to load user image');
 				}
 			} catch (error) {
 				showAlert(error || 'failed to fetch user profile ==> error: ');
-				console.log('failed to fetch user profile ==> error: ', error);
 			}
     }
 
@@ -505,7 +498,6 @@ class localGame {
 }
 
 export function renderLocalGame() {
-    console.log("render local game");
     const page = new localGame();
     return page.render();
 }

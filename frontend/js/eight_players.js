@@ -207,7 +207,6 @@ class EightPlayers
                 const img_player_semifinal2 = this.content.querySelector("#img_player_semifinal2");
                 const imgElement = document.createElement('img');
                 imgElement.src = localStorage.getItem('img_final_2');
-				console.log(localStorage.getItem('img_player_semifinale2'));
                 imgElement.className = "img_player_staylee";
                 img_player_semifinal2.appendChild(imgElement);
             }
@@ -245,7 +244,6 @@ class EightPlayers
 
 
 export function renderEightPlayers() {
-	console.log("render Fourplayers");
 	const page = new EightPlayers();
 	return page.render();
 }

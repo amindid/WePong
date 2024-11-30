@@ -98,7 +98,6 @@ class Toper {
 							if (userdata.avatar && userdata.username) {
 								searchImage.src = userdata.avatar;
 								searchImage.classList.add('show');
-								console.log(searchImage.src);
 								searchUsername.textContent = userdata.username;
 								const searchResultButton = document.querySelector('#searchResultButton');
 								if (searchResultButton) {
@@ -117,7 +116,6 @@ class Toper {
 						
 					} catch (error) {
 						showAlert('somthing went wrong please try again later.');
-						console.log('SOMTHING WENT WRONG', error);
 					}
 				}
 			});
@@ -138,20 +136,15 @@ class Toper {
 						const data = await response.json();
 			
 						if (response.ok) {
-							console.log(data);
 							let test = toper.querySelector(".notification-div");
 							const notification = new Notification(data.user_name, data.avatar, user_id);
 							test.append(notification.render());
-							// notification.setAttribute('name', data.user_name);
-							// notification.setAttribute('img', data.avatar);
 							
 						} else {
 							showAlert(data.error || 'Failed to load second user data');
-							console.log(data.error || 'Failed to load second user data');
 						}
 					} catch (error) {
 						showAlert(error || 'Failed to fetch user profile ==> error: ');
-						console.log('Failed to fetch second user profile ==> error: ', error);
 					}
 				}
 			};
@@ -174,7 +167,6 @@ class Toper {
 						console.log("no friendsRequests");
 					else
 					{
-						console.log(" friendsRequests length >> ", data.friendsRequests.length)
 						data.friendsRequests.forEach((element) => {
 							fetch_by_id(element);
 						});
