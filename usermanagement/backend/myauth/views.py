@@ -1157,7 +1157,7 @@ class UserMatchHistory(APIView):
 			user = User.objects.get(username=username)
 			matches = MatchHistory.objects.filter(user=user)
 			if not matches.exists():
-				return Response({'error': 'no matches found'}, status=status.HTTP_404_NOT_FOUND)
+				return Response({'error': 'no matches found'}, status=status.HTTP_400_BAD_REQUEST)
 			serializer = MatchHistorySerializer(matches, many=True)
 			return Response(serializer.data, status=status.HTTP_200_OK)
 		except User.DoesNotExist:
