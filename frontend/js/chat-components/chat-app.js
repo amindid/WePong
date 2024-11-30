@@ -448,31 +448,3 @@ class ChatApp extends HTMLElement {
 }
 
 customElements.define('chat-app', ChatApp);
-
-
-
-
-// // Create a WebSocket connection for notifications
-// const notificationSocket = new WebSocket('ws://yourserver/notifications/?userId=' + userId);
-
-// // Listen for notifications
-// notificationSocket.onmessage = function(event) {
-//     const data = JSON.parse(event.data);
-
-//     // If the notification includes the unread count and the last message timestamp
-//     if (data.unread_count !== undefined && data.last_message_timestamp !== undefined) {
-//         // Update the notification UI with the unread count and last message timestamp
-//         document.getElementById('notification-count-' + data.sender_id).innerText = `Unread messages: ${data.unread_count}`;
-//         document.getElementById('last-message-timestamp-' + data.sender_id).innerText = `Last message: ${data.last_message_timestamp}`;
-//     }
-// };
-
-// // Handle WebSocket open
-// notificationSocket.onopen = function(event) {
-//     console.log("Notification WebSocket connected");
-// };
-
-// // Handle WebSocket close
-// notificationSocket.onclose = function(event) {
-//     console.log("Notification WebSocket disconnected");
-// };
