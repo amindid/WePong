@@ -406,22 +406,26 @@ class CheckAuthentication(APIView):
 	def get(self, request):
 		return Response({'authenticated': True}, status=status.HTTP_200_OK)
 
-
+from django.http import JsonResponse
 
 def activate(request, uidb64,token):
 	try:
 		uid = force_str(urlsafe_base64_decode(uidb64))
 		user = User.objects.get(pk=uid)
+		print('inside try')
 	except (TypeError, ValueError, OverflowError, User.DoesNotExist):
 		user = None
+		print('first exept')
 	if user is not None and email_confirmation_token.check_token(user, token):
 		user.is_email_confirmed = True
 		user.save()
+		print('inside first condition')
 		log_to_elasticsearch("email confirmation success", event_type="email confirmation")
-		return Response({'messages' : 'email confirmed successfuly'}, status=status.HTTP_200_OK)
+		return JsonResponse({'messages' : 'email confirmed successfuly'}, status=status.HTTP_200_OK)
 	else:
+		print('inside else condition')
 		log_to_elasticsearch("email confirmation failed", event_type="error")
-		return Response({'error' : 'email activation is invalid'}, status=status.HTTP_400_BAD_REQUEST)
+		return JsonResponse({'error' : 'email activation is invalid'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 
@@ -450,6 +454,16 @@ class refreshAccessToken(APIView):
 			return Response({'access': access_token}, status=status.HTTP_200_OK)
 		except:
 			return Response({'error': 'invalide refresh token'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class is_email_confirmed(APIView):
+	authentication_classes = [CookieJWTAuthentication]
+	permission_classes = [IsAuthenticated]
+	def get(self, request):
+		user : User = request.user
+		if user.is_email_confirmed:
+			return Response({"confirmed" : True},status=status.HTTP_200_OK)
+		return Response({"confirmed" : False},status=status.HTTP_200_OK)
 
 
 

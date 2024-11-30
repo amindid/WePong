@@ -219,17 +219,58 @@ class SettingComponent
 				const enable2fa = button_twofa.querySelector("#flexS");
 				if (enable2fa) {
 				enable2fa.addEventListener('click', async function (event) {
-					const response = await fetch('http://localhost:8000/api/setup_2fa/', {
-						method : 'POST',
-						credentials: 'include',
+					const res = await fetch ('http://localhost:8000/api/users/is_email_confirmed/', {
+						method : 'GET',
+						credentials : 'include',
 					});
-					sendEmailConfirmation('Send Email to confirm');
-					const data = await response.json();
-					if (response.ok) {
-						showAlert(data.message || 'check check');
+					const resData = await res.json();
+					if (resData.confirmed){
+						console.log('inside condition');
+						const response = await fetch('http://localhost:8000/api/setup_2fa/', {
+							method : 'POST',
+							credentials: 'include',
+						});
+						const data = await response.json();
+						if (response.ok) {
+							showAlert(data.message || 'check check');
+						}
+						else {
+							showAlert(data.error);
+						}
 					}
 					else {
-						showAlert(data.error);
+						
+						sendEmailConfirmation('Send Email to confirm');
+					    const sendEmailBtn = document.getElementById('send-email-btn');
+    					if (sendEmailBtn) {
+    					    console.log('inside sendEmailBtn');
+    					    sendEmailBtn.addEventListener('click' , async function (event) {
+    					        const response = await fetch ('http://localhost:8000/api/users/confirmEmail/', {
+    					            method : 'GET',
+    					            credentials : 'include',
+    					        });
+    					        const data = response.json();
+    					        if (!data.ok) {
+    					            showAlert(data.error || 'cant send email to your inbox');
+    					        }
+								const sendMainElement = document.querySelector(".send-email");
+								if (sendMainElement){
+									sendMainElement.parentNode.removeChild(sendMainElement);								}
+    					    });
+    					}
+						const response = await fetch('http://localhost:8000/api/setup_2fa/', {
+							method : 'POST',
+							credentials: 'include',
+						});
+						const data = await response.json();
+						if (response.ok) {
+							showAlert(data.message || 'check check');
+						}
+						else {
+							showAlert(data.error);
+						}
+
+
 					}
 				});
 			}

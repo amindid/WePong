@@ -15,6 +15,5 @@ export function sendEmailConfirmation(message) {
     send.classList.add('send-email');
     send.textContent = message;
     send.innerHTML += '<button id="send-email-btn">Send Email</button>';
-        const sendEmailBtn = document.getElementById('send-email-btn');
     document.body.appendChild(send);
 }
