@@ -139,6 +139,8 @@ async function loadPage(route) {
                             '/register': renderRegistrationPage,
                             '/password_reset': renderResetPasswordPage,
                             '/2fa_confirmation': renderTwoFaConfirmationPage,
+                            '/game-local' : renderLocalGame,
+                            '/play-game' : renderGamePlay,
                             };
 
     const secretRoutes = {  '/dashboard': renderDashboard,

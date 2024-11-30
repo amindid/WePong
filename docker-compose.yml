@@ -76,6 +76,7 @@ services:
       discovery.type: single-node
     networks:
       - elk
+    container_name: elasticsearch
 
   logstash:
     image: localbuild/logstash:7.14.1
@@ -96,10 +97,13 @@ services:
       - "5000:5000"
     environment:
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+    env_file:
+      - .env
     networks:
       - elk
     depends_on:
       - elasticsearch
+    container_name: logstash
 
   kibana:
     image: localbuild/kibana:7.14.1
@@ -116,8 +120,11 @@ services:
       - "5601:5601"
     networks:
       - elk
+    env_file:
+      - .env
     depends_on:
       - elasticsearch
+    container_name: kibana
 
 networks:
   elk:

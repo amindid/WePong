@@ -42,12 +42,12 @@ def log_to_elasticsearch(message, event_type="generic"):
         "Content-Type": "application/json"
     }
     payload = {
-        "@timestamp": datetime.utcnow().isoformat(),
+        "@timestamp": datetime.now(timezone.utc).isoformat(),
         "message": message,
         "event": event_type
     }
     try:
-        response = requests.post(url, headers=headers, data=json.dumps(payload), auth=('elastic', 'aouchaadtest'))
+        response = requests.post(url, headers=headers, data=json.dumps(payload), auth=(settings.ELK_USER, settings.ELK_USER_PASS))
         if response.status_code == 201:
             print("Log event sent successfully!")
         else:

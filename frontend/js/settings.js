@@ -51,9 +51,6 @@ class SettingComponent
 									<div class="logout" >
 										<button class="logout_button" id="logoutButton">LOG OUT</button>
 									</div>
-									<div class="delete">
-										<button class="logout_button" id="deleteButton">DELETE ACCOUNT</button>
-									</div>
 								</div>
 				</div>
 			</div>
@@ -256,10 +253,7 @@ class SettingComponent
 			}
 		}
 		changebutton();
-			
-			this.content.querySelector('#deleteButton').addEventListener('click', function () {
-				confirmAction('Are you sure you want to delete your account?', deleteUser);
-			});
+
 			
 			this.content.querySelector('#logoutButton').addEventListener('click', function () {
 				confirmAction('Are you sure you want to log out?', logoutUser);
@@ -271,28 +265,7 @@ class SettingComponent
 					callback(); 
 				}
 			}
-			
-			function deleteUser() {
-				fetch('http://localhost:8000/api/users/delete', {
-					method: 'DELETE',
-					credentials: 'include',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-				})
-					.then(response => {
-						if (response.status === 204) {
-							showAlert('User deleted successfully');
-							navigate("/");
-						} else {
-							throw new Error('User deletion failed');
-						}
-					})
-					.catch(error => {
-						console.error('Error:', error);
-						alert('Error deleting user');
-					});
-			}
+		
 			
 			function logoutUser() {
 				fetch('http://localhost:8000/api/users/logout/', {

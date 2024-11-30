@@ -3,10 +3,11 @@
 all: up setup
 
 setup:
+	chmod +x elk_setup.sh
 	bash ./elk_setup.sh
 
 up:
-	@docker compose -f ./docker-compose.yml up -d --build
+	@docker compose -f ./docker-compose.yml -f docker-compose.override.yml up -d --build
 
 down:
 	@docker compose -f ./docker-compose.yml down

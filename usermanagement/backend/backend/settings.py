@@ -284,8 +284,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'wepong10auth@gmail.com'
-EMAIL_HOST_PASSWORD = 'vxhqismlzdvudgji'
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 
 os.environ['SSL_CERT_FILE'] = certifi.where()
 
@@ -300,3 +300,6 @@ AUTHENTICATION_BACKENDS = (
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['profile', 'email']
 
 LOGIN_REDIRECT_URL = '/dashboard/'
+
+ELK_USER=config('ELK_USER')
+ELK_USER_PASS=config('ELK_USER_PASS')

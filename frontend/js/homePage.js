@@ -44,7 +44,8 @@ class HomePage {
 		const playLocal = content.querySelector('#play-local');
 		playLocal.addEventListener('click', (event) => {
 			event.preventDefault();
-			navigate('/local-game');
+			localStorage.setItem("local-game", "1");
+			navigate('/game-local');
 		}
 		);
 

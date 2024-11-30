@@ -1,9 +1,9 @@
 import { navigate } from './router.js';
 // import { fetchUSerData } from './fetchPlayerData.js';
 
-let player1Name;
+let player1Name = "player1";
 let player2Name;
-let player1img;
+let player1img = "../images/player1.png";
 let player2img;
 
 
